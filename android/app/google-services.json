@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "742528959230",
+    "project_id": "tambal-ban-3081c",
+    "storage_bucket": "tambal-ban-3081c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742528959230:android:6e7bcd6699c2f55dd79baf",
+        "android_client_info": {
+          "package_name": "com.tambal_ban"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742528959230-dtkf11cbdi9d4h3c8vj5knds08d317bf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_9eHgiSbxgbQQd_hL_e_pLGIO4uEGzcM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742528959230-dtkf11cbdi9d4h3c8vj5knds08d317bf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "742528959230-u79uqnnt999cf9ndmev2lroded004vof.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tambalBan"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
