@@ -11,11 +11,13 @@ import 'pages/location_permission.dart';
 import 'pages/search_page.dart';
 import 'pages/splash.dart';
 import 'pages/started.dart';
-// import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // MobileAds.instance.initialize();
+  await Future.delayed(const Duration(milliseconds: 1000));
+
+  MobileAds.instance.initialize();
   await Firebase.initializeApp();
   runApp(Builder(builder: (context) {
     return MyApp(
