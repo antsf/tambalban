@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../ad_helper.dart';
 import '../cubit/connected_cubit.dart';
@@ -14,7 +15,8 @@ import '../widgets/place_list.dart';
 import 'detail.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  final Position? position;
+  const SearchPage({super.key, this.position});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -25,7 +27,7 @@ class _SearchPageState extends State<SearchPage> {
   TextEditingController searchController = TextEditingController();
   String filter = "";
   bool isShowGrid = false;
-  Position? position;
+  // Position? position;
   double lat = 0, long = 0;
   double distanceInMeters = 0.0;
   BannerAd? _bannerAd;
@@ -48,13 +50,15 @@ class _SearchPageState extends State<SearchPage> {
         )).load();
   }
 
-  void getLocation() async {
-    position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+  // void getLocation() async {
+  //   position = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.high);
 
-    lat = position!.latitude;
-    long = position!.longitude;
-  }
+  //   lat = position!.latitude;
+  //   long = position!.longitude;
+
+  //   setState(() {});
+  // }
 
   List<Map> sortByDistance(List<PlaceModel> places) {
     List<Map<dynamic, dynamic>> placesWithdistance = [];
@@ -79,13 +83,16 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
-    context.read<PlaceCubit>().fetchPlaces();
+    // context.read<PlaceCubit>().fetchPlaces();
     searchController.addListener(() {
       setState(() {
         filter = searchController.text;
       });
     });
-    getLocation();
+    // getLocation();
+
+    lat = widget.position?.latitude ?? 0;
+    long = widget.position?.longitude ?? 0;
     _initBannerAd();
     super.initState();
   }
@@ -98,61 +105,84 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget skeletonList() {
-      return Shimmer.fromColors(
-          baseColor: grayColor.withOpacity(0.5),
-          highlightColor: grayColor.withOpacity(0.1),
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 70.0,
-                margin: const EdgeInsets.only(bottom: 12.0),
-                decoration: BoxDecoration(
-                    color: grayColor.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(8.0)),
-              ),
-            ],
-          ));
-    }
+    // Widget skeletonList() {
+    //   return Shimmer.fromColors(
+    //       baseColor: grayColor.withOpacity(0.5),
+    //       highlightColor: grayColor.withOpacity(0.1),
+    //       child: Column(
+    //         children: [
+    //           Container(
+    //             width: double.infinity,
+    //             height: 70.0,
+    //             margin: const EdgeInsets.only(bottom: 12.0),
+    //             decoration: BoxDecoration(
+    //                 color: grayColor.withOpacity(0.5),
+    //                 borderRadius: BorderRadius.circular(8.0)),
+    //           ),
+    //         ],
+    //       ));
+    // }
 
-    Widget listView(List<PlaceModel> places) {
-      List<Map<dynamic, dynamic>> sort = sortByDistance(places);
+    Widget listView(List<Map<dynamic, dynamic>> places, bool isLoading,
+        bool isLoadLocation) {
+      final filteredData = isLoading
+          ? []
+          : places
+              .where((element) => element['items']
+                  .name
+                  .toLowerCase()
+                  .contains(filter.toLowerCase()))
+              .toList();
       return SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           sliver: SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
-            return filter == ""
-                ? PlaceList(
-                    sort[index],
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailPage(
-                              sort[index],
-                            ),
-                          ));
-                    },
-                  )
-                : sort[index]['items']
-                        .name
-                        .toLowerCase()
-                        .contains(filter.toLowerCase())
-                    ? PlaceList(
-                        sort[index],
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DetailPage(
-                                  sort[index],
-                                ),
-                              ));
-                        },
-                      )
-                    : const SizedBox();
-          }, childCount: sort.length)));
+            return Skeletonizer(
+              enabled: isLoadLocation,
+              child: PlaceList(
+                filteredData[index],
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailPage(
+                          filteredData[index],
+                        ),
+                      ));
+                },
+              ),
+            );
+            // return filter == ""
+            //     ? PlaceList(
+            //         sort[index],
+            //         onPressed: () {
+            //           Navigator.push(
+            //               context,
+            //               MaterialPageRoute(
+            //                 builder: (context) => DetailPage(
+            //                   sort[index],
+            //                 ),
+            //               ));
+            //         },
+            //       )
+            //     : sort[index]['items']
+            //             .name
+            //             .toLowerCase()
+            //             .contains(filter.toLowerCase())
+            //         ? PlaceList(
+            //             sort[index],
+            //             onPressed: () {
+            //               Navigator.push(
+            //                   context,
+            //                   MaterialPageRoute(
+            //                     builder: (context) => DetailPage(
+            //                       sort[index],
+            //                     ),
+            //                   ));
+            //             },
+            //           )
+            //         : const SizedBox();
+          }, childCount: filteredData.length < 20 ? filteredData.length : 20)));
     }
 
     Widget skeletonGrid() {
@@ -172,8 +202,14 @@ class _SearchPageState extends State<SearchPage> {
           ));
     }
 
-    Widget gridView(List<PlaceModel> places) {
-      List<Map<dynamic, dynamic>> sort = sortByDistance(places);
+    Widget gridView(List<Map<dynamic, dynamic>> places) {
+      // List<Map<dynamic, dynamic>> sort = sortByDistance(places);
+      final filteredData = places
+          .where((element) => element['items']
+              .name
+              .toLowerCase()
+              .contains(filter.toLowerCase()))
+          .toList();
       return SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           sliver: SliverGrid(
@@ -186,19 +222,24 @@ class _SearchPageState extends State<SearchPage> {
               delegate: SliverChildBuilderDelegate((context, index) {
                 return isLoading
                     ? skeletonGrid()
-                    : filter == ""
-                        ? PlaceGrid(
-                            sort[index],
-                          )
-                        : sort[index]['items']
-                                .name
-                                .toLowerCase()
-                                .contains(filter.toLowerCase())
-                            ? PlaceGrid(
-                                sort[index],
-                              )
-                            : const SizedBox();
-              }, childCount: sort.length < 20 ? sort.length : 20)));
+                    : PlaceGrid(
+                        filteredData[index],
+                      );
+                //   filter == ""
+                // ? PlaceGrid(
+                //     filteredData[index],
+                //   )
+                // : sort[index]['items']
+                //         .name
+                //         .toLowerCase()
+                //         .contains(filter.toLowerCase())
+                //     ? PlaceGrid(
+                //         sort[index],
+                //       )
+                //     : const SizedBox();
+              },
+                  childCount:
+                      filteredData.length < 20 ? filteredData.length : 20)));
     }
 
     Widget searchBar() {
@@ -238,7 +279,7 @@ class _SearchPageState extends State<SearchPage> {
                       Expanded(
                           child: TextFormField(
                         controller: searchController,
-                        autofocus: true,
+                        // autofocus: true,
                         cursorColor: greenColor,
                         style: blackTextStyle.copyWith(fontWeight: medium),
                         decoration: InputDecoration.collapsed(
@@ -333,65 +374,76 @@ class _SearchPageState extends State<SearchPage> {
         return Scaffold(
           backgroundColor: whiteColor,
           body: BlocBuilder<PlaceCubit, PlaceState>(
-            builder: (context, statePlace) {
-              if (statePlace is PlaceSuccess) {
-                List<PlaceModel> approvedPlaces = statePlace.places
-                    .where((p) => p.status == 'approved')
-                    .toList();
-                return CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      automaticallyImplyLeading: false,
-                      floating: true,
-                      backgroundColor: whiteColor,
-                      elevation: 0,
-                      toolbarHeight: 70.0,
-                      title: searchBar(),
-                    ),
-                    SliverPadding(
-                        padding: const EdgeInsets.all(16.0),
-                        sliver: SliverToBoxAdapter(
-                          child: title(),
-                        )),
-                    !isShowGrid
-                        ? listView(statePlace.places)
-                        : gridView(approvedPlaces),
-                    const SliverPadding(padding: EdgeInsets.only(bottom: 26.0)),
-                    SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              builder: (context, statePlace) {
+            // if (statePlace is PlaceSuccess) {
+            // List<PlaceModel> approvedPlaces = statePlace.places
+            //     .where((p) => p.status == 'approved')
+            //     .toList();
+
+            List<Map<dynamic, dynamic>> sortPlaces = statePlace is PlaceSuccess
+                ? sortByDistance(statePlace.places)
+                : [{}];
+            return Skeletonizer(
+              enabled: statePlace is PlaceInitial || statePlace is PlaceLoading,
+              child: CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    automaticallyImplyLeading: false,
+                    floating: true,
+                    backgroundColor: whiteColor,
+                    elevation: 0,
+                    toolbarHeight: 70.0,
+                    title: searchBar(),
+                  ),
+                  SliverPadding(
+                      padding: const EdgeInsets.all(16.0),
                       sliver: SliverToBoxAdapter(
-                          child: _bannerAd != null
-                              ? SizedBox(
-                                  width: _bannerAd!.size.width.toDouble(),
-                                  height: _bannerAd!.size.height.toDouble(),
-                                  child: AdWidget(ad: _bannerAd!),
-                                )
-                              : const SizedBox()),
-                    ),
-                  ],
-                );
-              }
-              return Padding(
-                  padding:
-                      const EdgeInsets.only(top: 24.0, left: 16.0, right: 16.0),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: searchBar(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
                         child: title(),
-                      ),
-                      skeletonList(),
-                      skeletonList(),
-                      skeletonList(),
-                      skeletonList(),
-                    ],
-                  ));
-            },
-          ),
+                      )),
+                  !isShowGrid
+                      ? listView(
+                          sortPlaces,
+                          statePlace is PlaceInitial ||
+                              statePlace is PlaceLoading,
+                          widget.position == null)
+                      : gridView(sortPlaces),
+                  const SliverPadding(padding: EdgeInsets.only(bottom: 26.0)),
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    sliver: SliverToBoxAdapter(
+                        child: _bannerAd != null
+                            ? SizedBox(
+                                width: _bannerAd!.size.width.toDouble(),
+                                height: _bannerAd!.size.height.toDouble(),
+                                child: AdWidget(ad: _bannerAd!),
+                              )
+                            : const SizedBox()),
+                  ),
+                ],
+              ),
+            );
+          }
+              // return Padding(
+              //     padding:
+              //         const EdgeInsets.only(top: 24.0, left: 16.0, right: 16.0),
+              //     child: Column(
+              //       children: [
+              //         Padding(
+              //           padding: const EdgeInsets.symmetric(vertical: 16.0),
+              //           child: searchBar(),
+              //         ),
+              //         Padding(
+              //           padding: const EdgeInsets.symmetric(vertical: 16.0),
+              //           child: title(),
+              //         ),
+              //         skeletonList(),
+              //         skeletonList(),
+              //         skeletonList(),
+              //         skeletonList(),
+              //       ],
+              //     ));
+              // },
+              ),
         );
       }
 

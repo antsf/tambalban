@@ -8,7 +8,7 @@ class PlaceModel extends Equatable {
   final String phoneNumber;
   final double latitude;
   final double longitude;
-  final List vehicle;
+  final List vehicles;
   final bool homeService;
   final String services;
   final String status;
@@ -24,7 +24,7 @@ class PlaceModel extends Equatable {
     this.phoneNumber = '',
     this.latitude = 0.0,
     this.longitude = 0.0,
-    this.vehicle = const [],
+    this.vehicles = const [],
     this.homeService = true,
     this.services = '',
     this.status = '',
@@ -42,7 +42,7 @@ class PlaceModel extends Equatable {
         phoneNumber: json['phoneNumber'],
         latitude: json['latitude'],
         longitude: json['longitude'],
-        vehicle: json['vehicle'],
+        vehicles: json['vehicles'],
         homeService: json['homeService'],
         services: json['services'],
         status: json['status'],
@@ -59,7 +59,7 @@ class PlaceModel extends Equatable {
         'phoneNumber': phoneNumber,
         'latitude': latitude,
         'longitude': longitude,
-        'vehicle': vehicle,
+        'vehicles': vehicles,
         'homeService': homeService,
         'services': services,
         'status': status,
@@ -77,7 +77,7 @@ class PlaceModel extends Equatable {
         phoneNumber,
         latitude,
         longitude,
-        vehicle,
+        vehicles,
         homeService,
         services,
         status,

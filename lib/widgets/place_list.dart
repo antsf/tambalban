@@ -19,7 +19,8 @@ class _PlaceListState extends State<PlaceList> {
       child: Container(
         margin: const EdgeInsets.only(bottom: 12.0),
         width: double.infinity,
-        constraints: const BoxConstraints(minHeight: 70.0),
+        constraints: const BoxConstraints(minHeight: 75.0),
+        // height: 75.0,
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
               color: greenColor.withOpacity(0.2),
@@ -31,7 +32,8 @@ class _PlaceListState extends State<PlaceList> {
           children: [
             Expanded(
               child: Container(
-                constraints: const BoxConstraints(minHeight: 70.0),
+                constraints: const BoxConstraints(minHeight: 75.0),
+                // height: ,
                 decoration: BoxDecoration(
                     borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(8.0),
@@ -78,19 +80,24 @@ class _PlaceListState extends State<PlaceList> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Icon(Icons.watch_later_outlined,
-                                  size: 14.0, color: greenColor),
-                              const SizedBox(
-                                width: 4.0,
-                              ),
-                              Text(
-                                widget.place['items'].openTime,
-                                style: grayTextStyle.copyWith(
-                                    fontSize: 10.0, color: greenColor),
-                              )
-                            ],
+                          Flexible(
+                            child: Row(
+                              children: [
+                                Icon(Icons.watch_later_outlined,
+                                    size: 14.0, color: greenColor),
+                                const SizedBox(
+                                  width: 4.0,
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    widget.place['items'].openTime,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: grayTextStyle.copyWith(
+                                        fontSize: 10.0, color: greenColor),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                           Row(
                             children: [
@@ -101,6 +108,7 @@ class _PlaceListState extends State<PlaceList> {
                               ),
                               Text(
                                   '${widget.place['distance'].toStringAsFixed(2)} km',
+                                  overflow: TextOverflow.ellipsis,
                                   style: grayTextStyle.copyWith(
                                     fontSize: 10.0,
                                   ))

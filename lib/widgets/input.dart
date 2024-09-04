@@ -7,14 +7,14 @@ class Input extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType keyboardType;
   final String hintText;
-  final String helperText;
+  final String? helperText;
   final void Function(String) onChange;
   const Input(
       {super.key,
       required this.text,
       required this.controller,
       required this.hintText,
-      required this.helperText,
+      this.helperText,
       required this.onChange,
       this.keyboardType = TextInputType.text});
 
@@ -36,29 +36,40 @@ class Input extends StatelessWidget {
               textCapitalization: TextCapitalization.words,
               onChanged: onChange,
               keyboardType: keyboardType,
+              textInputAction: TextInputAction.next,
               // toolbarOptions: const ToolbarOptions(
               //     copy: true, cut: true, paste: true, selectAll: true),
               decoration: InputDecoration(
                   hintText: hintText,
                   hintStyle:
                       grayTextStyle.copyWith(fontSize: 14.0, fontWeight: light),
+                  errorText: helperText,
+                  errorStyle: blackTextStyle.copyWith(
+                      color: Colors.red, fontSize: 12.0),
                   border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(width: 1, color: grayColor)),
+                  enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       borderSide: BorderSide(width: 1, color: grayColor)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       borderSide: BorderSide(width: 1, color: greenColor)),
+                  errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide:
+                          const BorderSide(width: 1, color: Colors.red)),
                   contentPadding: const EdgeInsets.symmetric(
                       vertical: 8.0, horizontal: 16.0)),
             ),
-            const SizedBox(
-              height: 4.0,
-            ),
-            helperText.isNotEmpty
-                ? Text(helperText,
-                    style: blackTextStyle.copyWith(
-                        color: Colors.red, fontSize: 12.0))
-                : const SizedBox(),
+            // const SizedBox(
+            //   height: 4.0,
+            // ),
+            // helperText.isNotEmpty
+            //     ? Text(helperText,
+            //         style: blackTextStyle.copyWith(
+            //             color: Colors.red, fontSize: 12.0))
+            //     : const SizedBox(),
           ],
         ));
   }

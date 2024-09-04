@@ -161,9 +161,10 @@ class _StartedPageState extends State<StartedPage> {
                   child: Text(
                     'Tambah tambal ban',
                     style: whiteTextStyle.copyWith(
-                        fontSize: 16.0,
-                        fontWeight: light,
-                        decoration: TextDecoration.underline),
+                      fontSize: 16.0,
+                      fontWeight: light,
+                      // decoration: TextDecoration.underline
+                    ),
                   ),
                 )
               ],

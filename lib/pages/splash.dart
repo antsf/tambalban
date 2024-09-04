@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+// import 'package:in_app_update/in_app_update.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../theme.dart';
@@ -13,14 +14,26 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  void loadPermission() async {
-    late bool hasPermission;
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      hasPermission = prefs.getBool('PERMISSION_LOCATION') ?? false;
-    });
+  // AppUpdateInfo? _updateInfo;
+  // Future<void> checkForUpdate() async {
+  //   InAppUpdate.checkForUpdate().then((info) {
+  //     if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+  //       InAppUpdate.performImmediateUpdate();
+  //     }
+  //     // setState(() {
+  //     //   _updateInfo = info;
+  //     // });
+  //   });
+  // }
 
-    Timer(const Duration(milliseconds: 3000), () {
+  void loadPermission() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    bool hasPermission = prefs.getBool('PERMISSION_LOCATION') ?? false;
+    // setState(() {
+    // });
+
+    Future.delayed(const Duration(milliseconds: 3000), () {
       if (hasPermission) {
         Navigator.pushNamedAndRemoveUntil(
           context,
@@ -40,6 +53,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     loadPermission();
+    // checkForUpdate();
     super.initState();
   }
 

@@ -32,15 +32,15 @@ class _AddPlaceState extends State<AddPlace> {
   Position? position;
   bool homeServiceSelected = false;
 
-  String helperTextImage = '';
-  String helperTextName = '';
-  String helperTextAddress = '';
-  String helperTextOpenTime = '';
-  String helperTextPhoneNumber = '';
-  String helperTextLatitude = '';
-  String helperTextLongitude = '';
-  String helperTextVehicle = '';
-  String helperTextServices = '';
+  String? helperTextImage;
+  String? helperTextName;
+  String? helperTextAddress;
+  String? helperTextOpenTime;
+  String? helperTextPhoneNumber;
+  String? helperTextLatitude;
+  String? helperTextLongitude;
+  String? helperTextVehicle;
+  String? helperTextServices;
   final TextEditingController nameController = TextEditingController(text: '');
   final TextEditingController addressController =
       TextEditingController(text: '');
@@ -68,8 +68,8 @@ class _AddPlaceState extends State<AddPlace> {
       latitudeController.text = position!.latitude.toString();
       longitudeController.text = position!.longitude.toString();
       isLoading = false;
-      helperTextLatitude = '';
-      helperTextLongitude = '';
+      helperTextLatitude = null;
+      helperTextLongitude = null;
     });
   }
 
@@ -83,7 +83,7 @@ class _AddPlaceState extends State<AddPlace> {
       if (pickedImage != null) {
         setState(() {
           image = File(pickedImage.path);
-          helperTextImage = '';
+          helperTextImage = null;
         });
       }
     } catch (e) {
@@ -97,7 +97,7 @@ class _AddPlaceState extends State<AddPlace> {
     if (imageGallery != null) {
       setState(() {
         image = File(imageGallery.path);
-        helperTextImage = '';
+        helperTextImage = null;
       });
     }
   }
@@ -120,6 +120,82 @@ class _AddPlaceState extends State<AddPlace> {
         )).load();
   }
 
+  void _pickImage(context) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: ((builder) {
+          return Container(
+            // height: 180.0,
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.all(16.0),
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10))),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Pilih Gambar',
+                  style: grayTextStyle,
+                  textAlign: TextAlign.center,
+                ),
+                const Divider(),
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _openCamera();
+                  },
+                  height: 40.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.camera_alt_outlined,
+                        color: greenColor,
+                      ),
+                      const SizedBox(
+                        width: 6.0,
+                      ),
+                      Text(
+                        'Buka Kamera',
+                        style: blackTextStyle,
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(),
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _openGalley();
+                  },
+                  height: 40.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.image_outlined,
+                        color: greenColor,
+                      ),
+                      const SizedBox(
+                        width: 6.0,
+                      ),
+                      Text(
+                        'Ambil dari Galeri',
+                        style: blackTextStyle,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }));
+  }
+
   @override
   void initState() {
     _initBannerAd();
@@ -138,124 +214,76 @@ class _AddPlaceState extends State<AddPlace> {
               const SizedBox(
                 height: 6.0,
               ),
-              Stack(
-                children: [
-                  ClipRRect(
+              // Stack(
+              //   children: [
+              //     ClipRRect(
+              //       borderRadius: BorderRadius.circular(8.0),
+              //       child: image != null
+              //           ? Image.file(
+              //               image!,
+              //               height: 170.0,
+              //               width: double.infinity,
+              //               fit: BoxFit.cover,
+              //               semanticLabel: 'Foto tambal ban',
+              //             )
+              //           : Image.asset(
+              //               'assets/image-default.png',
+              //               height: 170.0,
+              //               width: double.infinity,
+              //               fit: BoxFit.cover,
+              //               semanticLabel: 'Foto default',
+              //             ),
+              //     ),
+              Container(
+                width: double.infinity,
+                height: 170.0,
+                // padding: EdgeInsets.symmetric(
+                //     vertical: 65.0,
+                //     horizontal: (MediaQuery.of(context).size.width / 2) - 70.0),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: whiteColor.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(8.0),
-                    child: image != null
-                        ? Image.file(
-                            image!,
-                            height: 170.0,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                            semanticLabel: 'Foto tambal ban',
-                          )
-                        : Image.asset(
-                            'assets/image-default.png',
-                            height: 170.0,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                            semanticLabel: 'Foto default',
-                          ),
+                    border: Border.all(
+                        color: helperTextImage != null
+                            ? Colors.red
+                            : Colors.transparent),
+                    image: DecorationImage(
+                      image: image != null
+                          ? FileImage(
+                              image!,
+                              // height: 170.0,
+                              // width: double.infinity,
+                              // fit: BoxFit.cover,
+                              // semanticLabel: 'Foto tambal ban',
+                            )
+                          : const AssetImage(
+                              'assets/image-default.png',
+                              // height: 170.0,
+                              // width: double.infinity,
+                              // fit: BoxFit.cover,
+                              // semanticLabel: 'Foto default',
+                            ) as ImageProvider,
+                      fit: BoxFit.cover,
+                    )),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: greenColor,
                   ),
-                  Container(
-                    width: double.infinity,
-                    height: 170.0,
-                    padding: EdgeInsets.symmetric(
-                        vertical: 65.0,
-                        horizontal:
-                            (MediaQuery.of(context).size.width / 2) - 70.0),
-                    decoration: BoxDecoration(
-                      color: whiteColor.withOpacity(0.3),
-                    ),
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: greenColor,
-                      ),
-                      onPressed: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: ((builder) {
-                              return Container(
-                                height: 180.0,
-                                width: MediaQuery.of(context).size.width,
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Pilih Gambar',
-                                      style: grayTextStyle,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    const Divider(),
-                                    MaterialButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        _openCamera();
-                                      },
-                                      height: 40.0,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.camera_alt_outlined,
-                                            color: greenColor,
-                                          ),
-                                          const SizedBox(
-                                            width: 6.0,
-                                          ),
-                                          Text(
-                                            'Buka Kamera',
-                                            style: blackTextStyle,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const Divider(),
-                                    MaterialButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        _openGalley();
-                                      },
-                                      height: 40.0,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.image_outlined,
-                                            color: greenColor,
-                                          ),
-                                          const SizedBox(
-                                            width: 6.0,
-                                          ),
-                                          Text(
-                                            'Ambil dari Galeri',
-                                            style: blackTextStyle,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }));
-                      },
-                      child: Text(
-                        'Pilih Gambar',
-                        style: whiteTextStyle.copyWith(fontSize: 12.0),
-                      ),
-                    ),
+                  onPressed: () => _pickImage(context),
+                  child: Text(
+                    'Pilih Gambar',
+                    style: whiteTextStyle.copyWith(fontSize: 12.0),
                   ),
-                ],
+                ),
               ),
+              //   ],
+              // ),
               const SizedBox(
                 height: 4.0,
               ),
-              helperTextImage.isNotEmpty
-                  ? Text(helperTextImage,
+              helperTextImage != null
+                  ? Text(helperTextImage ?? '',
                       style: blackTextStyle.copyWith(
                           color: Colors.red, fontSize: 12.0))
                   : const SizedBox(),
@@ -270,7 +298,7 @@ class _AddPlaceState extends State<AddPlace> {
           hintText: 'contoh: Tambal Ban Sentosa',
           helperText: helperTextName,
           onChange: (text) => setState(() {
-                helperTextName = '';
+                helperTextName = null;
               }));
     }
 
@@ -282,7 +310,7 @@ class _AddPlaceState extends State<AddPlace> {
           hintText: 'contoh: Jalan Jend. Sudirman',
           helperText: helperTextAddress,
           onChange: (text) => setState(() {
-                helperTextAddress = '';
+                helperTextAddress = null;
               }));
     }
 
@@ -293,7 +321,7 @@ class _AddPlaceState extends State<AddPlace> {
           hintText: 'contoh: 09:00 - 17:00',
           helperText: helperTextOpenTime,
           onChange: (text) => setState(() {
-                helperTextOpenTime = '';
+                helperTextOpenTime = null;
               }));
     }
 
@@ -305,7 +333,7 @@ class _AddPlaceState extends State<AddPlace> {
           hintText: 'contoh: +62813xxx',
           helperText: helperTextPhoneNumber,
           onChange: (text) => setState(() {
-                helperTextPhoneNumber = '';
+                helperTextPhoneNumber = null;
               }));
     }
 
@@ -325,92 +353,107 @@ class _AddPlaceState extends State<AddPlace> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Flexible(
-                        flex: 3,
-                        child: Column(
-                          children: [
-                            TextFormField(
-                              controller: latitudeController,
-                              keyboardType: TextInputType.number,
-                              cursorColor: greenColor,
-                              onChanged: (text) => setState(() {
-                                helperTextLatitude = '';
-                              }),
-                              // toolbarOptions: const ToolbarOptions(
-                              //     copy: true,
-                              //     cut: true,
-                              //     paste: true,
-                              //     selectAll: true),
-                              style: blackTextStyle,
-                              decoration: InputDecoration(
-                                  hintText: 'Latitude',
-                                  hintStyle: grayTextStyle.copyWith(
-                                      fontSize: 14.0, fontWeight: light),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      borderSide: BorderSide(
-                                          width: 1, color: grayColor)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      borderSide: BorderSide(
-                                          width: 1, color: greenColor)),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 10.0)),
-                            ),
-                            const SizedBox(
-                              height: 4.0,
-                            ),
-                            helperTextLatitude.isNotEmpty
-                                ? Text(helperTextLatitude,
-                                    style: blackTextStyle.copyWith(
-                                        color: Colors.red, fontSize: 12.0))
-                                : const SizedBox(),
-                          ],
-                        )),
+                      flex: 3,
+                      // child: Column(
+                      //   children: [
+                      child: TextFormField(
+                        controller: latitudeController,
+                        keyboardType: TextInputType.number,
+                        cursorColor: greenColor,
+                        onChanged: (text) => setState(() {
+                          helperTextLatitude = null;
+                        }),
+                        // toolbarOptions: const ToolbarOptions(
+                        //     copy: true,
+                        //     cut: true,
+                        //     paste: true,
+                        //     selectAll: true),
+                        style: blackTextStyle,
+                        decoration: InputDecoration(
+                            hintText: 'Latitude',
+                            hintStyle: grayTextStyle.copyWith(
+                                fontSize: 14.0, fontWeight: light),
+                            errorText: helperTextLatitude,
+                            errorStyle: blackTextStyle.copyWith(
+                                color: Colors.red, fontSize: 12.0),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide:
+                                    BorderSide(width: 1, color: grayColor)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide:
+                                    BorderSide(width: 1, color: greenColor)),
+                            errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: const BorderSide(
+                                    width: 1, color: Colors.red)),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 10.0)),
+                      ),
+                      //     const SizedBox(
+                      //       height: 4.0,
+                      //     ),
+                      //     helperTextLatitude != null
+                      //         ? Text(helperTextLatitude!,
+                      //             style: blackTextStyle.copyWith(
+                      //                 color: Colors.red, fontSize: 12.0))
+                      //         : const SizedBox(),
+                      //   ],
+                      // )
+                    ),
                     const SizedBox(
                       width: 6.0,
                     ),
                     Flexible(
                       flex: 3,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: longitudeController,
-                            keyboardType: TextInputType.number,
-                            cursorColor: greenColor,
-                            onChanged: (text) => setState(() {
-                              helperTextLongitude = '';
-                            }),
-                            // toolbarOptions: const ToolbarOptions(
-                            //     copy: true,
-                            //     cut: true,
-                            //     paste: true,
-                            //     selectAll: true),
-                            style: blackTextStyle,
-                            decoration: InputDecoration(
-                                hintText: 'Longitude',
-                                hintStyle: grayTextStyle.copyWith(
-                                    fontSize: 14.0, fontWeight: light),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    borderSide:
-                                        BorderSide(width: 1, color: grayColor)),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(
-                                        width: 1, color: greenColor)),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 8.0, horizontal: 10.0)),
-                          ),
-                          const SizedBox(
-                            height: 4.0,
-                          ),
-                          helperTextLongitude.isNotEmpty
-                              ? Text(helperTextLongitude,
-                                  style: blackTextStyle.copyWith(
-                                      color: Colors.red, fontSize: 12.0))
-                              : const SizedBox(),
-                        ],
+                      // child: Column(
+                      //   children: [
+                      child: TextFormField(
+                        controller: longitudeController,
+                        keyboardType: TextInputType.number,
+                        cursorColor: greenColor,
+                        onChanged: (text) => setState(() {
+                          helperTextLongitude = null;
+                        }),
+                        // toolbarOptions: const ToolbarOptions(
+                        //     copy: true,
+                        //     cut: true,
+                        //     paste: true,
+                        //     selectAll: true),
+                        style: blackTextStyle,
+                        decoration: InputDecoration(
+                            hintText: 'Longitude',
+                            hintStyle: grayTextStyle.copyWith(
+                                fontSize: 14.0, fontWeight: light),
+                            errorText: helperTextLongitude,
+                            errorStyle: blackTextStyle.copyWith(
+                                color: Colors.red, fontSize: 12.0),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide:
+                                    BorderSide(width: 1, color: grayColor)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide:
+                                    BorderSide(width: 1, color: greenColor)),
+                            errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: const BorderSide(
+                                    width: 1, color: Colors.red)),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 10.0)),
                       ),
+                      //   const SizedBox(
+                      //     height: 4.0,
+                      //   ),
+                      //   helperTextLongitude != null
+                      //       ? Text(helperTextLongitude!,
+                      //           style: blackTextStyle.copyWith(
+                      //               color: Colors.red, fontSize: 12.0))
+                      //       : const SizedBox(),
+                      // ],
+                      // ),
                     ),
                     const SizedBox(
                       width: 6.0,
@@ -455,7 +498,10 @@ class _AddPlaceState extends State<AddPlace> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: grayColor),
+                    border: Border.all(
+                        width: 1,
+                        color:
+                            helperTextVehicle != null ? Colors.red : grayColor),
                     borderRadius: BorderRadius.circular(8.0)),
                 child: Column(
                   children: [
@@ -465,6 +511,7 @@ class _AddPlaceState extends State<AddPlace> {
                         onChanged: (bool? value) {
                           setState(() {
                             isCheckedBycicle = value!;
+                            helperTextVehicle = null;
                           });
                         }),
                     LabeledCheckbox(
@@ -474,6 +521,7 @@ class _AddPlaceState extends State<AddPlace> {
                         onChanged: (bool? value) {
                           setState(() {
                             isCheckedMotorbike = value!;
+                            helperTextVehicle = null;
                           });
                         }),
                     LabeledCheckbox(
@@ -482,6 +530,7 @@ class _AddPlaceState extends State<AddPlace> {
                         onChanged: (bool? value) {
                           setState(() {
                             isCheckedCar = value!;
+                            helperTextVehicle = null;
                           });
                         }),
                   ],
@@ -490,8 +539,8 @@ class _AddPlaceState extends State<AddPlace> {
               const SizedBox(
                 height: 4.0,
               ),
-              helperTextVehicle.isNotEmpty
-                  ? Text(helperTextVehicle,
+              helperTextVehicle != null
+                  ? Text(helperTextVehicle!,
                       style: blackTextStyle.copyWith(
                           color: Colors.red, fontSize: 12.0))
                   : const SizedBox(),
@@ -547,7 +596,7 @@ class _AddPlaceState extends State<AddPlace> {
           hintText: 'contoh: Ganti ban, Nitrogen, Tubeless',
           helperText: helperTextServices,
           onChange: (text) => setState(() {
-                helperTextServices = '';
+                helperTextServices = null;
               }));
     }
 
@@ -579,12 +628,6 @@ class _AddPlaceState extends State<AddPlace> {
           }
         },
         builder: (context, state) {
-          if (state is PlaceLoading) {
-            return Center(
-                child: CircularProgressIndicator(
-              color: greenColor,
-            ));
-          }
           return MaterialButton(
             color: greenColor,
             shape: RoundedRectangleBorder(
@@ -638,28 +681,40 @@ class _AddPlaceState extends State<AddPlace> {
                   helperTextServices = 'Layanan harus diisi!';
                 });
               }
+              if (imagePath == '' ||
+                  nameController.text.isEmpty ||
+                  addressController.text.isEmpty ||
+                  openTimeController.text.isEmpty ||
+                  phoneNumberController.text.isEmpty ||
+                  latitudeController.text.isEmpty ||
+                  longitudeController.text.isEmpty ||
+                  servicesController.text.isEmpty ||
+                  (!isCheckedBycicle && !isCheckedMotorbike && !isCheckedCar)) {
+                return;
+              }
               final String id =
                   DateTime.now().microsecondsSinceEpoch.toString();
               final String dateNow = DateTime.now().toString();
-              final String fileName = basename(image!.path);
+              final String fileName = basename(image?.path ?? '');
               String fullName = '';
-              String prefixName = nameController.text.substring(0, 6);
-              print(prefixName);
-              if (prefixName.toLowerCase() != 'tambal') {
+              // String prefixName = nameController.text.substring(0, 6);
+              // print(prefixName);
+              if (nameController.text.contains('tambal')) {
                 fullName = 'Tambal Ban ${nameController.text}';
               } else {
                 fullName = nameController.text;
               }
-              List vehicle = [];
+              List vehicles = [];
               if (isCheckedBycicle) {
-                vehicle.add('Sepeda');
+                vehicles.add('Sepeda');
               }
               if (isCheckedMotorbike) {
-                vehicle.add('Motor');
+                vehicles.add('Motor');
               }
               if (isCheckedCar) {
-                vehicle.add('Mobil');
+                vehicles.add('Mobil');
               }
+
               try {
                 PlaceModel place = PlaceModel(
                   id: id,
@@ -669,7 +724,7 @@ class _AddPlaceState extends State<AddPlace> {
                   phoneNumber: phoneNumberController.text,
                   latitude: double.parse(latitudeController.text),
                   longitude: double.parse(longitudeController.text),
-                  vehicle: vehicle,
+                  vehicles: vehicles,
                   homeService: homeServiceSelected,
                   services: servicesController.text,
                   status: 'pending',
@@ -678,25 +733,30 @@ class _AddPlaceState extends State<AddPlace> {
                 );
                 context.read<PlaceCubit>().createPlace(place, image, fileName);
               } catch (err) {
-                print(err);
+                print("err: $err");
               }
             },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.save_outlined,
-                  color: whiteColor,
-                ),
-                const SizedBox(
-                  width: 6.0,
-                ),
-                Text(
-                  'Tambah Data',
-                  style: whiteTextStyle.copyWith(fontSize: 16.0),
-                ),
-              ],
-            ),
+            child: state is PlaceLoading
+                ? Center(
+                    child: CircularProgressIndicator(
+                    color: whiteColor,
+                  ))
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.save_outlined,
+                        color: whiteColor,
+                      ),
+                      const SizedBox(
+                        width: 6.0,
+                      ),
+                      Text(
+                        'Tambah Data',
+                        style: whiteTextStyle.copyWith(fontSize: 16.0),
+                      ),
+                    ],
+                  ),
           );
         },
       );
@@ -718,6 +778,10 @@ class _AddPlaceState extends State<AddPlace> {
                 title: Text(
                   'Tambah Data Tambal Ban',
                   style: whiteTextStyle.copyWith(fontSize: 16.0),
+                ),
+                leading: BackButton(
+                  color: whiteColor,
+                  onPressed: () => Navigator.pop(context),
                 ),
               ),
               SliverToBoxAdapter(

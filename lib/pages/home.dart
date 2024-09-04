@@ -2,10 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:tambal_ban/pages/search_page.dart';
 
 import '../ad_helper.dart';
 import '../cubit/connected_cubit.dart';
@@ -22,15 +26,18 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   bool isLoading = false;
   Position? position;
   double lat = 0, long = 0;
   StreamSubscription<Position>? positionStream;
-  GoogleMapController? mapController;
+  // GoogleMapController? mapController;
+  late final _animatedMapController = AnimatedMapController(vsync: this);
   LatLng center = const LatLng(-6.907731, 109.730173);
   double distanceInMeters = 0.0;
-  Iterable markers = {};
+  // Iterable markers = {};
+  List<AnimatedMarker> markers = [];
   BannerAd? _bannerAd;
 
   _initBannerAd() {
@@ -51,9 +58,9 @@ class _HomePageState extends State<HomePage> {
         )).load();
   }
 
-  void onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
+  // void onMapCreated(GoogleMapController controller) {
+  //   mapController = controller;
+  // }
 
   void getLocation() async {
     position = await Geolocator.getCurrentPosition(
@@ -62,16 +69,16 @@ class _HomePageState extends State<HomePage> {
     lat = position!.latitude;
     long = position!.longitude;
 
-    LocationSettings locationSettings = const LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 100,
-    );
+    // LocationSettings locationSettings = const LocationSettings(
+    //   accuracy: LocationAccuracy.high,
+    //   distanceFilter: 100,
+    // );
 
-    StreamSubscription<Position> positionStream =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((Position position) {});
-    lat = position!.latitude;
-    long = position!.longitude;
+    // StreamSubscription<Position> positionStream =
+    //     Geolocator.getPositionStream(locationSettings: locationSettings)
+    //         .listen((Position position) {});
+    // lat = position!.latitude;
+    // long = position!.longitude;
 
     setState(() {
       if (position == null) {
@@ -81,36 +88,87 @@ class _HomePageState extends State<HomePage> {
       }
     });
 
-    mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-      target: center,
-      zoom: 15.0,
-    )));
+    _animatedMapController.mapController.move(
+      center,
+      13.0,
+    );
+    // mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+    //   target: center,
+    //   zoom: 15.0,
+    // )));
   }
 
   addMarkers(state, bottomSheet) async {
-    List<PlaceModel> places = state.places;
-    var sort = sortByDistance(places);
-    BitmapDescriptor customMarker = await BitmapDescriptor.asset(
-        const ImageConfiguration(), 'assets/custom-mark.png');
-    markers = Iterable.generate(sort.length, (index) {
-      return Marker(
-          markerId: MarkerId(sort[index]['items'].name),
-          position: LatLng(
-            sort[index]['items'].latitude,
-            sort[index]['items'].longitude,
-          ),
-          flat: true,
-          infoWindow: InfoWindow(
-              title: capitalize(sort[index]['items'].name),
-              snippet: sort[index]['items'].openTime,
-              onTap: () {
-                bottomSheet(
-                  state,
-                  index,
-                );
-              }),
-          icon: customMarker);
-    });
+    // List<PlaceModel> places = state.places;
+    // List<PlaceModel> approvedPlaces =
+    //     state.places.where((p) => p.status == 'approved').toList();
+    var sort = sortByDistance(state.places);
+    // BitmapDescriptor customMarker = await BitmapDescriptor.asset(
+    //     const ImageConfiguration(), 'assets/custom-mark.png');
+    markers = List.generate(
+        sort.length,
+        (index) => AnimatedMarker(
+              point: LatLng(
+                sort[index]['items'].latitude,
+                sort[index]['items'].longitude,
+              ),
+              width: 45.0,
+              height: 45.0,
+              builder: (_, animation) {
+                final size = 32.0 * animation.value;
+                return IconButton(
+                    onPressed: () => bottomSheet(
+                          state,
+                          index,
+                        ),
+                    icon: Image.asset(
+                      'assets/custom-mark.png',
+                      width: size,
+                      scale: 1.5,
+                    )
+                    //  Icon(
+                    //   Icons.location_on,
+                    //   size: size,
+                    //   color: Colors.red,
+                    // ),
+                    );
+              },
+            ));
+
+    markers.add(AnimatedMarker(
+      point: center,
+      width: 40.0,
+      height: 40.0,
+      builder: (_, animation) {
+        final size = 32.0 * animation.value;
+        return Icon(
+          Icons.person_pin_circle_rounded,
+          size: size,
+          color: Colors.blue,
+        );
+      },
+    ));
+
+    // markers = Iterable.generate(sort.length, (index) {
+
+    // return Marker(
+    //     markerId: MarkerId(sort[index]['items'].name),
+    //     position: LatLng(
+    //       sort[index]['items'].latitude,
+    //       sort[index]['items'].longitude,
+    //     ),
+    //     flat: true,
+    //     infoWindow: InfoWindow(
+    //         title: capitalize(sort[index]['items'].name),
+    //         snippet: sort[index]['items'].openTime,
+    //         onTap: () {
+    //           bottomSheet(
+    //             state,
+    //             index,
+    //           );
+    //         }),
+    //     icon: customMarker);
+    // });
   }
 
   List<Map> sortByDistance(List<PlaceModel> places) {
@@ -149,8 +207,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Future bottomSheet(state, int index) {
-      List<PlaceModel> places = state.places;
-      var sort = sortByDistance(places);
+      // List<PlaceModel> places = state.places;
+      // var sort = sortByDistance(places);
+      // List<PlaceModel> approvedPlaces =
+      //     state.places.where((p) => p.status == 'approved').toList();
+      var sort = sortByDistance(state.places);
       return showModalBottomSheet(
           context: context,
           builder: (builder) {
@@ -208,6 +269,7 @@ class _HomePageState extends State<HomePage> {
                                 sort[index]['items'].imageUrl,
                                 scale: 1.4,
                                 fit: BoxFit.cover,
+                                width: double.infinity,
                                 semanticLabel: sort[index]['items'].name,
                               ),
                             ),
@@ -348,16 +410,56 @@ class _HomePageState extends State<HomePage> {
                 )));
           } else if (state is PlaceSuccess) {
             addMarkers(state, bottomSheet);
+            // getLocation();
           }
-          return SizedBox(
-            child: GoogleMap(
-              myLocationEnabled: true,
-              onMapCreated: onMapCreated,
-              initialCameraPosition: CameraPosition(target: center, zoom: 12.0),
-              markers: Set.from(markers),
-              mapType: MapType.normal,
+
+          return FlutterMap(
+            mapController: _animatedMapController.mapController,
+            options: MapOptions(
+              initialCenter: center, // Center the map over London
+              initialZoom: 10,
+              // onMapReady: () {
+              //   _animatedMapController
+              //       .mapController.mapEventStream
+              //       .listen((evt) {
+              //     _animatedMapController.mapController
+              //         .move(center, 8);
+              //   }); // for example
+              //   // Any* other `MapController` dependent methods
+              // },
             ),
+            children: [
+              TileLayer(
+                // Display map tiles from any source
+                urlTemplate:
+                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // OSMF's Tile Server
+                userAgentPackageName: 'com.example.app',
+                maxNativeZoom:
+                    19, // Scale tiles when the server doesn't support higher zoom levels
+                // And many more recommended properties!
+              ),
+              const RichAttributionWidget(
+                // Include a stylish prebuilt attribution widget that meets all requirments
+                attributions: [
+                  TextSourceAttribution(
+                    'OpenStreetMap contributors',
+                    // onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')), // (external)
+                  ),
+                  // Also add images...
+                ],
+              ),
+              AnimatedMarkerLayer(markers: markers),
+            ],
           );
+          // return SizedBox(
+          // child: GoogleMap(
+          //   myLocationEnabled: true,
+          //   onMapCreated: onMapCreated,
+          //   initialCameraPosition: CameraPosition(target: center, zoom: 12.0),
+          //   markers: Set.from(markers),
+          //   mapType: MapType.normal,
+          // ),
+          // );
         },
       );
     }
@@ -365,7 +467,14 @@ class _HomePageState extends State<HomePage> {
     Widget searchInput() {
       return InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/search');
+          // Navigator.pushNamed(context, '/search');
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchPage(
+                  position: position,
+                ),
+              ));
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -436,7 +545,7 @@ class _HomePageState extends State<HomePage> {
                         height: 16.0,
                       ),
                       Text(
-                        'Tambal ban terdekat',
+                        'Tambal Ban Terdekat',
                         style: blackTextStyle.copyWith(fontSize: 18.0),
                       ),
                       BlocConsumer<PlaceCubit, PlaceState>(
@@ -450,7 +559,7 @@ class _HomePageState extends State<HomePage> {
                               )));
                         }
                       }, builder: (context, state) {
-                        if (state is PlaceLoading) {
+                        if (state is PlaceLoading || position == null) {
                           return Container(
                               padding: const EdgeInsets.all(24),
                               child: Shimmer.fromColors(
@@ -481,10 +590,10 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ));
                         } else if (state is PlaceSuccess) {
-                          List<PlaceModel> approvedPlaces = state.places
-                              .where((p) => p.status == 'approved')
-                              .toList();
-                          var sort = sortByDistance(approvedPlaces);
+                          // List<PlaceModel> approvedPlaces = state.places
+                          //     .where((p) => p.status == 'approved')
+                          //     .toList();
+                          var sort = sortByDistance(state.places);
                           return sort.isEmpty
                               ? Container(
                                   padding: const EdgeInsets.all(24),
@@ -506,20 +615,30 @@ class _HomePageState extends State<HomePage> {
                                               ? PlaceList(
                                                   sort[index],
                                                   onPressed: () {
-                                                    setState(() {
-                                                      center = LatLng(
+                                                    // setState(() {
+                                                    //   center = LatLng(
+                                                    //       sort[index]['items']
+                                                    //           .latitude,
+                                                    //       sort[index]['items']
+                                                    //           .longitude);
+                                                    // });
+                                                    // mapController?.animateCamera(
+                                                    //     CameraUpdate
+                                                    //         .newCameraPosition(
+                                                    //             CameraPosition(
+                                                    //   target: center,
+                                                    //   zoom: 14.0,
+                                                    // )));
+                                                    _animatedMapController
+                                                        .mapController
+                                                        .move(
+                                                      LatLng(
                                                           sort[index]['items']
                                                               .latitude,
                                                           sort[index]['items']
-                                                              .longitude);
-                                                    });
-                                                    mapController?.animateCamera(
-                                                        CameraUpdate
-                                                            .newCameraPosition(
-                                                                CameraPosition(
-                                                      target: center,
-                                                      zoom: 14.0,
-                                                    )));
+                                                              .longitude),
+                                                      13.0,
+                                                    );
                                                     bottomSheet(state, index);
                                                   },
                                                 )

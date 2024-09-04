@@ -84,10 +84,14 @@ class _PlaceGridState extends State<PlaceGrid> {
                     const SizedBox(
                       width: 4.0,
                     ),
-                    Text(
-                      widget.place['items'].openTime,
-                      style: grayTextStyle.copyWith(
-                          fontSize: 10.0, color: greenColor),
+                    Flexible(
+                      child: Text(
+                        widget.place['items'].openTime,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: grayTextStyle.copyWith(
+                            fontSize: 10.0, color: greenColor),
+                      ),
                     )
                   ],
                 ),

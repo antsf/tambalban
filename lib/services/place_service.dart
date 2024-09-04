@@ -23,7 +23,7 @@ class PlaceService {
         'phoneNumber': place.phoneNumber,
         'latitude': place.latitude,
         'longitude': place.longitude,
-        'vehicle': place.vehicle,
+        'vehicles': place.vehicles,
         'homeService': place.homeService,
         'services': place.services,
         'status': place.status,
@@ -38,9 +38,11 @@ class PlaceService {
 
   Future<List<PlaceModel>> fetchPlaces() async {
     try {
-      final QuerySnapshot results = await _placeReference.get();
+      final QuerySnapshot results =
+          await _placeReference.where('status', isEqualTo: 'approved').get();
 
       List<PlaceModel> places = results.docs.map((e) {
+        print('results: ${e.data()}');
         return PlaceModel.fromJson(e.id, e.data() as Map<String, dynamic>);
       }).toList();
       print('results: $results');
