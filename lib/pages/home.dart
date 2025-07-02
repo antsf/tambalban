@@ -17,6 +17,7 @@ import '../cubit/place_cubit.dart';
 import '../model/place_model.dart';
 import '../theme.dart';
 import '../widgets/place_list.dart';
+import '../widgets/common/app_header.dart'; // Import the AppHeader
 import 'detail.dart';
 
 class HomePage extends StatefulWidget {
@@ -716,6 +717,7 @@ class _HomePageState extends State<HomePage>
 
     return Scaffold(
       backgroundColor: whiteColor,
+      appBar: const AppHeader(), // Use the new AppHeader
       body: BlocBuilder<ConnectedCubit, ConnectedState>(
         builder: (context, state) {
           if ((state is ConnectedSuccess &&
@@ -724,26 +726,31 @@ class _HomePageState extends State<HomePage>
                   state.connectionType == ConnectionType.mobile)) {
             return Stack(
               children: [
-                map(),
-                Container(
-                  width: double.infinity,
-                  height: 180,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                        greenColor,
-                        greenColor.withOpacity(0.5),
-                        greenColor.withOpacity(0),
-                      ])),
+                // Map takes full space initially
+                Positioned.fill(child: map()),
+
+                // Search bar positioned below AppHeader area.
+                // This might need careful positioning depending on AppHeader's actual height and desired overlap.
+                // For a simple layout, we can put it in a Column with the map,
+                // but Stack is used here, so let's try to keep it.
+                // The previous searchInput was absolutely positioned by its margin.
+                // We'll wrap it and position it.
+                Positioned(
+                  top: 10, // Adjust this based on desired spacing from AppHeader
+                  left: 0,
+                  right: 0,
+                  child: searchInput(), // searchInput() itself has padding
                 ),
-                searchInput(),
+
+                // nearestPlace (DraggableScrollableSheet) will overlay the map from the bottom
                 nearestPlace(),
+
                 // display bannerAds when ready
+                // Ensure banner ad does not overlap AppHeader or critical UI
                 if (_bannerAd != null)
-                  Align(
-                    alignment: Alignment.topCenter,
+                  Positioned(
+                    top: MediaQuery.of(context).padding.top + kToolbarHeight + 10, // Below AppHeader + search
+                    left: (MediaQuery.of(context).size.width - _bannerAd!.size.width.toDouble()) / 2, // Centered
                     child: SizedBox(
                       width: _bannerAd!.size.width.toDouble(),
                       height: _bannerAd!.size.height.toDouble(),
@@ -775,12 +782,13 @@ class _HomePageState extends State<HomePage>
               ],
             ));
           }
+          // Loading state for connectivity
           return Center(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircularProgressIndicator(
-                color: blackColor,
+                color: blackColor, // Consider using greenColor to match theme
               ),
               const SizedBox(
                 height: 12.0,
@@ -805,4 +813,51 @@ class _HomePageState extends State<HomePage>
       ),
     );
   }
+
+  // Adjust searchInput to remove the top margin that was for placing it from screen top
+  Widget searchInput() {
+      return InkWell(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchPage(
+                  position: position,
+                ),
+              ));
+        },
+        child: Padding(
+          // Horizontal padding remains, top margin is removed/handled by Positioned widget
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+          child: Container(
+            // margin: const EdgeInsets.only(top: 100.0), // REMOVED: This was the large top margin
+            height: 50.0,
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30.0),
+                boxShadow: [
+                  BoxShadow(
+                      // Adjusted shadow to be less pronounced if needed
+                      color: blackColor.withOpacity(0.15),
+                      offset: const Offset(0, 4), // Softer offset
+                      blurRadius: 10.0) // Softer blur
+                ]),
+            child: Row(
+              children: [
+                Expanded(
+                    child: Text('Cari tempat tambal ban...',
+                        style: grayTextStyle.copyWith(
+                            fontSize: 16.0, fontWeight: light))),
+                Icon(
+                  Icons.search_outlined,
+                  color: blackColor,
+                  size: 28.0,
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 }

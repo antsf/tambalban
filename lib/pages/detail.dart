@@ -169,9 +169,18 @@ class _DetailPageState extends State<DetailPage>
 
   @override
   Widget build(BuildContext context) {
-    String name = widget.place['items'].name;
-    String phoneNumber = widget.place['items'].phoneNumber;
-    List<dynamic> vehicles = widget.place['items'].vehicles;
+    // final PlaceModel placeModel = widget.place['items'] as PlaceModel; // Assuming widget.place['items'] is indeed a PlaceModel
+    // It's safer to cast, or ensure the type from the source.
+    // For now, assuming it's PlaceModel based on previous usage.
+    // If widget.place['items'] is Map, then we need PlaceModel.fromMap(widget.place['items'])
+    // From SearchPage, widget.place is Map<dynamic,dynamic> where 'items' is PlaceModel
+    final PlaceModel placeModel = widget.place['items'] as PlaceModel;
+    final double distance = widget.place['distance'] as double? ?? -1.0;
+
+
+    // String name = placeModel.name; // Use placeModel directly
+    // String phoneNumber = placeModel.phoneNumber;
+    // List<dynamic> vehicles = placeModel.vehicles; // This is List<String> now in PlaceModel
 
     return BlocBuilder<ConnectedCubit, ConnectedState>(
         builder: (context, state) {
@@ -185,15 +194,23 @@ class _DetailPageState extends State<DetailPage>
               slivers: [
                 SliverAppBar(
                     expandedHeight: 300.0,
-                    // collapsedHeight: MediaQuery.of(context).size.height * 0.2,
                     backgroundColor: greenColor,
-                    // floating: true,
-                    // snap: true,
                     pinned: true,
                     leading: BackButton(
                       color: whiteColor,
                       onPressed: () => Navigator.pop(context),
                     ),
+                    actions: [
+                      IconButton(
+                        icon: Icon(Icons.favorite_border, color: whiteColor), // Save icon (can be Icons.favorite for saved state)
+                        onPressed: () {
+                          // TODO: Implement save functionality
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Save feature not implemented yet.')),
+                          );
+                        },
+                      ),
+                    ],
                     flexibleSpace: LayoutBuilder(
                       builder: (context, constraints) {
                         top = constraints.biggest.height;
@@ -205,7 +222,7 @@ class _DetailPageState extends State<DetailPage>
                                 decoration: BoxDecoration(
                                     image: DecorationImage(
                                         image: NetworkImage(
-                                          widget.place['items'].imageUrl,
+                                          placeModel.imageUrl, // Use placeModel
                                         ),
                                         fit: BoxFit.cover)),
                               ),
@@ -252,8 +269,7 @@ class _DetailPageState extends State<DetailPage>
                                               ),
                                               Flexible(
                                                 child: Text(
-                                                  widget
-                                                      .place['items'].openTime,
+                                                  placeModel.openTime, // Use placeModel
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   maxLines: 1,
@@ -280,7 +296,7 @@ class _DetailPageState extends State<DetailPage>
                                                 width: 4.0,
                                               ),
                                               Text(
-                                                  '${widget.place['distance'].toStringAsFixed(2)} km',
+                                                  distance >= 0 ? '${distance.toStringAsFixed(2)} km' : 'N/A', // Use distance
                                                   style:
                                                       whiteTextStyle.copyWith(
                                                     fontSize: 9.0,
@@ -302,7 +318,7 @@ class _DetailPageState extends State<DetailPage>
                                                 kToolbarHeight
                                         ? 0
                                         : 32.0),
-                                child: Text(capitalize(name),
+                                child: Text(capitalize(placeModel.name), // Use placeModel
                                     style: whiteTextStyle.copyWith(
                                         fontSize: 16.0, fontWeight: semiBold),
                                     overflow: TextOverflow.ellipsis,
@@ -319,30 +335,126 @@ class _DetailPageState extends State<DetailPage>
                       },
                     )),
                 SliverToBoxAdapter(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Padding( // Changed Container to Padding for semantic correctness
+                    padding: const EdgeInsets.all(16.0), // Consistent padding
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start, // Align content to start
                       children: [
-                        Container(
-                            width: double.infinity,
-                            margin: const EdgeInsets.only(
-                              top: 26.0,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Kendaraan:',
-                                    style: blackTextStyle.copyWith(
-                                        fontSize: 16.0, fontWeight: semiBold)),
-                                SizedBox(
-                                    width: double.infinity,
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: vehicles.map((item) {
+                        // WorkshopInfo section (Name, Rating, Tags, Address, Hours)
+                        _buildWorkshopInfoSection(placeModel, distance),
+                        const SizedBox(height: 24),
+
+                        // BadgeRow section
+                        _buildBadgeRow(placeModel),
+                        const SizedBox(height: 24),
+
+                        // "Kendaraan" section (already exists, can be part of WorkshopInfo or BadgeRow)
+                        Text('Kendaraan:', style: blackTextStyle.copyWith(fontSize: 16.0, fontWeight: semiBold)),
+                        const SizedBox(height: 10.0),
+                        Wrap( // Use Wrap for better layout if many vehicles
+                            spacing: 10.0,
+                            runSpacing: 10.0,
+                            children: placeModel.vehicles.map((item) { // item is String
                                           return Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 10.0, right: 10.0),
+                                            padding: const EdgeInsets.all(10.0),
+                                            width: 90.0, // Consider dynamic width or Chip widget
+                                            decoration: BoxDecoration(
+                                                color: const Color(0xffffffff),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: greenColor.withOpacity(0.4),
+                                                    blurRadius: 12.0,
+                                                    offset: const Offset(0, 4.0),
+                                                  )
+                                                ],
+                                                borderRadius: BorderRadius.circular(10.0)),
+                                            child: Column(
+                                              children: [
+                                                Image.asset(
+                                                  'assets/$item.png', // Assumes item matches asset name (e.g. "Mobil.png")
+                                                  width: 32.0,
+                                                  semanticLabel: 'kendaraan $item',
+                                                  errorBuilder: (context, error, stackTrace) => Icon(Icons.directions_car, size: 32), // Fallback icon
+                                                ),
+                                                const SizedBox(height: 4.0),
+                                                Text(item, style: blackTextStyle.copyWith(fontSize: 12.0, fontWeight: medium)),
+                                              ],
+                                            ),
+                                          );
+                                        }).toList()),
+                        const SizedBox(height: 24.0),
+
+                        // "Terima Panggilan" (Home Service) Section
+                        Text('Terima Panggilan:', style: blackTextStyle.copyWith(fontSize: 16.0, fontWeight: semiBold)),
+                        const SizedBox(height: 10.0),
+                        Row(
+                          children: [
+                            Icon(
+                              placeModel.homeService ? Icons.check_box : Icons.check_box_outline_blank, // Use placeModel
+                              color: placeModel.homeService ? greenColor : grayColor,
+                            ),
+                            const SizedBox(width: 8.0),
+                            Text(placeModel.homeService ? 'Ya' : 'Tidak', style: blackTextStyle), // Use placeModel
+                          ],
+                        ),
+                        const SizedBox(height: 24.0),
+
+                        // "Layanan Lain" (Services) Section
+                        Text('Layanan Lain:', style: blackTextStyle.copyWith(fontSize: 16.0, fontWeight: semiBold)),
+                        const SizedBox(height: 10.0),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(Icons.build_circle_outlined, color: greenColor, size: 20),
+                            const SizedBox(width: 8.0),
+                            Expanded(child: Text(placeModel.services.isNotEmpty ? placeModel.services : 'Tidak ada layanan tambahan yang disebutkan.', style: blackTextStyle)), // Use placeModel
+                          ],
+                        ),
+                        const SizedBox(height: 24.0),
+
+                        // Map Preview & External Link
+                        _buildMapSection(context, placeModel),
+                        const SizedBox(height: 24.0),
+
+                        // Action Buttons
+                        _buildActionButtons(context, placeModel),
+                        const SizedBox(height: 80), // Space for FAB or bottom content
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            floatingActionButton: FloatingActionButton.extended(
+              backgroundColor: placeModel.phoneNumber.isNotEmpty && (placeModel.phoneNumber[0] == '0' || placeModel.phoneNumber[0] == '+')
+                  ? greenColor
+                  : grayColor.withOpacity(0.8),
+              shape: const StadiumBorder(),
+              onPressed: placeModel.phoneNumber.isNotEmpty && (placeModel.phoneNumber[0] == '0' || placeModel.phoneNumber[0] == '+')
+                  ? () async {
+                      String currentPhoneNumber = placeModel.phoneNumber;
+                      var firstLetter = currentPhoneNumber[0];
+                      var idPhoneCode = firstLetter == '0'
+                          ? currentPhoneNumber.replaceFirst(firstLetter, '+62')
+                          : currentPhoneNumber;
+                      var urlWhatsapp = "whatsapp://send?phone=$idPhoneCode";
+                      // For testing, can use https link: var urlWhatsapp = "https://wa.me/$idPhoneCode";
+                      if (await canLaunchUrlString(urlWhatsapp)) {
+                        await launchUrlString(urlWhatsapp);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Could not launch WhatsApp for $idPhoneCode')),
+                        );
+                      }
+                    }
+                  : null,
+              label: Text(
+                placeModel.phoneNumber.isNotEmpty ? placeModel.phoneNumber : "No Phone",
+                style: whiteTextStyle,
+              ),
+              icon: Icon(
+                Icons.phone_outlined, // Changed to outlined
                                             padding: const EdgeInsets.all(10.0),
                                             width: 90.0,
                                             decoration: BoxDecoration(
