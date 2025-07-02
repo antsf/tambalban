@@ -40,8 +40,8 @@ dependencies:
   image_picker: ^0.8.5+3
   firebase_core: ^1.18.0
   equatable: ^2.0.3
-  bloc: ^8.0.3
-  flutter_bloc: ^8.0.1
+  # bloc: ^8.0.3 # Removing BLoC as we are moving to Riverpod
+  # flutter_bloc: ^8.0.1 # Removing BLoC as we are moving to Riverpod
   firebase_storage: ^10.2.18
   cloud_firestore: ^3.1.18
   shimmer: ^2.0.0
@@ -51,9 +51,18 @@ dependencies:
   shared_preferences: ^2.0.15
   google_mobile_ads: ^2.0.1
 
+  # Riverpod dependencies
+  flutter_riverpod: ^2.5.1 # Latest version as of my knowledge
+  riverpod_annotation: ^2.3.5 # Latest version as of my knowledge
+
+  # Functional programming
+  dartz: ^0.10.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: ^2.4.9 # Latest version as of my knowledge
+  riverpod_generator: ^2.4.0 # Latest version as of my knowledge
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
