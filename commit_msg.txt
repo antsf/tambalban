@@ -1,0 +1,45 @@
+feat(app): implement core TambalBan Finder application
+
+This commit introduces the complete foundation and core features of the
+TambalBan Finder app. The architecture was specifically designed for
+low-spec hardware (2GB RAM devices) by removing heavy dependencies
+(Retrofit, Room, Gson) in favor of lightweight native Android components.
+
+Key Implementations:
+
+1. Map & Location Engine (OSMDroid)
+- Integrated `osmdroid` and `OSMBonusPack` for Map rendering and Marker Clustering.
+- Implemented viewport-based bounding-box queries to limit map data loading.
+- Optimized map tile caching with strict disk size limits (50MB max).
+
+2. Native Data & Storage Layer
+- Replaced Retrofit and Gson with native `HttpURLConnection` and `org.json`.
+- Built `WorkshopDbHelper` using `SQLiteOpenHelper`.
+- Added localized spatial queries in SQLite using the Pythagorean distance
+  approximation for lightning-fast closest-workshop lookups.
+
+3. Emergency Mode (Priority Feature)
+- Added 'Emergency Mode' Floating Action Button for an instant 1-tap search.
+- Utilizes the SQL-level bounding box and closest-neighbor query to find
+  the nearest workshop instantly without polling all network data.
+- Built a minimal Workshop Detail Activity displaying critical info.
+
+4. Action Intents & Navigation
+- Added native system intents (`IntentUtils`) for one-tap calling (`ACTION_DIAL`).
+- Added smart navigation deep-linking, falling back gracefully:
+  Google Maps -> Waze -> Browser Maps.
+
+5. Contribution Form
+- Implemented `AddWorkshopActivity` with interactive map-pinning to gather
+  user-contributed tire repair workshops.
+- Bound manual JSON mapping to POST requests.
+
+6. App Polish & Low-Spec Optimizations
+- Implemented global `onTrimMemory` strategies in `TambalBanApp` to
+  aggressively clear map caches under OS memory pressure.
+- Migrated build system to Gradle Kotlin DSL (`build.gradle.kts` and
+  `settings.gradle.kts`).
+- Integrated AdMob (Banner & Native ad layouts) with delayed initialization
+  strategies to ensure the core map UI renders without thread contention.
+
+Ref: Specs Phase 1-8 Implementation

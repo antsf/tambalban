@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors -->
+    <color name="primary">#FF5722</color>
+    <color name="primary_variant">#E64A19</color>
+    <color name="primary_dark">#BF360C</color>
+    <color name="primary_light">#FF8A65</color>
+
+    <!-- Secondary Colors -->
+    <color name="secondary">#2196F3</color>
+    <color name="secondary_variant">#1976D2</color>
+
+    <!-- Background & Surface -->
+    <color name="background">#FFFFFF</color>
+    <color name="surface">#F5F5F5</color>
+    <color name="surface_variant">#EEEEEE</color>
+
+    <!-- Text Colors -->
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="on_background">#212121</color>
+    <color name="on_surface">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#9E9E9E</color>
+
+    <!-- Status Colors -->
+    <color name="error">#B00020</color>
+    <color name="on_error">#FFFFFF</color>
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FFC107</color>
+
+    <!-- Map Colors -->
+    <color name="marker_cluster">#FF5722</color>
+    <color name="marker_workshop">#2196F3</color>
+    <color name="user_location">#4CAF50</color>
+
+    <!-- Emergency Button -->
+    <color name="emergency">#D32F2F</color>
+    <color name="emergency_pressed">#B71C1C</color>
+
+    <!-- Rating -->
+    <color name="rating_star">#FFC107</color>
+    <color name="rating_star_empty">#E0E0E0</color>
+
+    <!-- Divider -->
+    <color name="divider">#E0E0E0</color>
+
+    <!-- Ad Banner -->
+    <color name="ad_background">#F5F5F5</color>
+</resources>

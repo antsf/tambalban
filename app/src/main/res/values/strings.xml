@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TambalBan Finder</string>
+
+    <!-- Map Screen -->
+    <string name="title_map">Map</string>
+    <string name="find_nearest">Find Nearest Tambal Ban</string>
+    <string name="emergency_mode">EMERGENCY</string>
+    <string name="loading_workshops">Loading workshops...</string>
+    <string name="no_workshops_found">No workshops found nearby</string>
+    <string name="my_location">My Location</string>
+    <string name="filter_radius">Filter by Radius</string>
+    <string name="radius_1km">1 km</string>
+    <string name="radius_3km">3 km</string>
+    <string name="radius_5km">5 km</string>
+
+    <!-- Workshop Detail -->
+    <string name="workshop_detail">Workshop Details</string>
+    <string name="call">Call</string>
+    <string name="navigate">Navigate</string>
+    <string name="report">Report</string>
+    <string name="distance">Distance</string>
+    <string name="rating">Rating</string>
+    <string name="reviews">reviews</string>
+    <string name="open_24h">Open 24 Hours</string>
+    <string name="open_time">Open: %s</string>
+    <string name="close_time">Close: %s</string>
+    <string name="no_rating">No rating yet</string>
+
+    <!-- Add Workshop -->
+    <string name="add_workshop">Add Workshop</string>
+    <string name="workshop_name">Workshop Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="address">Address</string>
+    <string name="select_location">Select Location on Map</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
+    <string name="submission_success">Workshop submitted successfully!</string>
+    <string name="submission_failed">Failed to submit workshop</string>
+    <string name="fill_required_fields">Please fill in all required fields</string>
+
+    <!-- Location -->
+    <string name="location_permission_required">Location permission is required to find nearby workshops</string>
+    <string name="location_permission_denied">Location permission denied. Please enable it in settings.</string>
+    <string name="enable_location">Enable Location</string>
+    <string name="getting_location">Getting your location...</string>
+    <string name="location_unavailable">Unable to get your location</string>
+
+    <!-- Network -->
+    <string name="network_error">Network error. Please check your connection.</string>
+    <string name="offline_mode">You are offline. Showing cached data.</string>
+    <string name="retry">Retry</string>
+
+    <!-- Emergency Mode -->
+    <string name="emergency_closest">Closest Workshop</string>
+    <string name="emergency_no_workshop">No workshop found within 3km</string>
+    <string name="calling">Calling...</string>
+    <string name="opening_navigation">Opening navigation...</string>
+
+    <!-- Ads -->
+    <string name="advertisement">Advertisement</string>
+
+    <!-- General -->
+    <string name="ok">OK</string>
+    <string name="error">Error</string>
+    <string name="km">km</string>
+    <string name="m">m</string>
+</resources>

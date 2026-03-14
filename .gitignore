@@ -1,0 +1,31 @@
+# Android
+build/
+*.iml
+.gradle/
+local.properties
+.idea/caches/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aar
+*.keystore
+!debug.keystore
+
+# Kotlin
+bin/
+out/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env*
