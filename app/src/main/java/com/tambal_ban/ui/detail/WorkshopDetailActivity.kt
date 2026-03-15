@@ -2,36 +2,38 @@ package com.tambal_ban.ui.detail
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.tambal_ban.R
-import com.tambal_ban.TambalBanApp
 import com.tambal_ban.data.model.Workshop
-import com.tambal_ban.data.repository.WorkshopRepository
 import com.tambal_ban.databinding.ActivityWorkshopDetailBinding
 import com.tambal_ban.utils.Constants
 import com.tambal_ban.utils.IntentUtils
-import kotlinx.coroutines.launch
 
 class WorkshopDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWorkshopDetailBinding
-    private lateinit var repository: WorkshopRepository
+    private val viewModel: WorkshopDetailViewModel by viewModels()
     private var workshopId: String? = null
     private var currentWorkshop: Workshop? = null
+    private lateinit var reviewAdapter: ReviewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWorkshopDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        repository = (application as TambalBanApp).workshopRepository
         workshopId = intent.getStringExtra(Constants.EXTRA_WORKSHOP_ID)
 
         setupToolbar()
+        setupRecyclerView()
         setupListeners()
-        loadWorkshopDetails()
+        setupObservers()
+
+        workshopId?.let { viewModel.loadWorkshop(it) }
     }
 
     private fun setupToolbar() {
@@ -64,30 +66,40 @@ class WorkshopDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadWorkshopDetails() {
-        val id = workshopId ?: return
+    private fun setupRecyclerView() {
+        reviewAdapter = ReviewAdapter()
+        binding.rvReviews.apply {
+            layoutManager = LinearLayoutManager(this@WorkshopDetailActivity)
+            adapter = reviewAdapter
+        }
+    }
 
-        lifecycleScope.launch {
-            try {
-                val workshop = repository.getWorkshopById(id)
-                if (workshop != null) {
-                    bindWorkshopData(workshop)
-                } else {
-                    Toast.makeText(
-                                    this@WorkshopDetailActivity,
-                                    "Workshop not found",
-                                    Toast.LENGTH_SHORT
-                            )
-                            .show()
-                    finish()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(
-                                this@WorkshopDetailActivity,
-                                "Error loading details",
-                                Toast.LENGTH_SHORT
-                        )
-                        .show()
+    private fun setupObservers() {
+        viewModel.workshop.observe(this) { workshop ->
+            if (workshop != null) {
+                bindWorkshopData(workshop)
+            }
+        }
+
+        viewModel.reviews.observe(this) { reviews ->
+            reviewAdapter.submitList(reviews)
+        }
+
+        viewModel.isLoading.observe(this) { isLoading ->
+            // Show/hide progress bar if needed
+        }
+
+        viewModel.error.observe(this) { error ->
+            error?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.reviewSubmissionResult.observe(this) { result ->
+            if (result.isSuccess) {
+                Toast.makeText(this, "Review submitted!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Failed to submit review", Toast.LENGTH_SHORT).show()
             }
         }
     }
