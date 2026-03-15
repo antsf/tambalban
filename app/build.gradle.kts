@@ -23,8 +23,8 @@ android {
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"sb_publishable_VDZL8LuKtE1kv5r0YFzypQ_sMz77ZWI\"")
 
         // AdMob Configuration
-        buildConfigField("String", "ADMOB_BANNER_AD_UNIT", "\"ca-app-pub-xxxxxxxxxxxxxxxxxxx/yyyyyyyyyyyyyy\"")
-        buildConfigField("String", "ADMOB_NATIVE_AD_UNIT", "\"ca-app-pub-xxxxxxxxxxxxxxxxxxx/yyyyyyyyyyyyyy\"")
+        buildConfigField("String", "ADMOB_BANNER_AD_UNIT", "\"ca-app-pub-8364630765022754/8057509608\"")
+        buildConfigField("String", "ADMOB_NATIVE_AD_UNIT", "\"ca-app-pub-8364630765022754/3232446490\"")
     }
 
     buildTypes {

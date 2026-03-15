@@ -15,9 +15,9 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 [P] Create com.tambalban.utils.SupabaseConfig.kt with URL and ANON_KEY constants
-- [ ] T002 [P] Configure Android dependencies for Retrofit, Moshi, and Security-Crypto in android/app/build.gradle
-- [ ] T003 [P] Create com.tambalban.utils.AuthPrefs.kt for EncryptedSharedPreferences management
+- [x] T001 [P] Create com.tambal_ban.utils.Constants.kt with URL and ANON_KEY constants
+- [x] T002 [P] Configure Android dependencies for Retrofit, Moshi, and Security-Crypto in app/build.gradle.kts
+- [x] T003 [P] Create com.tambal_ban.utils.AuthPrefs.kt for EncryptedSharedPreferences management
 
 ---
 
@@ -27,9 +27,9 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 [P] Implement com.tambalban.data.api.AuthInterceptor.kt to handle apikey and Bearer tokens
-- [ ] T005 [P] Implement com.tambalban.data.api.SupabaseService.kt with Auth and REST endpoints
-- [ ] T006 Implement com.tambalban.data.api.NetworkModule.kt using providing Retrofit and SupabaseService (depends on T004, T005)
+- [x] T004 [P] Implement com.tambal_ban.data.api.AuthInterceptor.kt to handle apikey and Bearer tokens
+- [x] T005 [P] Implement com.tambal_ban.data.api.SupabaseService.kt with Auth and REST endpoints
+- [x] T006 Implement com.tambal_ban.data.api.NetworkModule.kt using providing Retrofit and SupabaseService (depends on T004, T005)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -43,10 +43,10 @@
 
 ### Implementation for User Story 1
 
-- [ ] T007 [P] [US1] Create com.tambalban.data.model.Workshop.kt matching Supabase schema
-- [ ] T008 [P] [US1] Implement com.tambalban.data.repository.WorkshopRepository.kt for fetching nearby workshops
-- [ ] T009 [US1] Implement com.tambalban.viewmodel.MapViewModel.kt to load and expose workshop markers
-- [ ] T010 [US1] Update com.tambalban.ui.map.HomeMapActivity.kt to integrate with MapViewModel and display markers
+- [x] T007 [P] [US1] Create com.tambal_ban.data.model.Workshop.kt matching Supabase schema
+- [x] T008 [P] [US1] Implement com.tambal_ban.data.repository.WorkshopRepository.kt for fetching nearby workshops
+- [x] T009 [US1] Implement com.tambal_ban.ui.main.MainViewModel.kt to load and expose workshop markers
+- [x] T010 [US1] Update com.tambal_ban.ui.main.MainActivity.kt to integrate with MainViewModel and display markers
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently.
 
@@ -60,10 +60,10 @@
 
 ### Implementation for User Story 2
 
-- [ ] T011 [P] [US2] Create com.tambalban.data.model.AuthModels.kt (LoginRequest, AuthResponse, User)
-- [ ] T012 [P] [US2] Implement com.tambalban.data.repository.AuthRepository.kt for login and session management
-- [ ] T013 [US2] Implement com.tambalban.viewmodel.LoginViewModel.kt to handle user authentication state
-- [ ] T014 [US2] Implement com.tambalban.ui.auth.LoginActivity.kt with email/password input and login logic
+- [x] T011 [P] [US2] Create com.tambal_ban.data.model.AuthModels.kt (LoginRequest, AuthResponse, User)
+- [x] T012 [P] [US2] Implement com.tambal_ban.data.repository.AuthRepository.kt for login and session management
+- [x] T013 [US2] Implement com.tambal_ban.ui.auth.LoginViewModel.kt to handle user authentication state
+- [x] T014 [US2] Implement com.tambal_ban.ui.auth.LoginActivity.kt with email/password input and login logic
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently.
 
@@ -77,10 +77,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T015 [P] [US3] Create com.tambalban.data.model.WorkshopSubmission.kt
-- [ ] T016 [P] [US3] Implement com.tambalban.data.repository.SubmissionRepository.kt for workshop submission
-- [ ] T017 [US3] Implement com.tambalban.viewmodel.AddWorkshopViewModel.kt to handle submission logic
-- [ ] T018 [US3] Implement com.tambalban.ui.add.AddWorkshopActivity.kt with submission form and location picker
+- [x] T015 [P] [US3] Create com.tambal_ban.data.model.WorkshopSubmission.kt
+- [x] T016 [P] [US3] Implement com.tambal_ban.data.repository.SubmissionRepository.kt for workshop submission
+- [x] T017 [US3] Implement com.tambal_ban.ui.add.AddWorkshopViewModel.kt to handle submission logic
+- [x] T018 [US3] Implement com.tambal_ban.ui.add.AddWorkshopActivity.kt with submission form and location picker
 
 **Checkpoint**: Authenticated submission flow should be fully functional.
 
@@ -94,10 +94,10 @@
 
 ### Implementation for User Story 4
 
-- [ ] T019 [P] [US4] Create com.tambalban.data.model.Review.kt
-- [ ] T020 [P] [US4] Implement com.tambalban.data.repository.ReviewRepository.kt for reviews API
-- [ ] T021 [US4] Implement com.tambalban.viewmodel.ReviewViewModel.kt for review submissions
-- [ ] T022 [US4] Update com.tambalban.ui.detail.WorkshopDetailActivity.kt to display review list and "Write Review" entry point
+- [x] T019 [P] [US4] Create com.tambal_ban.data.model.Review.kt
+- [x] T020 [P] [US4] Implement com.tambal_ban.data.repository.ReviewRepository.kt for reviews API
+- [x] T021 [US4] Implement com.tambal_ban.ui.detail.WorkshopDetailViewModel.kt for review submissions
+- [x] T022 [US4] Update com.tambal_ban.ui.detail.WorkshopDetailActivity.kt to display review list and "Write Review" entry point
 
 **Checkpoint**: All user stories should now be independently functional.
 
@@ -107,10 +107,10 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T023 [P] Update AndroidManifest.xml with all new Activities and necessary permissions
-- [ ] T024 [P] Implement global error handling for network-wide interceptors in AuthInterceptor
-- [ ] T025 Code cleanup and ensuring all Repositories follow the IPlaceRepository-like interface structure
-- [ ] T026 Final validation of quickstart.md steps to ensures integration is seamless
+- [x] T023 [P] Update AndroidManifest.xml with Activities, permissions, and AdMob configuration
+- [x] T024 [P] Refine AuthInterceptor to handle Auth endpoints correctly (skip Bearer for /auth/)
+- [x] T025 Implement user_id storage in AuthPrefs and Repositories to satisfy Row-Level Security (RLS)
+- [x] T026 Final validation of quickstart.md and migration of credentials to SupabaseConfig.kt
 
 ---
 

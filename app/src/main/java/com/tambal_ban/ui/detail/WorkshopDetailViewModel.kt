@@ -68,8 +68,10 @@ class WorkshopDetailViewModel(application: Application) : AndroidViewModel(appli
 
         viewModelScope.launch {
             _isLoading.value = true
+            val userId = authRepository.getUserId()
             val review = Review(
                 workshopId = workshopId,
+                userId = userId,
                 rating = rating,
                 comment = comment
             )

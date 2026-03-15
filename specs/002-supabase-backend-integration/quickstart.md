@@ -3,7 +3,7 @@
 This guide explains how to initialize the Supabase connection in the Android app.
 
 ## 1. Configuration Constants
-Create `com.tambalban.utils.SupabaseConfig.kt`:
+Ensure `com.tambal_ban.utils.SupabaseConfig.kt` has your Supabase credentials:
 
 ```kotlin
 object SupabaseConfig {
@@ -13,23 +13,20 @@ object SupabaseConfig {
 ```
 
 ## 2. Networking Setup
-Initialize the `OkHttpClient` with an interceptor:
+Initialize the `OkHttpClient` with the `AuthInterceptor`:
 
 ```kotlin
-val client = OkHttpClient.Builder()
-    .addInterceptor { chain ->
-        val original = chain.request()
-        val requestBuilder = original.newBuilder()
-            .header("apikey", SupabaseConfig.ANON_KEY)
-            
-        // Add Authorization header if token exists
-        sharedPrefs.getToken()?.let {
-            requestBuilder.header("Authorization", "Bearer $it")
-        }
-        
-        chain.proceed(requestBuilder.build())
-    }
-    .build()
+// In AuthInterceptor.kt
+val token = authPrefs.getAccessToken()
+val isAuthRequest = originalRequest.url.toString().contains("/auth/v1/")
+
+if (!token.isNullOrEmpty()) {
+    requestBuilder.addHeader("Authorization", "Bearer $token")
+} else if (!isAuthRequest) {
+    // Only add anon token to data requests, NOT auth/login requests
+    // to avoid "invalid_credentials" errors during login
+    requestBuilder.addHeader("Authorization", "Bearer ${SupabaseConfig.ANON_KEY}")
+}
 ```
 
 ## 3. Repository Injection
@@ -39,7 +36,7 @@ Initialize the `SupabaseService` via Retrofit:
 val retrofit = Retrofit.Builder()
     .baseUrl(SupabaseConfig.URL)
     .client(client)
-    .addConverterFactory(MoshiConverterFactory.create())
+    .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
     .build()
 
 val service = retrofit.create(SupabaseService::class.java)
@@ -56,5 +53,6 @@ val service = retrofit.create(SupabaseService::class.java)
 ### Authenticating User
 1. Enter credentials in `LoginActivity`.
 2. Call `service.login(LoginRequest(email, password))`.
-3. On success, save `access_token` to `EncryptedSharedPreferences`.
+3. On success, save `access_token` and `user_id` to `AuthPrefs`.
+   - `user_id` is critical for RLS (Row Level Security) policies.
 4. Navigate to Home screen.

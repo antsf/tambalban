@@ -38,6 +38,14 @@ class AuthPrefs(context: Context) {
         return sharedPreferences.getString(KEY_REFRESH_TOKEN, null)
     }
 
+    fun saveUserId(userId: String) {
+        sharedPreferences.edit().putString(KEY_USER_ID, userId).apply()
+    }
+
+    fun getUserId(): String? {
+        return sharedPreferences.getString(KEY_USER_ID, null)
+    }
+
     fun clear() {
         sharedPreferences.edit().clear().apply()
     }
@@ -49,5 +57,6 @@ class AuthPrefs(context: Context) {
     companion object {
         private const val KEY_ACCESS_TOKEN = "access_token"
         private const val KEY_REFRESH_TOKEN = "refresh_token"
+        private const val KEY_USER_ID = "user_id"
     }
 }

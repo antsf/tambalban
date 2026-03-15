@@ -32,12 +32,14 @@ class AddWorkshopViewModel(application: Application) : AndroidViewModel(applicat
     fun submitWorkshop(name: String, address: String, latitude: Double, longitude: Double, phone: String) {
         viewModelScope.launch {
             _isLoading.value = true
+            val userId = authRepository.getUserId()
             val submission = WorkshopSubmission(
                 name = name,
                 address = address,
                 latitude = latitude,
                 longitude = longitude,
-                phone = phone
+                phone = phone,
+                userId = userId
             )
             val result = submissionRepository.submitWorkshop(submission)
             _submissionResult.value = result

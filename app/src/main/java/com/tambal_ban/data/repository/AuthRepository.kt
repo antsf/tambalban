@@ -23,6 +23,7 @@ class AuthRepository(
                     val authResponse = response.body()!!
                     authPrefs.saveAccessToken(authResponse.accessToken)
                     authPrefs.saveRefreshToken(authResponse.refreshToken)
+                    authPrefs.saveUserId(authResponse.user.id)
                     Result.success(authResponse)
                 } else {
                     Result.failure(Exception("Login failed: ${response.message()}"))
@@ -40,6 +41,7 @@ class AuthRepository(
                     val authResponse = response.body()!!
                     authPrefs.saveAccessToken(authResponse.accessToken)
                     authPrefs.saveRefreshToken(authResponse.refreshToken)
+                    authPrefs.saveUserId(authResponse.user.id)
                     Result.success(authResponse)
                 } else {
                     Result.failure(Exception("Registration failed: ${response.message()}"))
@@ -56,4 +58,6 @@ class AuthRepository(
     fun isLoggedIn(): Boolean = authPrefs.isLoggedIn()
 
     fun getAccessToken(): String? = authPrefs.getAccessToken()
+
+    fun getUserId(): String? = authPrefs.getUserId()
 }

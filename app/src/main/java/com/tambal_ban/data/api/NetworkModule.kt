@@ -2,7 +2,7 @@ package com.tambal_ban.data.api
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.tambal_ban.utils.AuthPrefs
-import com.tambal_ban.utils.Constants
+import com.tambal_ban.utils.SupabaseConfig
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -31,7 +31,7 @@ object NetworkModule {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.SUPABASE_URL)
+            .baseUrl(SupabaseConfig.URL)
             .client(client)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()

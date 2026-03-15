@@ -2,6 +2,7 @@ package com.tambal_ban.data.api
 
 import com.tambal_ban.utils.AuthPrefs
 import com.tambal_ban.utils.Constants
+import com.tambal_ban.utils.SupabaseConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -12,13 +13,16 @@ class AuthInterceptor(private val authPrefs: AuthPrefs) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val requestBuilder = originalRequest.newBuilder()
-            .addHeader("apikey", Constants.SUPABASE_ANON_KEY)
+            .addHeader("apikey", SupabaseConfig.ANON_KEY)
 
         val token = authPrefs.getAccessToken()
-        if (token != null) {
+        val isAuthRequest = originalRequest.url.toString().contains("/auth/v1/")
+
+        if (!token.isNullOrEmpty()) {
             requestBuilder.addHeader("Authorization", "Bearer $token")
-        } else {
-            requestBuilder.addHeader("Authorization", "Bearer ${Constants.SUPABASE_ANON_KEY}")
+        } else if (!isAuthRequest) {
+            // Only add anon token to data requests, not auth/login requests
+            requestBuilder.addHeader("Authorization", "Bearer ${SupabaseConfig.ANON_KEY}")
         }
 
         val response = chain.proceed(requestBuilder.build())

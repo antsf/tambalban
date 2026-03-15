@@ -1,9 +1,6 @@
 package com.tambal_ban.utils
 
 object Constants {
-    // Supabase Configuration - Replace with your actual values
-    const val SUPABASE_URL = "https://xwqckmkjciptlbopmxjl.supabase.co"
-    const val SUPABASE_ANON_KEY = "sb_publishable_VDZL8LuKtE1kv5r0YFzypQ_sMz77ZWI"
 
     // API Endpoints
     const val WORKSHOPS_ENDPOINT = "rest/v1/workshops"
@@ -53,7 +50,7 @@ object Constants {
     const val PREF_SEARCH_RADIUS = "search_radius"
 
     // AdMob - Replace with your actual ad unit IDs
-    const val ADMOB_BANNER_AD_UNIT = "ca-app-pub-xxxxxxxxxxxxxxxxxxx/yyyyyyyyyyyyyy"
-    const val ADMOB_NATIVE_AD_UNIT = "ca-app-pub-xxxxxxxxxxxxxxxxxxx/yyyyyyyyyyyyyy"
+    const val ADMOB_BANNER_AD_UNIT = "ca-app-pub-8364630765022754/8057509608"
+    const val ADMOB_NATIVE_AD_UNIT = "ca-app-pub-8364630765022754/3232446490"
 }
 
