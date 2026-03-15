@@ -1,18 +1,15 @@
 package com.tambal_ban.ui.add
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.tambal_ban.TambalBanApp
-import com.tambal_ban.data.model.Workshop
-import com.tambal_ban.data.repository.WorkshopRepository
 import com.tambal_ban.databinding.ActivityAddWorkshopBinding
+import com.tambal_ban.ui.auth.LoginActivity
 import com.tambal_ban.utils.Constants
-import java.util.UUID
-import kotlinx.coroutines.launch
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.MapEventsOverlay
@@ -21,7 +18,7 @@ import org.osmdroid.views.overlay.Marker
 class AddWorkshopActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddWorkshopBinding
-    private lateinit var repository: WorkshopRepository
+    private val viewModel: AddWorkshopViewModel by viewModels()
     private var selectedPoint: GeoPoint? = null
     private var marker: Marker? = null
 
@@ -30,11 +27,10 @@ class AddWorkshopActivity : AppCompatActivity() {
         binding = ActivityAddWorkshopBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        repository = (application as TambalBanApp).workshopRepository
-
         setupToolbar()
         setupMap()
         setupListeners()
+        setupObservers()
     }
 
     private fun setupToolbar() {
@@ -120,57 +116,36 @@ class AddWorkshopActivity : AppCompatActivity() {
         return true
     }
 
+    private fun setupObservers() {
+        viewModel.submissionResult.observe(this) { result ->
+            if (result.isSuccess) {
+                Toast.makeText(this, "Workshop submitted successfully!", Toast.LENGTH_LONG).show()
+                finish()
+            } else {
+                Toast.makeText(this, "Error: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.btnSubmit.isEnabled = !isLoading
+        }
+
+        viewModel.isLoggedIn.observe(this) { isLoggedIn ->
+            if (!isLoggedIn) {
+                Toast.makeText(this, "Please log in to submit a workshop", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, LoginActivity::class.java))
+            }
+        }
+    }
+
     private fun submitWorkshop() {
         val name = binding.etName.text.toString().trim()
         val phone = binding.etPhone.text.toString().trim()
         val address = binding.etAddress.text.toString().trim()
         val point = selectedPoint ?: return
 
-        val workshop =
-                Workshop(
-                        id = UUID.randomUUID().toString(),
-                        name = name,
-                        latitude = point.latitude,
-                        longitude = point.longitude,
-                        phone = if (phone.isEmpty()) null else phone,
-                        address = if (address.isEmpty()) null else address,
-                        openTime = null,
-                        closeTime = null,
-                        ratingAvg = 0.0,
-                        ratingCount = 0,
-                        source = "user_contribution"
-                )
-
-        binding.progressBar.visibility = View.VISIBLE
-        binding.btnSubmit.isEnabled = false
-
-        lifecycleScope.launch {
-            try {
-                val success = repository.submitWorkshop(workshop)
-                if (success) {
-                    Toast.makeText(
-                                    this@AddWorkshopActivity,
-                                    "Workshop submitted successfully!",
-                                    Toast.LENGTH_LONG
-                            )
-                            .show()
-                    finish()
-                } else {
-                    Toast.makeText(
-                                    this@AddWorkshopActivity,
-                                    "Submission failed",
-                                    Toast.LENGTH_SHORT
-                            )
-                            .show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this@AddWorkshopActivity, "Error: ${e.message}", Toast.LENGTH_SHORT)
-                        .show()
-            } finally {
-                binding.progressBar.visibility = View.GONE
-                binding.btnSubmit.isEnabled = true
-            }
-        }
+        viewModel.submitWorkshop(name, address, point.latitude, point.longitude, phone)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -184,6 +159,7 @@ class AddWorkshopActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         binding.mapView.onResume()
+        viewModel.checkAuth()
     }
 
     override fun onPause() {

@@ -225,6 +225,23 @@
 
             </LinearLayout>
 
+            <!-- Reviews Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Reviews"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvReviews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@android:layout/simple_list_item_2" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

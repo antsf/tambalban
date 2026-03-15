@@ -53,6 +53,12 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.TambalBanFinder" />
 
+        <!-- Login Activity -->
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TambalBanFinder" />
+
     </application>
 
 </manifest>

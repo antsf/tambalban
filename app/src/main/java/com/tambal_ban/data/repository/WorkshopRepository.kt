@@ -4,8 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
-import com.tambal_ban.data.api.NetworkClient
-import com.tambal_ban.data.api.parsers.WorkshopParser
+import com.tambal_ban.data.api.SupabaseService
 import com.tambal_ban.data.database.WorkshopDbHelper
 import com.tambal_ban.data.database.mappers.WorkshopMapper
 import com.tambal_ban.data.model.Workshop
@@ -15,7 +14,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /** Repository for workshop data using native components */
-class WorkshopRepository(private val dbHelper: WorkshopDbHelper) {
+class WorkshopRepository(
+    private val dbHelper: WorkshopDbHelper,
+    private val supabaseService: SupabaseService
+) {
     private val TAG = "WorkshopRepository"
 
     /** Get workshops within bounding box - Try API, then Cache */
@@ -28,20 +30,20 @@ class WorkshopRepository(private val dbHelper: WorkshopDbHelper) {
     ): List<Workshop> =
             withContext(Dispatchers.IO) {
                 if (isNetworkAvailable(context)) {
-                    val queryParams =
-                            listOf(
-                                    "latitude" to "gte.$minLat",
-                                    "latitude" to "lte.$maxLat",
-                                    "longitude" to "gte.$minLng",
-                                    "longitude" to "lte.$maxLng",
-                                    "select" to "*",
-                                    "limit" to Constants.MAX_MARKERS_PER_REQUEST.toString()
-                            )
-                    val response = NetworkClient.get(Constants.WORKSHOPS_ENDPOINT, queryParams)
-                    if (response != null) {
-                        val workshops = WorkshopParser.parseWorkshops(response)
-                        saveWorkshopsToDb(workshops)
-                        return@withContext workshops
+                    try {
+                        val response = supabaseService.getWorkshops(
+                            minLat = "gte.$minLat",
+                            maxLat = "lte.$maxLat",
+                            minLng = "gte.$minLng",
+                            maxLng = "lte.$maxLng"
+                        )
+                        if (response.isSuccessful) {
+                            val workshops = response.body() ?: emptyList()
+                            saveWorkshopsToDb(workshops)
+                            return@withContext workshops
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error fetching workshops", e)
                     }
                 }
                 
@@ -104,6 +106,15 @@ class WorkshopRepository(private val dbHelper: WorkshopDbHelper) {
 
     suspend fun getWorkshopById(id: String): Workshop? =
             withContext(Dispatchers.IO) {
+                try {
+                    val response = supabaseService.getWorkshopById("eq.$id")
+                    if (response.isSuccessful) {
+                        return@withContext response.body()?.firstOrNull()
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error fetching workshop by ID", e)
+                }
+
                 val db = dbHelper.readableDatabase
                 val cursor = db.query(
                     WorkshopDbHelper.TABLE_WORKSHOPS,
@@ -120,11 +131,6 @@ class WorkshopRepository(private val dbHelper: WorkshopDbHelper) {
                 return@withContext null
             }
 
-    suspend fun submitWorkshop(workshop: Workshop): Boolean =
-            withContext(Dispatchers.IO) {
-                val json = WorkshopParser.toJson(workshop)
-                return@withContext NetworkClient.post(Constants.WORKSHOP_SUBMISSIONS_ENDPOINT, json)
-            }
 
     private fun saveWorkshopsToDb(workshops: List<Workshop>) {
         val db = dbHelper.writableDatabase
