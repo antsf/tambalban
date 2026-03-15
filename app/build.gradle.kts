@@ -19,8 +19,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Supabase Configuration
-        buildConfigField("String", "SUPABASE_URL", "\"https://your-project.supabase.co\"")
-        buildConfigField("String", "SUPABASE_ANON_KEY", "\"your-anon-key-here\"")
+        buildConfigField("String", "SUPABASE_URL", "\"https://xwqckmkjciptlbopmxjl.supabase.co\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"sb_publishable_VDZL8LuKtE1kv5r0YFzypQ_sMz77ZWI\"")
 
         // AdMob Configuration
         buildConfigField("String", "ADMOB_BANNER_AD_UNIT", "\"ca-app-pub-xxxxxxxxxxxxxxxxxxx/yyyyyyyyyyyyyy\"")

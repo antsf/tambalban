@@ -2,8 +2,8 @@ package com.tambal_ban.utils
 
 object Constants {
     // Supabase Configuration - Replace with your actual values
-    const val SUPABASE_URL = "https://your-project.supabase.co"
-    const val SUPABASE_ANON_KEY = "your-anon-key-here"
+    const val SUPABASE_URL = "https://xwqckmkjciptlbopmxjl.supabase.co"
+    const val SUPABASE_ANON_KEY = "sb_publishable_VDZL8LuKtE1kv5r0YFzypQ_sMz77ZWI"
 
     // API Endpoints
     const val WORKSHOPS_ENDPOINT = "rest/v1/workshops"

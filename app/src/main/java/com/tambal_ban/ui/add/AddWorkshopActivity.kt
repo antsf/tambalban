@@ -1,12 +1,19 @@
 package com.tambal_ban.ui.add
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.tambal_ban.databinding.ActivityAddWorkshopBinding
 import com.tambal_ban.ui.auth.LoginActivity
 import com.tambal_ban.utils.Constants
@@ -21,11 +28,25 @@ class AddWorkshopActivity : AppCompatActivity() {
     private val viewModel: AddWorkshopViewModel by viewModels()
     private var selectedPoint: GeoPoint? = null
     private var marker: Marker? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    private val requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+            getCurrentLocation()
+        } else {
+            Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddWorkshopBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         setupToolbar()
         setupMap()
@@ -85,10 +106,7 @@ class AddWorkshopActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         binding.btnUseCurrentLocation.setOnClickListener {
-            // In a real app we'd fetch current location, for now center on default
-            updateSelectedLocation(
-                    GeoPoint(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE)
-            )
+            checkLocationPermissions()
         }
 
         binding.btnCancel.setOnClickListener { finish() }
@@ -97,6 +115,46 @@ class AddWorkshopActivity : AppCompatActivity() {
             if (validateInput()) {
                 submitWorkshop()
             }
+        }
+    }
+
+    private fun checkLocationPermissions() {
+        when {
+            ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                getCurrentLocation()
+            }
+            else -> {
+                requestPermissionLauncher.launch(
+                        arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                        )
+                )
+            }
+        }
+    }
+
+    private fun getCurrentLocation() {
+        try {
+            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                    .addOnSuccessListener { location ->
+                        if (location != null) {
+                            val geoPoint = GeoPoint(location.latitude, location.longitude)
+                            updateSelectedLocation(geoPoint)
+                            binding.mapView.controller.animateTo(geoPoint)
+                            binding.mapView.controller.setZoom(18.0)
+                        } else {
+                            Toast.makeText(this, "Unable to get current location", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, "Error getting location: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+        } catch (e: SecurityException) {
+            Toast.makeText(this, "Permission error: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
