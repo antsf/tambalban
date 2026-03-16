@@ -58,6 +58,14 @@ interface SupabaseService {
 
         // --- Storage ---
 
+        @GET("rest/v1/workshop_photos")
+        suspend fun getWorkshopPhotos(
+                @Query("workshop_id") workshopId: String
+        ): Response<List<WorkshopPhoto>>
+
+        @POST("rest/v1/workshop_photos")
+        suspend fun addWorkshopPhoto(@Body photo: WorkshopPhoto): Response<Void>
+
         @POST("storage/v1/object/{bucket}/{path}")
         suspend fun uploadPhoto(
                 @Path("bucket") bucket: String,

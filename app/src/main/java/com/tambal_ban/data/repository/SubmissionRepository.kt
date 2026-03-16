@@ -60,4 +60,39 @@ class SubmissionRepository(private val supabaseService: SupabaseService) {
                     Result.failure(e)
                 }
             }
+
+    suspend fun uploadWorkshopPhoto(
+            workshopId: String,
+            fileName: String,
+            bytes: ByteArray
+    ): Result<String> =
+            withContext(Dispatchers.IO) {
+                try {
+                    // 1. Upload the photo to storage
+                    val uploadResult = uploadPhoto(fileName, bytes)
+                    if (uploadResult.isFailure) {
+                        return@withContext uploadResult
+                    }
+
+                    val publicUrl = uploadResult.getOrThrow()
+
+                    // 2. Insert the record into workshop_photos table
+                    val photoRecord =
+                            com.tambal_ban.data.model.WorkshopPhoto(
+                                    workshopId = workshopId,
+                                    imageUrl = publicUrl
+                            )
+
+                    val response = supabaseService.addWorkshopPhoto(photoRecord)
+                    if (response.isSuccessful) {
+                        Result.success(publicUrl)
+                    } else {
+                        Result.failure(
+                                Exception("Failed to save photo record: ${response.message()}")
+                        )
+                    }
+                } catch (e: Exception) {
+                    Result.failure(e)
+                }
+            }
 }
