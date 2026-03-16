@@ -3,68 +3,91 @@
     <string name="app_name">TambalBan Finder</string>
 
     <!-- Map Screen -->
-    <string name="title_map">Map</string>
-    <string name="find_nearest">Find Nearest Tambal Ban</string>
-    <string name="emergency_mode">EMERGENCY</string>
-    <string name="loading_workshops">Loading workshops...</string>
-    <string name="no_workshops_found">No workshops found nearby</string>
-    <string name="my_location">My Location</string>
-    <string name="filter_radius">Filter by Radius</string>
+    <string name="title_map">Peta</string>
+    <string name="find_nearest">Cari Tambal Ban Terdekat</string>
+    <string name="emergency_mode">DARURAT</string>
+    <string name="loading_workshops">Memuat data...</string>
+    <string name="no_workshops_found">Tidak ditemukan tambal ban di area ini</string>
+    <string name="my_location">Lokasi Saya</string>
+    <string name="filter_radius">Filter Jarak</string>
     <string name="radius_1km">1 km</string>
     <string name="radius_3km">3 km</string>
     <string name="radius_5km">5 km</string>
+    <string name="search_hint">Cari Tambal Ban</string>
 
     <!-- Workshop Detail -->
-    <string name="workshop_detail">Workshop Details</string>
-    <string name="call">Call</string>
-    <string name="navigate">Navigate</string>
-    <string name="report">Report</string>
-    <string name="distance">Distance</string>
+    <string name="workshop_detail">Detail Tambal Ban</string>
+    <string name="call">Panggil</string>
+    <string name="navigate">Navigasi</string>
+    <string name="report">Laporkan</string>
+    <string name="distance">Jarak</string>
     <string name="rating">Rating</string>
-    <string name="reviews">reviews</string>
-    <string name="open_24h">Open 24 Hours</string>
-    <string name="open_time">Open: %s</string>
-    <string name="close_time">Close: %s</string>
-    <string name="no_rating">No rating yet</string>
+    <string name="reviews"> %s ulasan</string>
+    <string name="review_success">Ulasan Anda telah terkirim!</string>
+    <string name="review_failed">Gagal mengirim ulasan. Silakan coba lagi.</string>
+    <string name="login_required_review">Harap login terlebih dahulu untuk menulis ulasan</string>
+    <string name="rating_required">Harap berikan rating bintang</string>
+    <string name="open_24h">Buka 24 Jam</string>
+    <string name="open_time">Buka: %s</string>
+    <string name="close_time">Tutup: %s</string>
+    <string name="no_rating">Belum ada rating</string>
 
     <!-- Add Workshop -->
-    <string name="add_workshop">Add Workshop</string>
-    <string name="workshop_name">Workshop Name</string>
-    <string name="phone_number">Phone Number</string>
-    <string name="address">Address</string>
-    <string name="select_location">Select Location on Map</string>
-    <string name="latitude">Latitude</string>
-    <string name="longitude">Longitude</string>
-    <string name="submit">Submit</string>
-    <string name="cancel">Cancel</string>
-    <string name="submission_success">Workshop submitted successfully!</string>
-    <string name="submission_failed">Failed to submit workshop</string>
-    <string name="fill_required_fields">Please fill in all required fields</string>
+    <string name="add_workshop">Tambah Tambal Ban</string>
+    <string name="workshop_name">Nama Tambal Ban</string>
+    <string name="phone_number">Nomor Telepon</string>
+    <string name="address">Alamat</string>
+    <string name="select_location">Pilih Lokasi di Peta</string>
+    <string name="latitude">Latituda</string>
+    <string name="longitude">Longituda</string>
+    <string name="submit">Simpan</string>
+    <string name="cancel">Batal</string>
+    <string name="submission_success">Data berhasil dikirim!</string>
+    <string name="submission_failed">Gagal mengirim data</string>
+    <string name="fill_required_fields">Harap isi semua bidang yang diperlukan</string>
 
     <!-- Location -->
-    <string name="location_permission_required">Location permission is required to find nearby workshops</string>
-    <string name="location_permission_denied">Location permission denied. Please enable it in settings.</string>
-    <string name="enable_location">Enable Location</string>
-    <string name="getting_location">Getting your location...</string>
-    <string name="location_unavailable">Unable to get your location</string>
+    <string name="location_permission_required">Izin lokasi diperlukan untuk mencari tambal ban terdekat</string>
+    <string name="location_permission_denied">Izin lokasi ditolak. Harap aktifkan di pengaturan.</string>
+    <string name="enable_location">Aktifkan Lokasi</string>
+    <string name="getting_location">Mendapatkan lokasi...</string>
+    <string name="location_unavailable">Gagal mendapatkan lokasi</string>
 
     <!-- Network -->
-    <string name="network_error">Network error. Please check your connection.</string>
-    <string name="offline_mode">You are offline. Showing cached data.</string>
-    <string name="retry">Retry</string>
+    <string name="network_error">Kesalahan jaringan. Periksa koneksi Anda.</string>
+    <string name="offline_mode">Anda sedang offline. Menampilkan data cache.</string>
+    <string name="retry">Coba Lagi</string>
 
     <!-- Emergency Mode -->
-    <string name="emergency_closest">Closest Workshop</string>
-    <string name="emergency_no_workshop">No workshop found within 3km</string>
-    <string name="calling">Calling...</string>
-    <string name="opening_navigation">Opening navigation...</string>
+    <string name="emergency_closest">Tambal Ban Terdekat</string>
+    <string name="emergency_no_workshop">Tidak ditemukan tambal ban dalam radius 3km</string>
+    <string name="calling">Menghubungi...</string>
+    <string name="opening_navigation">Membuka navigasi...</string>
 
     <!-- Ads -->
-    <string name="advertisement">Advertisement</string>
+    <string name="advertisement">Iklan</string>
+
+    <!-- User Profile & Auth -->
+    <string name="profile">Profil Saya</string>
+    <string name="login">Masuk</string>
+    <string name="register">Daftar</string>
+    <string name="logout">Keluar</string>
+    <string name="email">Email</string>
+    <string name="password">Kata Sandi</string>
+    <string name="full_name">Nama Lengkap</string>
+    <string name="no_account">Belum punya akun? Daftar</string>
+    <string name="already_have_account">Sudah punya akun? Masuk</string>
+    <string name="my_submissions">Kontribusi Saya</string>
+    <string name="status_pending">Menunggu</string>
+    <string name="status_approved">Disetujui</string>
+    <string name="status_rejected">Ditolak</string>
+
+    <!-- List Screen -->
+    <string name="list_all_title">Semua Tambal Ban</string>
 
     <!-- General -->
     <string name="ok">OK</string>
-    <string name="error">Error</string>
+    <string name="error">Kesalahan</string>
     <string name="km">km</string>
     <string name="m">m</string>
 </resources>

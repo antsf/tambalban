@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -18,9 +20,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Supabase Configuration
-        buildConfigField("String", "SUPABASE_URL", "\"https://xwqckmkjciptlbopmxjl.supabase.co\"")
-        buildConfigField("String", "SUPABASE_ANON_KEY", "\"sb_publishable_VDZL8LuKtE1kv5r0YFzypQ_sMz77ZWI\"")
+        // Supabase Configuration - Read from local.properties
+        val localProperties = Properties()
+        rootProject.file("local.properties").inputStream().use { localProperties.load(it) }
+        val supabaseUrl: String = localProperties.getProperty("SUPABASE_URL", "")
+        val supabaseKey: String = localProperties.getProperty("SUPABASE_ANON_KEY", "")
+        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"$supabaseKey\"")
 
         // AdMob Configuration
         buildConfigField("String", "ADMOB_BANNER_AD_UNIT", "\"ca-app-pub-8364630765022754/8057509608\"")
@@ -61,6 +67,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     // Lifecycle - ViewModel & LiveData
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
@@ -90,6 +97,10 @@ dependencies {
 
     // Security - EncryptedSharedPreferences
     implementation("androidx.security:security-crypto:1.1.0")
+
+    // Glide - Image Loading
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    ksp("com.github.bumptech.glide:ksp:4.16.0")
 
     // Testing
     testImplementation("junit:junit:4.13.2")

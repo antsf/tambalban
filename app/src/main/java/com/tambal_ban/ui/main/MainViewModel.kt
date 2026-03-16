@@ -181,4 +181,41 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun clearError() {
         _error.value = null
     }
+
+    /** Search workshops by name */
+    fun searchByName(query: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val results = repository.searchWorkshops(getApplication(), query)
+
+                // Calculate distance if location is available
+                val location = _userLocation.value
+                val finalizedList =
+                        if (location != null) {
+                            results
+                                    .map { workshop ->
+                                        workshop.distance =
+                                                GeoUtils.calculateDistance(
+                                                        location.latitude,
+                                                        location.longitude,
+                                                        workshop.latitude,
+                                                        workshop.longitude
+                                                )
+                                        workshop
+                                    }
+                                    .sortedBy { it.distance }
+                        } else {
+                            results
+                        }
+
+                _workshops.value = finalizedList
+                _error.value = null
+            } catch (e: Exception) {
+                _error.value = e.message
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
 }

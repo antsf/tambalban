@@ -2,8 +2,8 @@ feat(app): implement core TambalBan Finder application
 
 This commit introduces the complete foundation and core features of the
 TambalBan Finder app. The architecture was specifically designed for
-low-spec hardware (2GB RAM devices) by removing heavy dependencies
-(Retrofit, Room, Gson) in favor of lightweight native Android components.
+low-spec hardware (2GB RAM devices) with lightweight native Android components
+and optimized networking.
 
 Key Implementations:
 
@@ -13,10 +13,10 @@ Key Implementations:
 - Optimized map tile caching with strict disk size limits (50MB max).
 
 2. Native Data & Storage Layer
-- Replaced Retrofit and Gson with native `HttpURLConnection` and `org.json`.
-- Built `WorkshopDbHelper` using `SQLiteOpenHelper`.
-- Added localized spatial queries in SQLite using the Pythagorean distance
-  approximation for lightning-fast closest-workshop lookups.
+- Built `WorkshopDbHelper` using native `SQLiteOpenHelper`.
+- Added localized spatial queries in SQLite using the Haversine formula
+  for fast closest-workshop lookups.
+- Uses Retrofit + OkHttp + Kotlinx Serialization for Supabase API.
 
 3. Emergency Mode (Priority Feature)
 - Added 'Emergency Mode' Floating Action Button for an instant 1-tap search.

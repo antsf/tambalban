@@ -22,7 +22,7 @@ object NetworkModule {
 
     fun provideSupabaseService(authPrefs: AuthPrefs): SupabaseService {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = if (com.tambal_ban.BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         }
 
         val client = OkHttpClient.Builder()
@@ -39,3 +39,4 @@ object NetworkModule {
         return retrofit.create(SupabaseService::class.java)
     }
 }
+

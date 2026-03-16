@@ -7,49 +7,52 @@ import com.tambal_ban.utils.AuthPrefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/**
- * Repository for authentication-related data operations.
- */
+/** Repository for authentication-related data operations. */
 class AuthRepository(
-    private val supabaseService: SupabaseService,
-    private val authPrefs: AuthPrefs
+        private val supabaseService: SupabaseService,
+        private val authPrefs: AuthPrefs
 ) {
 
     suspend fun login(email: String, password: String): Result<AuthResponse> =
-        withContext(Dispatchers.IO) {
-            try {
-                val response = supabaseService.login(LoginRequest(email, password))
-                if (response.isSuccessful && response.body() != null) {
-                    val authResponse = response.body()!!
-                    authPrefs.saveAccessToken(authResponse.accessToken)
-                    authPrefs.saveRefreshToken(authResponse.refreshToken)
-                    authPrefs.saveUserId(authResponse.user.id)
-                    Result.success(authResponse)
-                } else {
-                    Result.failure(Exception("Login failed: ${response.message()}"))
+            withContext(Dispatchers.IO) {
+                try {
+                    val response = supabaseService.login(LoginRequest(email, password))
+                    if (response.isSuccessful && response.body() != null) {
+                        val authResponse = response.body()!!
+                        authPrefs.saveAccessToken(authResponse.accessToken)
+                        authPrefs.saveRefreshToken(authResponse.refreshToken)
+                        authPrefs.saveUserId(authResponse.user.id)
+                        authPrefs.saveUserName(authResponse.user.userMetadata?.fullName)
+                        authPrefs.saveEmail(authResponse.user.email)
+                        Result.success(authResponse)
+                    } else {
+                        Result.failure(Exception("Login failed: ${response.message()}"))
+                    }
+                } catch (e: Exception) {
+                    Result.failure(e)
                 }
-            } catch (e: Exception) {
-                Result.failure(e)
             }
-        }
 
-    suspend fun register(email: String, password: String): Result<AuthResponse> =
-        withContext(Dispatchers.IO) {
-            try {
-                val response = supabaseService.register(LoginRequest(email, password))
-                if (response.isSuccessful && response.body() != null) {
-                    val authResponse = response.body()!!
-                    authPrefs.saveAccessToken(authResponse.accessToken)
-                    authPrefs.saveRefreshToken(authResponse.refreshToken)
-                    authPrefs.saveUserId(authResponse.user.id)
-                    Result.success(authResponse)
-                } else {
-                    Result.failure(Exception("Registration failed: ${response.message()}"))
+    suspend fun register(email: String, password: String, fullName: String): Result<AuthResponse> =
+            withContext(Dispatchers.IO) {
+                try {
+                    val data = mapOf("full_name" to fullName)
+                    val response = supabaseService.register(LoginRequest(email, password, data))
+                    if (response.isSuccessful && response.body() != null) {
+                        val authResponse = response.body()!!
+                        authPrefs.saveAccessToken(authResponse.accessToken)
+                        authPrefs.saveRefreshToken(authResponse.refreshToken)
+                        authPrefs.saveUserId(authResponse.user.id)
+                        authPrefs.saveUserName(authResponse.user.userMetadata?.fullName)
+                        authPrefs.saveEmail(authResponse.user.email)
+                        Result.success(authResponse)
+                    } else {
+                        Result.failure(Exception("Registration failed: ${response.message()}"))
+                    }
+                } catch (e: Exception) {
+                    Result.failure(e)
                 }
-            } catch (e: Exception) {
-                Result.failure(e)
             }
-        }
 
     fun logout() {
         authPrefs.clear()

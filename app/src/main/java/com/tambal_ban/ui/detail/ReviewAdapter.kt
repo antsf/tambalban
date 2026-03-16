@@ -19,16 +19,21 @@ class ReviewAdapter : ListAdapter<Review, ReviewAdapter.ReviewViewHolder>(Review
         holder.bind(getItem(position))
     }
 
-    class ReviewViewHolder(private val binding: ItemReviewBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ReviewViewHolder(private val binding: ItemReviewBinding) :
+            RecyclerView.ViewHolder(binding.root) {
         fun bind(review: Review) {
             binding.tvRating.text = review.rating.toString()
             binding.tvComment.text = review.comment
             binding.tvDate.text = review.createdAt?.take(10) ?: ""
+            // Use user name from review data if available, fallback to default
+            binding.tvUserName.text = review.userName ?: "Pengguna"
         }
     }
 
     class ReviewDiffCallback : DiffUtil.ItemCallback<Review>() {
-        override fun areItemsTheSame(oldItem: Review, newItem: Review): Boolean = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Review, newItem: Review): Boolean = oldItem == newItem
+        override fun areItemsTheSame(oldItem: Review, newItem: Review): Boolean =
+                oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: Review, newItem: Review): Boolean =
+                oldItem == newItem
     }
 }

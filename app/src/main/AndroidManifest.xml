@@ -53,9 +53,28 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.TambalBanFinder" />
 
+        <!-- All Workshops List Activity -->
+        <activity
+            android:name=".ui.list.AllWorkshopsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.TambalBanFinder" />
+
         <!-- Login Activity -->
         <activity
             android:name=".ui.auth.LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TambalBanFinder" />
+
+        <!-- Register Activity -->
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TambalBanFinder" />
+
+        <!-- Profile Activity -->
+        <activity
+            android:name=".ui.profile.ProfileActivity"
             android:exported="false"
             android:theme="@style/Theme.TambalBanFinder" />
 

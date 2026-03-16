@@ -10,12 +10,12 @@ import com.tambal_ban.data.model.AuthResponse
 import com.tambal_ban.data.repository.AuthRepository
 import kotlinx.coroutines.launch
 
-class LoginViewModel(application: Application) : AndroidViewModel(application) {
+class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private val authRepository: AuthRepository = (application as TambalBanApp).authRepository
 
-    private val _loginResult = MutableLiveData<Result<AuthResponse>>()
-    val loginResult: LiveData<Result<AuthResponse>> = _loginResult
+    private val _authResult = MutableLiveData<Result<AuthResponse>>()
+    val authResult: LiveData<Result<AuthResponse>> = _authResult
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -24,17 +24,21 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _isLoading.value = true
             val result = authRepository.login(email, password)
-            _loginResult.value = result
+            _authResult.value = result
             _isLoading.value = false
         }
     }
 
-    fun register(email: String, password: String) {
+    fun register(email: String, password: String, fullName: String) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = authRepository.register(email, password)
-            _loginResult.value = result
+            val result = authRepository.register(email, password, fullName)
+            _authResult.value = result
             _isLoading.value = false
         }
+    }
+
+    fun clearResult() {
+        _authResult.value = null
     }
 }

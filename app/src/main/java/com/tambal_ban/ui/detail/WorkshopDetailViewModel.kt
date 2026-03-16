@@ -11,13 +11,16 @@ import com.tambal_ban.data.model.Workshop
 import com.tambal_ban.data.repository.AuthRepository
 import com.tambal_ban.data.repository.ReviewRepository
 import com.tambal_ban.data.repository.WorkshopRepository
+import com.tambal_ban.utils.AuthPrefs
 import kotlinx.coroutines.launch
 
 class WorkshopDetailViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val workshopRepository: WorkshopRepository = (application as TambalBanApp).workshopRepository
+    private val workshopRepository: WorkshopRepository =
+            (application as TambalBanApp).workshopRepository
     private val reviewRepository: ReviewRepository = (application as TambalBanApp).reviewRepository
     private val authRepository: AuthRepository = (application as TambalBanApp).authRepository
+    private val authPrefs: AuthPrefs = (application as TambalBanApp).authPrefs
 
     private val _workshop = MutableLiveData<Workshop?>()
     val workshop: LiveData<Workshop?> = _workshop
@@ -69,12 +72,15 @@ class WorkshopDetailViewModel(application: Application) : AndroidViewModel(appli
         viewModelScope.launch {
             _isLoading.value = true
             val userId = authRepository.getUserId()
-            val review = Review(
-                workshopId = workshopId,
-                userId = userId,
-                rating = rating,
-                comment = comment
-            )
+            val userName = authPrefs.getUserName()
+            val review =
+                    Review(
+                            workshopId = workshopId,
+                            userId = userId,
+                            userName = userName,
+                            rating = rating,
+                            comment = comment
+                    )
             val result = reviewRepository.submitReview(review)
             _reviewSubmissionResult.value = result
             if (result.isSuccess) {

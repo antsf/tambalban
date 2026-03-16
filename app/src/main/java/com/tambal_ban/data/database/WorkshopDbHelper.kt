@@ -10,7 +10,7 @@ class WorkshopDbHelper(context: Context) :
 
     companion object {
         const val DATABASE_NAME = "tambal_ban.db"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
 
         const val TABLE_WORKSHOPS = "workshops"
         const val COLUMN_ID = "id"
@@ -26,6 +26,8 @@ class WorkshopDbHelper(context: Context) :
         const val COLUMN_RATING_COUNT = "rating_count"
         const val COLUMN_SOURCE = "source"
         const val COLUMN_CREATED_AT = "created_at"
+        const val COLUMN_PHOTO_URL = "photo_url"
+        const val COLUMN_VERIFIED = "verified"
 
         private const val SQL_CREATE_WORKSHOPS =
                 """
@@ -42,7 +44,9 @@ class WorkshopDbHelper(context: Context) :
                 $COLUMN_RATING_AVG REAL DEFAULT 0.0,
                 $COLUMN_RATING_COUNT INTEGER DEFAULT 0,
                 $COLUMN_SOURCE TEXT,
-                $COLUMN_CREATED_AT TEXT
+                $COLUMN_CREATED_AT TEXT,
+                $COLUMN_PHOTO_URL TEXT,
+                $COLUMN_VERIFIED INTEGER DEFAULT 0
             )
         """
 

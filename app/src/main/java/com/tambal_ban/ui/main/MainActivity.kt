@@ -12,22 +12,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import androidx.core.view.GravityCompat
 import com.tambal_ban.R
 import com.tambal_ban.TambalBanApp
 import com.tambal_ban.ads.AdMobManager
 import com.tambal_ban.data.model.Workshop
 import com.tambal_ban.databinding.ActivityMainBinding
 import com.tambal_ban.ui.add.AddWorkshopActivity
+import com.tambal_ban.ui.auth.LoginActivity
+import com.tambal_ban.ui.auth.RegisterActivity
 import com.tambal_ban.ui.detail.WorkshopDetailActivity
+import com.tambal_ban.ui.list.AllWorkshopsActivity
+import com.tambal_ban.ui.profile.ProfileActivity
 import com.tambal_ban.utils.Constants
-import com.tambal_ban.utils.GeoUtils
-import com.tambal_ban.utils.IntentUtils
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
 import org.osmdroid.events.DelayedMapListener
@@ -46,8 +43,6 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     private lateinit var adMobManager: AdMobManager
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
-    private lateinit var workshopAdapter: WorkshopAdapter
 
     private var myLocationOverlay: MyLocationNewOverlay? = null
     private var markerClusterer: RadiusMarkerClusterer? = null
@@ -77,33 +72,48 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Apply window insets for safe areas
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) {
-                v: View,
-                windowInsets: WindowInsetsCompat ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(
-                    v.paddingStart,
-                    insets.top,
-                    v.paddingEnd,
-                    insets.bottom
-            )
-            windowInsets
-        }
+        // T034: Use Material 3 Color for Status Bar (already handled by theme, but good for dynamic
+        // changes)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primary)
 
         adMobManager = (application as TambalBanApp).adMobManager
 
+        setupToolbar()
+        setupDrawer()
         setupMap()
-        setupBottomSheet()
-        setupRecyclerView()
         setupButtons()
         setupObservers()
         checkLocationPermission()
+    }
 
-        // T031: Delayed Ad Loading (2 seconds delay to prioritize map rendering)
-        lifecycleScope.launch {
-            delay(2000)
-            adMobManager.loadBannerAd(binding.adContainer)
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbar)
+        binding.toolbar.setNavigationOnClickListener {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+        }
+    }
+
+    private fun setupDrawer() {
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_home -> {
+                    // Already here
+                }
+                R.id.nav_all_workshops -> {
+                    startActivity(Intent(this, AllWorkshopsActivity::class.java))
+                }
+                R.id.nav_profile -> {
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                }
+                R.id.nav_login -> {
+                    startActivity(Intent(this, LoginActivity::class.java))
+                }
+                R.id.nav_register -> {
+                    startActivity(Intent(this, RegisterActivity::class.java))
+                }
+            }
+            binding.drawerLayout.closeDrawers()
+            true
         }
     }
 
@@ -151,93 +161,25 @@ class MainActivity : AppCompatActivity() {
         return bitmap
     }
 
-    private fun setupBottomSheet() {
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-
-        bottomSheetBehavior.addBottomSheetCallback(
-                object : BottomSheetBehavior.BottomSheetCallback() {
-                    override fun onStateChanged(bottomSheet: View, newState: Int) {
-                        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                            binding.emergencyFab.show()
-                        }
-                    }
-
-                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                        if (slideOffset > 0) {
-                            binding.emergencyFab.hide()
-                        } else {
-                            binding.emergencyFab.show()
-                        }
-                    }
-                }
-        )
-    }
-
-    private fun setupRecyclerView() {
-        workshopAdapter = WorkshopAdapter { workshop -> openWorkshopDetail(workshop) }
-        binding.rvWorkshops.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = workshopAdapter
-        }
-    }
-
     private fun setupButtons() {
-        binding.emergencyFab.setOnClickListener { viewModel.activateEmergencyMode() }
-
         binding.btnMyLocation.setOnClickListener { centerOnMyLocation() }
 
-        binding.btnFindNearest.setOnClickListener {
-            viewModel.findNearestWorkshops(viewModel.searchRadius.value ?: Constants.RADIUS_3KM)
-        }
-
         binding.fabAddWorkshop.setOnClickListener {
-            startActivity(Intent(this, AddWorkshopActivity::class.java))
+            startActivity(Intent(this, com.tambal_ban.ui.add.AddWorkshopActivity::class.java))
         }
 
-        binding.chipGroupRadius.setOnCheckedStateChangeListener { _, checkedIds ->
-            if (checkedIds.isNotEmpty()) {
-                val radius =
-                        when (checkedIds.first()) {
-                            R.id.chip1km -> Constants.RADIUS_1KM
-                            R.id.chip3km -> Constants.RADIUS_3KM
-                            R.id.chip5km -> Constants.RADIUS_5KM
-                            else -> Constants.RADIUS_3KM
-                        }
-                viewModel.setSearchRadius(radius)
-                loadWorkshopsInViewport()
+        // T036: Search logic will be triggered by etSearch keyboard actions or text changes
+        binding.etSearch.setOnEditorActionListener { _, _, _ ->
+            val query = binding.etSearch.text.toString()
+            if (query.isNotEmpty()) {
+                viewModel.searchByName(query)
             }
-        }
-
-        binding.btnEmergencyCall.setOnClickListener {
-            viewModel.emergencyWorkshop.value?.phone?.let { phone ->
-                IntentUtils.dialPhoneNumber(this, phone)
-            }
-        }
-
-        binding.btnEmergencyNavigate.setOnClickListener {
-            viewModel.emergencyWorkshop.value?.let { workshop ->
-                IntentUtils.openNavigation(
-                        this,
-                        workshop.latitude,
-                        workshop.longitude,
-                        workshop.name
-                )
-            }
+            true
         }
     }
 
     private fun setupObservers() {
-        viewModel.workshops.observe(this) { workshops ->
-            updateMapMarkers(workshops)
-            workshopAdapter.submitList(workshops)
-        }
-
-        viewModel.nearestWorkshops.observe(this) { workshops ->
-            if (workshops.isNotEmpty()) {
-                showEmergencyMode(workshops.first())
-            }
-        }
+        viewModel.workshops.observe(this) { workshops -> updateMapMarkers(workshops) }
 
         viewModel.userLocation.observe(this) { location ->
             location?.let {
@@ -255,12 +197,6 @@ class MainActivity : AppCompatActivity() {
             error?.let {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
                 viewModel.clearError()
-            }
-        }
-
-        viewModel.isEmergencyMode.observe(this) { isEmergency ->
-            if (!isEmergency) {
-                hideEmergencyMode()
             }
         }
 
@@ -330,24 +266,6 @@ class MainActivity : AppCompatActivity() {
             markerClusterer?.add(marker)
         }
         binding.mapView.invalidate()
-    }
-
-    private fun showEmergencyMode(workshop: Workshop) {
-        viewModel.setEmergencyWorkshop(workshop)
-        binding.cardEmergency.apply {
-            visibility = View.VISIBLE
-            binding.tvEmergencyName.text = workshop.name
-            binding.tvEmergencyDistance.text =
-                    workshop.distance?.let { GeoUtils.formatDistance(it) } ?: ""
-        }
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        binding.emergencyFab.hide()
-    }
-
-    private fun hideEmergencyMode() {
-        binding.cardEmergency.visibility = View.GONE
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        binding.emergencyFab.show()
     }
 
     private fun openWorkshopDetail(workshop: Workshop) {

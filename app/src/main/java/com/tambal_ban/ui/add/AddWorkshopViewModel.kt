@@ -29,17 +29,32 @@ class AddWorkshopViewModel(application: Application) : AndroidViewModel(applicat
         _isLoggedIn.value = authRepository.isLoggedIn()
     }
 
-    fun submitWorkshop(name: String, address: String, latitude: Double, longitude: Double, phone: String) {
+    fun submitWorkshop(name: String, address: String, latitude: Double, longitude: Double, phone: String, photoBytes: ByteArray? = null) {
         viewModelScope.launch {
             _isLoading.value = true
             val userId = authRepository.getUserId()
+            
+            var photoUrl: String? = null
+            if (photoBytes != null) {
+                val fileName = "workshop_${System.currentTimeMillis()}.jpg"
+                val uploadResult = submissionRepository.uploadPhoto(fileName, photoBytes)
+                if (uploadResult.isSuccess) {
+                    photoUrl = uploadResult.getOrNull()
+                } else {
+                    _submissionResult.value = Result.failure(uploadResult.exceptionOrNull() ?: Exception("Gagal mengunggah foto"))
+                    _isLoading.value = false
+                    return@launch
+                }
+            }
+
             val submission = WorkshopSubmission(
                 name = name,
                 address = address,
                 latitude = latitude,
                 longitude = longitude,
                 phone = phone,
-                userId = userId
+                userId = userId,
+                photoUrl = photoUrl
             )
             val result = submissionRepository.submitWorkshop(submission)
             _submissionResult.value = result

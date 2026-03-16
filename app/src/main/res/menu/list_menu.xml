@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_sort"
+        android:title="Urutkan"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_sort_by_size">
+        <menu>
+            <item
+                android:id="@+id/sort_name"
+                android:title="Nama (A-Z)" />
+            <item
+                android:id="@+id/sort_distance"
+                android:title="Terdekat" />
+            <item
+                android:id="@+id/sort_rating"
+                android:title="Rating Tertinggi" />
+        </menu>
+    </item>
+</menu>

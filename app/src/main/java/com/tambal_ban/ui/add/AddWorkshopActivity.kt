@@ -3,6 +3,7 @@ package com.tambal_ban.ui.add
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -17,6 +18,7 @@ import com.google.android.gms.location.Priority
 import com.tambal_ban.databinding.ActivityAddWorkshopBinding
 import com.tambal_ban.ui.auth.LoginActivity
 import com.tambal_ban.utils.Constants
+import com.tambal_ban.utils.ImageCompressionUtils
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.MapEventsOverlay
@@ -29,17 +31,24 @@ class AddWorkshopActivity : AppCompatActivity() {
     private var selectedPoint: GeoPoint? = null
     private var marker: Marker? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var selectedPhotoBytes: ByteArray? = null
 
-    private val requestPermissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
-            getCurrentLocation()
-        } else {
-            Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
-        }
-    }
+    private val pickImageLauncher =
+            registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+                uri?.let { handleImageSelection(it) }
+            }
+
+    private val requestPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+                    permissions ->
+                if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+                ) {
+                    getCurrentLocation()
+                } else {
+                    Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
+                }
+            }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,11 +95,11 @@ class AddWorkshopActivity : AppCompatActivity() {
         binding.tvSelectedLocation.apply {
             visibility = View.VISIBLE
             text = buildString {
-        append("Lat: ")
-        append("%.4f".format(point.latitude))
-        append(", Lng: ")
-        append("%.4f".format(point.longitude))
-    }
+                append("Lat: ")
+                append("%.4f".format(point.latitude))
+                append(", Lng: ")
+                append("%.4f".format(point.longitude))
+            }
         }
 
         if (marker == null) {
@@ -105,9 +114,7 @@ class AddWorkshopActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        binding.btnUseCurrentLocation.setOnClickListener {
-            checkLocationPermissions()
-        }
+        binding.btnUseCurrentLocation.setOnClickListener { checkLocationPermissions() }
 
         binding.btnCancel.setOnClickListener { finish() }
 
@@ -116,14 +123,32 @@ class AddWorkshopActivity : AppCompatActivity() {
                 submitWorkshop()
             }
         }
+
+        binding.cvPhoto.setOnClickListener { pickImageLauncher.launch("image/*") }
+    }
+
+    private fun handleImageSelection(uri: Uri) {
+        try {
+            val compressedFile =
+                    ImageCompressionUtils.compressImage(
+                            this,
+                            uri,
+                            "compressed_${System.currentTimeMillis()}.jpg"
+                    )
+            // Use try-with-resources to properly handle the file stream
+            compressedFile?.inputStream()?.use { selectedPhotoBytes = it.readBytes() }
+            binding.ivSelectedPhoto.setImageURI(uri)
+            binding.ivSelectedPhoto.visibility = View.VISIBLE
+            binding.llPhotoPlaceholder.visibility = View.GONE
+        } catch (e: Exception) {
+            Toast.makeText(this, "Gagal memproses gambar", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun checkLocationPermissions() {
         when {
-            ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED -> {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                    PackageManager.PERMISSION_GRANTED -> {
                 getCurrentLocation()
             }
             else -> {
@@ -139,7 +164,8 @@ class AddWorkshopActivity : AppCompatActivity() {
 
     private fun getCurrentLocation() {
         try {
-            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+            fusedLocationClient
+                    .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener { location ->
                         if (location != null) {
                             val geoPoint = GeoPoint(location.latitude, location.longitude)
@@ -147,11 +173,21 @@ class AddWorkshopActivity : AppCompatActivity() {
                             binding.mapView.controller.animateTo(geoPoint)
                             binding.mapView.controller.setZoom(18.0)
                         } else {
-                            Toast.makeText(this, "Unable to get current location", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                            this,
+                                            "Unable to get current location",
+                                            Toast.LENGTH_SHORT
+                                    )
+                                    .show()
                         }
                     }
                     .addOnFailureListener { e ->
-                        Toast.makeText(this, "Error getting location: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                                        this,
+                                        "Error getting location: ${e.message}",
+                                        Toast.LENGTH_SHORT
+                                )
+                                .show()
                     }
         } catch (e: SecurityException) {
             Toast.makeText(this, "Permission error: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -180,7 +216,12 @@ class AddWorkshopActivity : AppCompatActivity() {
                 Toast.makeText(this, "Workshop submitted successfully!", Toast.LENGTH_LONG).show()
                 finish()
             } else {
-                Toast.makeText(this, "Error: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                                this,
+                                "Error: ${result.exceptionOrNull()?.message}",
+                                Toast.LENGTH_SHORT
+                        )
+                        .show()
             }
         }
 
@@ -191,7 +232,8 @@ class AddWorkshopActivity : AppCompatActivity() {
 
         viewModel.isLoggedIn.observe(this) { isLoggedIn ->
             if (!isLoggedIn) {
-                Toast.makeText(this, "Please log in to submit a workshop", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please log in to submit a workshop", Toast.LENGTH_SHORT)
+                        .show()
                 startActivity(Intent(this, LoginActivity::class.java))
             }
         }
@@ -199,11 +241,18 @@ class AddWorkshopActivity : AppCompatActivity() {
 
     private fun submitWorkshop() {
         val name = binding.etName.text.toString().trim()
-        val phone = binding.etPhone.text.toString().trim()
         val address = binding.etAddress.text.toString().trim()
+        val phone = binding.etPhone.text.toString().trim()
         val point = selectedPoint ?: return
 
-        viewModel.submitWorkshop(name, address, point.latitude, point.longitude, phone)
+        viewModel.submitWorkshop(
+                name,
+                address,
+                point.latitude,
+                point.longitude,
+                phone,
+                selectedPhotoBytes
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
