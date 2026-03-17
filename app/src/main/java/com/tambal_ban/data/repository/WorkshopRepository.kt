@@ -148,7 +148,7 @@ class WorkshopRepository(
                                 "${WorkshopDbHelper.COLUMN_NAME} ASC",
                                 "${page * pageSize},$pageSize"
                         )
-                cursor?.use {
+                cursor.use {
                     while (it.moveToNext()) {
                         workshops.add(WorkshopMapper.fromCursor(it))
                     }
@@ -196,7 +196,7 @@ class WorkshopRepository(
                                 "${WorkshopDbHelper.COLUMN_NAME} ASC",
                                 "${page * pageSize},$pageSize"
                         )
-                cursor?.use {
+                cursor.use {
                     while (it.moveToNext()) {
                         workshops.add(WorkshopMapper.fromCursor(it))
                     }

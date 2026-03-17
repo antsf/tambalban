@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.tambal_ban.R
 import com.tambal_ban.databinding.ActivityAllWorkshopsBinding
 import com.tambal_ban.ui.add.AddWorkshopActivity
@@ -44,6 +45,7 @@ class AllWorkshopsActivity : AppCompatActivity() {
                     }
             startActivity(intent)
         }
+        binding.rvWorkshops.layoutManager = LinearLayoutManager(this)
         binding.rvWorkshops.adapter = adapter
     }
 

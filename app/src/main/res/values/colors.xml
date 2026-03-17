@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Primary Colors -->
-    <color name="primary">#DA70D6</color>
-    <color name="primary_variant">#BA55D3</color>
-    <color name="primary_dark">#9932CC</color>
-    <color name="primary_light">#E6A8D7</color>
+    <!-- Primary Colors (Orange - Automotive/Mechanic Theme) -->
+    <color name="primary">#FF6D00</color>
+    <color name="primary_variant">#E65100</color>
+    <color name="primary_dark">#BF360C</color>
+    <color name="primary_light">#FF9E40</color>
 
     <!-- Secondary Colors -->
     <color name="secondary">#2196F3</color>
@@ -18,7 +18,7 @@
     <!-- Text Colors -->
     <color name="text_primary">#212121</color>
     <color name="on_primary">#FFFFFF</color>
-    <color name="on_primary_container">#BA55D3</color>
+    <color name="on_primary_container">#FF6D00</color>
     <color name="on_secondary">#FFFFFF</color>
     <color name="on_background">#212121</color>
     <color name="on_surface">#212121</color>
@@ -32,7 +32,7 @@
     <color name="warning">#FFC107</color>
 
     <!-- Map Colors -->
-    <color name="marker_cluster">#DA70D6</color>
+    <color name="marker_cluster">#FF6D00</color>
     <color name="marker_workshop">#2196F3</color>
     <color name="user_location">#4CAF50</color>
 

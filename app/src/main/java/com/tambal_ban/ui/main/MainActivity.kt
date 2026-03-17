@@ -18,7 +18,6 @@ import com.tambal_ban.TambalBanApp
 import com.tambal_ban.ads.AdMobManager
 import com.tambal_ban.data.model.Workshop
 import com.tambal_ban.databinding.ActivityMainBinding
-import com.tambal_ban.ui.add.AddWorkshopActivity
 import com.tambal_ban.ui.auth.LoginActivity
 import com.tambal_ban.ui.auth.RegisterActivity
 import com.tambal_ban.ui.detail.WorkshopDetailActivity
@@ -78,19 +77,11 @@ class MainActivity : AppCompatActivity() {
 
         adMobManager = (application as TambalBanApp).adMobManager
 
-        setupToolbar()
         setupDrawer()
         setupMap()
         setupButtons()
         setupObservers()
         checkLocationPermission()
-    }
-
-    private fun setupToolbar() {
-        setSupportActionBar(binding.toolbar)
-        binding.toolbar.setNavigationOnClickListener {
-            binding.drawerLayout.openDrawer(GravityCompat.START)
-        }
     }
 
     private fun setupDrawer() {
@@ -162,11 +153,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
-        binding.btnMyLocation.setOnClickListener { centerOnMyLocation() }
-
-        binding.fabAddWorkshop.setOnClickListener {
-            startActivity(Intent(this, com.tambal_ban.ui.add.AddWorkshopActivity::class.java))
+        // Profile icon button - opens navigation drawer
+        binding.btnProfile.setOnClickListener {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
         }
+
+        binding.btnMyLocation.setOnClickListener { centerOnMyLocation() }
 
         // T036: Search logic will be triggered by etSearch keyboard actions or text changes
         binding.etSearch.setOnEditorActionListener { _, _, _ ->

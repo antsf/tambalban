@@ -5,86 +5,88 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
+    android:fitsSystemWindows="true"
     tools:context=".ui.main.MainActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
+        <!-- Map View (full screen) -->
+        <org.osmdroid.views.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Floating Search Bar (Google Maps style) -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/searchCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            app:elevation="0dp">
+            android:layout_margin="16dp"
+            app:cardCornerRadius="32dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/primary"
-                app:navigationIcon="@android:drawable/ic_menu_sort_by_size"
-                app:title="TambalBan Finder"
-                app:titleTextColor="@color/on_primary" />
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <!-- Search Field -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/searchLayout"
-                style="@style/RoundedInputStyle"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:hint="Cari Tambal Ban"
-                app:startIconDrawable="@android:drawable/ic_menu_search">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="4dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etSearch"
-                    android:layout_width="match_parent"
+                <!-- Search Input -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/searchLayout"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:inputType="text" />
+                    android:layout_weight="1"
+                    android:hint="Cari Tambal Ban"
+                    app:boxCornerRadiusBottomEnd="24dp"
+                    app:boxCornerRadiusBottomStart="24dp"
+                    app:boxCornerRadiusTopEnd="24dp"
+                    app:boxCornerRadiusTopStart="24dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:hintEnabled="false"
+                    app:startIconDrawable="@android:drawable/ic_menu_search">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Cari Tambal Ban"
+                        android:inputType="text" />
 
-            <!-- Map View -->
-            <org.osmdroid.views.MapView
-                android:id="@+id/mapView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
+                <!-- Profile Icon Button (Menu Trigger) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnProfile"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:contentDescription="Menu"
+                    app:icon="@android:drawable/ic_menu_myplaces"
+                    app:iconTint="@color/on_surface" />
 
-        <!-- My Location Button (Keep this, usually helpful even in minimal UI) -->
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- My Location Button -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnMyLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="88dp"
-            android:src="@android:drawable/ic_menu_mylocation"
+            android:layout_marginBottom="16dp"
             android:contentDescription="Lokasi Saya"
-            app:fabSize="mini"
-            app:backgroundTint="@color/surface" />
-
-        <!-- Add Workshop FAB -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAddWorkshop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:src="@android:drawable/ic_input_add"
-            android:contentDescription="@string/add_workshop"
-            app:backgroundTint="@color/primary"
-            app:tint="@color/on_primary" />
+            android:src="@android:drawable/ic_menu_mylocation"
+            app:backgroundTint="@color/surface"
+            app:fabSize="mini" />
 
         <!-- Loading Progress -->
         <ProgressBar
@@ -102,6 +104,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/drawer_menu" />
 

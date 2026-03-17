@@ -29,14 +29,14 @@ class SubmissionAdapter :
             binding.tvAddress.text = submission.address
 
             val statusRes =
-                    when (submission.status?.lowercase()) {
+                    when (submission.status.lowercase()) {
                         "approved" -> R.string.status_approved
                         "rejected" -> R.string.status_rejected
                         else -> R.string.status_pending
                     }
 
             val colorRes =
-                    when (submission.status?.lowercase()) {
+                    when (submission.status.lowercase()) {
                         "approved" -> R.color.success
                         "rejected" -> R.color.error
                         else -> R.color.secondary

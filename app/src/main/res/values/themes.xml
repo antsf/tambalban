@@ -66,10 +66,10 @@
 
     <!-- Search Input Style -->
     <style name="RoundedInputStyle" parent="Widget.Material3.TextInputLayout.OutlinedBox">
-        <item name="boxCornerRadiusTopStart">24dp</item>
-        <item name="boxCornerRadiusTopEnd">24dp</item>
-        <item name="boxCornerRadiusBottomStart">24dp</item>
-        <item name="boxCornerRadiusBottomEnd">24dp</item>
+        <item name="boxCornerRadiusTopStart">28dp</item>
+        <item name="boxCornerRadiusTopEnd">28dp</item>
+        <item name="boxCornerRadiusBottomStart">28dp</item>
+        <item name="boxCornerRadiusBottomEnd">28dp</item>
         <item name="boxStrokeColor">@color/primary</item>
         <item name="hintTextColor">@color/primary</item>
     </style>
