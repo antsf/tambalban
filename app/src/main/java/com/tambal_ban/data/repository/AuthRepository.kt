@@ -54,8 +54,32 @@ class AuthRepository(
                 }
             }
 
+    suspend fun recover(email: String): Result<Unit> =
+            withContext(Dispatchers.IO) {
+                try {
+                    val response = supabaseService.recover(mapOf("email" to email))
+                    if (response.isSuccessful) {
+                        Result.success(Unit)
+                    } else {
+                        Result.failure(Exception("Recovery failed: ${response.message()}"))
+                    }
+                } catch (e: Exception) {
+                    Result.failure(e)
+                }
+            }
+
+    fun saveEmail(email: String) {
+        authPrefs.saveEmail(email)
+    }
+
+    fun getSavedEmail(): String? = authPrefs.getEmail()
+
     fun logout() {
+        val email = getSavedEmail()
         authPrefs.clear()
+        if (email != null) {
+            saveEmail(email)
+        }
     }
 
     fun isLoggedIn(): Boolean = authPrefs.isLoggedIn()
