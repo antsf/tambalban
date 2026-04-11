@@ -55,31 +55,37 @@
 
     </LinearLayout>
 
-    <!-- My Location Button -->
+    <!-- My Location Button (Guardian Style) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnMyLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|top"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="16dp"
         android:src="@android:drawable/ic_menu_mylocation"
         android:contentDescription="@string/my_location"
-        app:fabSize="mini"
-        app:backgroundTint="@color/surface" />
+        app:fabSize="normal"
+        android:minHeight="56dp"
+        android:minWidth="56dp"
+        app:backgroundTint="@color/surface_container_lowest"
+        app:tint="@color/primary"
+        app:elevation="8dp" />
 
-    <!-- Emergency FAB -->
+    <!-- Emergency FAB (Digital Concierge - US1) -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/emergencyFab"
+        style="@style/Guardian.Button.Primary"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="200dp"
+        android:layout_marginBottom="180dp"
         android:text="@string/emergency_mode"
-        android:textColor="@color/on_primary"
-        app:backgroundTint="@color/emergency"
+        android:textColor="@color/on_primary_container"
+        android:background="@drawable/bg_primary_gradient_pill"
         app:icon="@android:drawable/ic_dialog_alert"
-        app:iconTint="@color/on_primary" />
+        app:iconTint="@color/on_primary_container"
+        app:elevation="12dp" />
 
     <!-- Add Workshop FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -93,15 +99,15 @@
         android:contentDescription="@string/add_workshop"
         app:backgroundTint="@color/primary" />
 
-    <!-- Find Nearest Button -->
+    <!-- Find Nearest Button (Pill Style) -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnFindNearest"
+        style="@style/Guardian.Button.Primary"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="120dp"
-        android:text="@string/find_nearest"
-        app:backgroundTint="@color/primary" />
+        android:layout_marginBottom="110dp"
+        android:text="@string/find_nearest" />
 
     <!-- Bottom Sheet -->
     <androidx.core.widget.NestedScrollView

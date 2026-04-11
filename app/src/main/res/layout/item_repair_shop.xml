@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_md"
+    android:background="@color/surface_container_low"
+    android:minHeight="@dimen/touch_target_min"
+    android:orientation="horizontal"
+    android:padding="20dp"
+    android:elevation="0dp">
+
+    <!-- Workshop Info -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvWorkshopName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceTitleLarge"
+            android:textColor="@color/on_surface"
+            tools:text="Tambal Ban Maju Jaya" />
+
+        <TextView
+            android:id="@+id/tvWorkshopAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="@color/on_surface_variant"
+            tools:text="Jl. Sudirman No. 123, Jakarta" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipOpenStatus"
+                style="@style/Guardian.Chip.Safety"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="OPEN NOW" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipMobileRepair"
+                style="@style/Guardian.Chip.Safety"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:text="MOBILE REPAIR" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Distance Hero (US2) -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:gravity="center_vertical|end"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceDisplaySmall"
+            android:textColor="@color/primary"
+            tools:text="1.2" />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="km"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="@color/on_surface_variant"
+            android:textAllCaps="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

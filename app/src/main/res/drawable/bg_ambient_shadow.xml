@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Custom Ambient Shadow mimicking Y:8, Blur:24, Color: on_surface @ 6% -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shadow Layer -->
+    <item
+        android:top="8dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:bottom="0dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/radius_md" />
+            <solid android:color="#0F191C1D" /> <!-- approx 6% of on_surface -->
+        </shape>
+    </item>
+    
+    <!-- Content Background Layer (Surface Lowest) -->
+    <item
+        android:top="0dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:bottom="8dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/radius_md" />
+            <solid android:color="@color/surface_container_lowest" />
+        </shape>
+    </item>
+</layer-list>

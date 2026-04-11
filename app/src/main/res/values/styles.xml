@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The "No-Line" Rule Base Styles -->
+    <style name="Guardian.List" parent="">
+        <!-- Remove dividers from all lists -->
+        <item name="android:divider">@null</item>
+        <item name="android:dividerHeight">0dp</item>
+    </style>
+
+    <!-- Component: Primary Action Button (Orchid Pill) -->
+    <style name="Guardian.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:layout_height">@dimen/touch_target_min</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="backgroundTint">@color/selector_button_primary</item>
+        <item name="android:textColor">@color/on_primary_container</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Guardian.Pill</item>
+        <item name="android:textAppearance">@style/TextAppearance.Guardian.LabelMedium</item>
+    </style>
+
+    <!-- Component: Secondary Button -->
+    <style name="Guardian.Button.Secondary" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:layout_height">@dimen/touch_target_min</item>
+        <item name="backgroundTint">@color/surface_container_lowest</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Guardian.Pill</item>
+    </style>
+
+    <!-- Shape Definitions -->
+    <style name="ShapeAppearance.Guardian.Pill" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/radius_xl</item>
+    </style>
+
+    <!-- Emergency Chips Style (Safety Green) -->
+    <style name="Guardian.Chip.Emergency" parent="Widget.Material3.SuggestionChip">
+        <item name="chipBackgroundColor">@color/tertiary_container</item>
+        <item name="android:textColor">@color/on_tertiary_container</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Guardian.Pill</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+</resources>
