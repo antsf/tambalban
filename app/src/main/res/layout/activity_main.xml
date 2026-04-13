@@ -82,7 +82,6 @@
         android:layout_marginBottom="180dp"
         android:text="@string/emergency_mode"
         android:textColor="@color/on_primary_container"
-        android:background="@drawable/bg_primary_gradient_pill"
         app:icon="@android:drawable/ic_dialog_alert"
         app:iconTint="@color/on_primary_container"
         app:elevation="12dp" />
@@ -95,7 +94,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_input_add"
-        app:iconTint="@color/on_primary"
+        app:tint="@color/on_primary"
         android:contentDescription="@string/add_workshop"
         app:backgroundTint="@color/primary" />
 

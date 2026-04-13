@@ -8,6 +8,7 @@
     <!-- Design System Tokens -->
     <dimen name="radius_xl">48dp</dimen> <!-- 3rem equivalent -->
     <dimen name="radius_lg">32dp</dimen> <!-- 2rem equivalent -->
+    <dimen name="radius_pill">28dp</dimen>
     <dimen name="radius_md">16dp</dimen> <!-- 1rem equivalent -->
     
     <dimen name="touch_target_min">56dp</dimen>

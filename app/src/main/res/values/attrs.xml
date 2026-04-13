@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TambalTextField">
+        <attr name="android:hint" />
+        <attr name="android:inputType" />
+        <attr name="fieldHint" format="string" />
+        <attr name="fieldIcon" format="reference" />
+        <attr name="fieldVariant" format="enum">
+            <enum name="text" value="0" />
+            <enum name="email" value="1" />
+            <enum name="password" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="TambalButton">
+        <attr name="android:text" />
+        <attr name="android:enabled" />
+        <attr name="btnText" format="string" />
+        <attr name="btnIcon" format="reference" />
+        <attr name="btnLoading" format="boolean" />
+        <attr name="btnVariant" format="enum">
+            <enum name="primary" value="0" />
+            <enum name="secondary" value="1" />
+            <enum name="outlined" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>

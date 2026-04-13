@@ -1,66 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center_vertical">
+    android:background="@drawable/bg_login_gradient"
+    android:padding="32dp">
 
+    <!-- Brand Name (Centered at top) -->
     <TextView
+        android:id="@+id/tvBrandName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:textSize="24sp"
+        android:layout_marginTop="64dp"
+        android:text="Tambal Ban"
+        android:textColor="@color/on_surface"
+        android:textSize="32sp"
         android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="32dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
+    <!-- Branding Logo Header -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivBrandLogo"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/colorPrimaryLogin"
+        android:padding="16dp"
+        app:contentDescription="Brand Logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvBrandName"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Guardian.Pill"
+        app:srcCompat="@drawable/ic_wrench"
+        app:tint="@color/white" />
+
+    <!-- Login Form Starts Here (Directly on Background) -->
+    <TextView
+        android:id="@+id/tvWelcomeBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="Selamat datang kembali"
+        android:textColor="@color/on_surface"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivBrandLogo" />
+
+    <TextView
+        android:id="@+id/tvWelcomeSub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Silakan masukkan detail Anda untuk masuk"
+        android:textColor="@color/login_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvWelcomeBack" />
+
+    <!-- Email Field -->
+    <TextView
+        android:id="@+id/tvEmailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Alamat Email"
+        android:textColor="@color/on_surface"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvWelcomeSub" />
+
+    <com.tambal_ban.ui.components.TambalTextField
+        android:id="@+id/etEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email">
+        android:layout_marginTop="8dp"
+        app:fieldHint="name@example.com"
+        app:fieldIcon="@drawable/ic_mail"
+        app:fieldVariant="email"
+        app:layout_constraintTop_toBottomOf="@id/tvEmailLabel" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"/>
-    </com.google.android.material.textfield.TextInputLayout>
+    <!-- Password Field -->
+    <TextView
+        android:id="@+id/tvPasswordLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Kata Sandi"
+        android:textColor="@color/on_surface"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etEmail" />
 
-    <com.google.android.material.textfield.TextInputLayout
+    <TextView
+        android:id="@+id/tvForgot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lupa?"
+        android:textColor="@color/colorPrimaryLogin"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/tvPasswordLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvPasswordLabel" />
+
+    <com.tambal_ban.ui.components.TambalTextField
+        android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        app:fieldHint="........."
+        app:fieldIcon="@drawable/ic_lock"
+        app:fieldVariant="password"
+        app:layout_constraintTop_toBottomOf="@id/tvPasswordLabel" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
+    <com.tambal_ban.ui.components.TambalButton
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="32dp"
+        app:btnText="Masuk"
+        app:btnVariant="primary"
+        app:layout_constraintTop_toBottomOf="@id/etPassword" />
 
-    <Button
-        android:id="@+id/btnRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:text="Create Account"
-        android:layout_marginTop="8dp"/>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
+    <!-- Registration Link -->
+    <LinearLayout
+        android:id="@+id/layoutRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnLogin">
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Belum punya akun? "
+            android:textColor="@color/on_surface"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Daftar"
+            android:textColor="@color/colorPrimaryLogin"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

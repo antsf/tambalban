@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Emergency / Safety Chips (Guardian Style) -->
-    <style name="Guardian.Chip.Safety" parent="Widget.Material3.SuggestionChip">
+    <style name="Guardian.Chip.Safety" parent="Widget.Material3.Chip.Suggestion">
         <item name="chipBackgroundColor">@color/tertiary_container</item>
         <item name="android:textColor">@color/on_tertiary_container</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Guardian.Pill</item>

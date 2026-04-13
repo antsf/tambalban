@@ -5,6 +5,13 @@
     <color name="primary_container">#DA70D6</color> <!-- Emergency Orchid Beacon -->
     <color name="on_primary">#FFFFFF</color>
     <color name="on_primary_container">#FFFFFF</color>
+    
+    <!-- Modern Login Refresh Palette -->
+    <color name="colorPrimaryLogin">#D672E1</color>
+    <color name="login_bg_start">#F9F5FF</color>
+    <color name="login_bg_end">#F4EBFF</color>
+    <color name="login_field_bg">#F5F5F5</color>
+    <color name="login_text_secondary">#757575</color>
 
     <!-- Surface Hierarchy (Tonal Layering) -->
     <color name="surface">#F8F9FA</color>
@@ -25,6 +32,14 @@
     <color name="outline_variant_ghost">#26000000</color> <!-- 15% opacity ghost border -->
 
     <!-- Core / Existing Colors Mapping Fallbacks -->
+    <color name="white">#FFFFFF</color>
+    <color name="success">#4CAF50</color>
+    <color name="secondary">#DA70D6</color>
+    <color name="rating_star">#FFB300</color>
+    <color name="divider">#E0E0E0</color>
+    <color name="text_secondary">#757575</color>
+    <color name="primary_light">#E1BEE7</color>
+    
     <color name="background">@color/surface</color>
     <color name="error">#B3261E</color>
     <color name="on_error">#FFFFFF</color>
