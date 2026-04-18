@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <ImageView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/ic_search"
+        android:alpha="0.3"
+        android:tint="@color/on_surface_variant" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Tidak ada tambal ban ditemukan"
+        android:textColor="@color/on_surface_variant"
+        android:textSize="14sp"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Coba gunakan kata kunci lain atau cari di area yang berbeda."
+        android:textColor="@color/on_surface_variant"
+        android:textSize="12sp"
+        android:alpha="0.7"
+        android:gravity="center" />
+
+</LinearLayout>

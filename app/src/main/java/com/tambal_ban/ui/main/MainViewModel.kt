@@ -11,101 +11,87 @@ import com.tambal_ban.data.model.Workshop
 import com.tambal_ban.data.repository.WorkshopRepository
 import com.tambal_ban.location.LocationService
 import com.tambal_ban.utils.Constants
-import com.tambal_ban.utils.GeoUtils
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
-/** ViewModel for MainActivity (Map screen) using native components */
+/**
+ * T006: ViewModel for the modernized Home screen.
+ * Handles nearby workshops fetching and search state.
+ */
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-
     private val repository: WorkshopRepository = (application as TambalBanApp).workshopRepository
     private val locationService: LocationService = LocationService.getInstance(application)
 
-    // UI State
     private val _workshops = MutableLiveData<List<Workshop>>()
     val workshops: LiveData<List<Workshop>> = _workshops
-
-    private val _nearestWorkshops = MutableLiveData<List<Workshop>>()
-    val nearestWorkshops: LiveData<List<Workshop>> = _nearestWorkshops
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private val _error = MutableLiveData<String?>()
-    val error: LiveData<String?> = _error
+    private val _searchQuery = MutableLiveData<String>()
+    val searchQuery: LiveData<String> = _searchQuery
 
     private val _userLocation = MutableLiveData<Location?>()
     val userLocation: LiveData<Location?> = _userLocation
 
-    private val _searchRadius = MutableLiveData<Int>()
-    val searchRadius: LiveData<Int> = _searchRadius
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> = _error
 
-    private val _emergencyWorkshop = MutableLiveData<Workshop?>()
-    val emergencyWorkshop: LiveData<Workshop?> = _emergencyWorkshop
+    private val _sheetTitle = MutableLiveData<String>("Tambal Ban Terdekat")
+    val sheetTitle: LiveData<String> = _sheetTitle
 
-    private val _isEmergencyMode = MutableLiveData<Boolean>()
-    val isEmergencyMode: LiveData<Boolean> = _isEmergencyMode
+    private val _searchFlow = MutableStateFlow("")
 
     init {
-        _searchRadius.value = Constants.RADIUS_3KM
-        _isEmergencyMode.value = false
+        viewModelScope.launch {
+            @OptIn(FlowPreview::class)
+            _searchFlow
+                .debounce(500)
+                .filter { it.length >= 3 }
+                .distinctUntilChanged()
+                .collect { query ->
+                    searchWorkshops(query)
+                }
+        }
     }
 
-    /** Start location tracking */
     fun startLocationUpdates() {
         locationService.getLastLocation()
         locationService.requestLocationUpdates()
     }
 
-    /** Stop location tracking */
     fun stopLocationUpdates() {
         locationService.stopLocationUpdates()
     }
 
-    /** Get the location service LiveData for observation in Activity */
     fun getLocationLiveData(): LiveData<Location?> = locationService.location
-    fun getLocationErrorLiveData(): LiveData<String?> = locationService.locationError
 
-    /** Update user location in ViewModel state */
     fun onLocationUpdated(location: Location?) {
         _userLocation.value = location
+        // Fetch workshops when location is updated if the workshop list is empty
+        if (_workshops.value.isNullOrEmpty()) {
+            location?.let {
+                fetchNearbyWorkshops(it.latitude, it.longitude)
+            }
+        }
     }
 
-    /** Load workshops by bounding box (Viewport-based) */
-    fun loadWorkshopsByBounds(minLat: Double, maxLat: Double, minLng: Double, maxLng: Double) {
+    fun fetchNearbyWorkshops(lat: Double, lon: Double, radiusKm: Int = Constants.RADIUS_3KM) {
+        _sheetTitle.value = "Tambal Ban Terdekat"
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val workshopList =
-                        repository.getWorkshopsInBounds(
-                                minLat,
-                                maxLat,
-                                minLng,
-                                maxLng,
-                                context = getApplication()
-                        )
-
-                // If user location is available, calculate distances
-                val location = _userLocation.value
-                val finalizedList =
-                        if (location != null) {
-                            workshopList
-                                    .map { workshop ->
-                                        workshop.distance =
-                                                GeoUtils.calculateDistance(
-                                                        location.latitude,
-                                                        location.longitude,
-                                                        workshop.latitude,
-                                                        workshop.longitude
-                                                )
-                                        workshop
-                                    }
-                                    .sortedBy { it.distance }
-                        } else {
-                            workshopList
-                        }
-
-                _workshops.value = finalizedList
-                _error.value = null
+                val list = repository.getNearbyWorkshops(
+                    lat, 
+                    lon, 
+                    radiusKm * 10000, 
+                    getApplication()
+                )
+                _workshops.value = list
             } catch (e: Exception) {
                 _error.value = e.message
             } finally {
@@ -114,71 +100,28 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    /** Find nearest workshops within specific radius */
-    fun findNearestWorkshops(radius: Int) {
-        val location = _userLocation.value ?: return
+    fun onSearchTextChanged(query: String) {
+        _searchFlow.value = query
+        if (query.isEmpty()) {
+            _userLocation.value?.let {
+                fetchNearbyWorkshops(it.latitude, it.longitude)
+            }
+        }
+    }
 
+    fun searchWorkshops(query: String) {
+        _searchQuery.value = query
+        _sheetTitle.value = "Hasil Pencarian"
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val workshopList =
-                        repository.findNearestWorkshops(
-                                userLat = location.latitude,
-                                userLng = location.longitude,
-                                radiusKm = radius
-                        )
-                _nearestWorkshops.value = workshopList
-                _error.value = null
+                val list = repository.searchWorkshops(query, getApplication())
+                _workshops.value = list
             } catch (e: Exception) {
                 _error.value = e.message
             } finally {
                 _isLoading.value = false
             }
         }
-    }
-
-    /** Set search radius */
-    fun setSearchRadius(radius: Int) {
-        _searchRadius.value = radius
-    }
-
-    /** Activate emergency mode (find closest immediately using SQL optimization) */
-    fun activateEmergencyMode() {
-        val location = _userLocation.value ?: return
-        _isEmergencyMode.value = true
-
-        viewModelScope.launch {
-            _isLoading.value = true
-            try {
-                val closest = repository.getClosestWorkshop(location.latitude, location.longitude)
-                if (closest != null) {
-                    _nearestWorkshops.value = listOf(closest)
-                } else {
-                    // Fallback to broader radius if no local hit
-                    findNearestWorkshops(Constants.EMERGENCY_RADIUS_KM)
-                }
-                _error.value = null
-            } catch (e: Exception) {
-                _error.value = e.message
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
-
-    /** Deactivate emergency mode */
-    fun deactivateEmergencyMode() {
-        _isEmergencyMode.value = false
-        _emergencyWorkshop.value = null
-    }
-
-    /** Set emergency workshop */
-    fun setEmergencyWorkshop(workshop: Workshop?) {
-        _emergencyWorkshop.value = workshop
-    }
-
-    /** Clear error */
-    fun clearError() {
-        _error.value = null
     }
 }

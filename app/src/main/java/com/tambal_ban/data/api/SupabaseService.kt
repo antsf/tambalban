@@ -25,6 +25,12 @@ interface SupabaseService {
     // --- Workshops ---
 
     @GET("rest/v1/workshops")
+    suspend fun getWorkshopsByName(
+        @Query("name") nameQuery: String,
+        @Query("verified") verified: String = "eq.true"
+    ): Response<List<Workshop>>
+
+    @GET("rest/v1/workshops")
     suspend fun getWorkshops(
         @Query("verified") verified: String = "eq.true",
         @Query("latitude") minLat: String?,
@@ -36,6 +42,11 @@ interface SupabaseService {
     @GET("rest/v1/workshops")
     suspend fun getWorkshopById(
         @Query("id") id: String
+    ): Response<List<Workshop>>
+
+    @POST("rest/v1/rpc/nearby_workshops")
+    suspend fun getNearbyWorkshops(
+        @Body request: NearbyRequest
     ): Response<List<Workshop>>
 
 

@@ -57,6 +57,35 @@ class WorkshopRepository(
                 return@withContext workshops
             }
 
+    /**
+     * T005: Get nearby workshops using RPC with local DB fallback.
+     */
+    suspend fun getNearbyWorkshops(
+        lat: Double,
+        lon: Double,
+        radiusMeters: Int,
+        context: Context
+    ): List<Workshop> =
+        withContext(Dispatchers.IO) {
+            if (isNetworkAvailable(context)) {
+                try {
+                    val response = supabaseService.getNearbyWorkshops(
+                        com.tambal_ban.data.model.NearbyRequest(lat, lon, radiusMeters)
+                    )
+                    if (response.isSuccessful) {
+                        val workshops = response.body() ?: emptyList()
+                        saveWorkshopsToDb(workshops)
+                        return@withContext workshops.onEach {
+                            it.distance = GeoUtils.calculateDistance(lat, lon, it.latitude, it.longitude)
+                        }.sortedBy { it.distance }
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error fetching nearby workshops", e)
+                }
+            }
+            return@withContext findNearestWorkshops(lat, lon, radiusMeters / 1000)
+        }
+
     /** 
      * T026 Optimization: Find nearest workshops within radius using SQL-level bounding box first
      */
@@ -103,6 +132,37 @@ class WorkshopRepository(
                 }
                 return@withContext null
             }
+
+    suspend fun searchWorkshops(query: String, context: Context): List<Workshop> =
+        withContext(Dispatchers.IO) {
+            if (isNetworkAvailable(context)) {
+                try {
+                    val response = supabaseService.getWorkshopsByName("ilike.*$query*")
+                    if (response.isSuccessful) {
+                        return@withContext response.body() ?: emptyList()
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error searching workshops", e)
+                }
+            }
+            
+            // Local DB fuzzy search
+            val workshops = mutableListOf<Workshop>()
+            val db = dbHelper.readableDatabase
+            val cursor = db.query(
+                WorkshopDbHelper.TABLE_WORKSHOPS,
+                null,
+                "${WorkshopDbHelper.COLUMN_NAME} LIKE ?",
+                arrayOf("%$query%"),
+                null, null, null
+            )
+            cursor.use {
+                while (it.moveToNext()) {
+                    workshops.add(WorkshopMapper.fromCursor(it))
+                }
+            }
+            return@withContext workshops
+        }
 
     suspend fun getWorkshopById(id: String): Workshop? =
             withContext(Dispatchers.IO) {

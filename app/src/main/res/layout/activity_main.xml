@@ -4,236 +4,160 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".ui.main.MainActivity">
 
-    <!-- Map View -->
+    <!-- T007: Map View Base Layer -->
     <org.osmdroid.views.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Top Controls -->
-    <LinearLayout
+    <!-- T015: Search Overlay -->
+    <include
+        android:id="@+id/searchOverlay"
+        layout="@layout/view_search_overlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/surface"
-        android:padding="8dp">
+        android:layout_margin="16dp" />
 
-        <!-- Radius Filter Chips -->
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupRadius"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:singleSelection="true"
-            app:selectionRequired="true">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip1km"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/radius_1km" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip3km"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/radius_3km"
-                android:checked="true" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip5km"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/radius_5km" />
-
-        </com.google.android.material.chip.ChipGroup>
-
-    </LinearLayout>
-
-    <!-- My Location Button (Guardian Style) -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnMyLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|top"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="16dp"
-        android:src="@android:drawable/ic_menu_mylocation"
-        android:contentDescription="@string/my_location"
-        app:fabSize="normal"
-        android:minHeight="56dp"
-        android:minWidth="56dp"
-        app:backgroundTint="@color/surface_container_lowest"
-        app:tint="@color/primary"
-        app:elevation="8dp" />
-
-    <!-- Emergency FAB (Digital Concierge - US1) -->
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/emergencyFab"
-        style="@style/Guardian.Button.Primary"
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="180dp"
-        android:text="@string/emergency_mode"
-        android:textColor="@color/on_primary_container"
-        app:icon="@android:drawable/ic_dialog_alert"
-        app:iconTint="@color/on_primary_container"
-        app:elevation="12dp" />
-
-    <!-- Add Workshop FAB -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddWorkshop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:src="@android:drawable/ic_input_add"
-        app:tint="@color/on_primary"
-        android:contentDescription="@string/add_workshop"
-        app:backgroundTint="@color/primary" />
-
-    <!-- Find Nearest Button (Pill Style) -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnFindNearest"
-        style="@style/Guardian.Button.Primary"
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="110dp"
-        android:text="@string/find_nearest" />
-
-    <!-- Bottom Sheet -->
-    <androidx.core.widget.NestedScrollView
+    <!-- T012: Interactive Bottom Sheet -->
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomSheet"
+        style="@style/Home.BottomSheet"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@color/surface"
-        android:elevation="16dp"
+        android:layout_height="wrap_content"
+        app:cardElevation="12dp"
+        app:strokeWidth="0dp"
+        app:behavior_draggable="true"
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
+        app:behavior_fitToContents="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-            <!-- Handle -->
-            <View
-                android:layout_width="40dp"
-                android:layout_height="4dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@color/divider" />
-
-            <!-- Emergency Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardEmergency"
+            <!-- Sticky Header Part -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:visibility="gone"
-                app:cardBackgroundColor="@color/primary_light"
-                app:cardCornerRadius="12dp">
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@color/white">
 
-                <LinearLayout
+                <!-- Drag Handle -->
+                <View
+                    android:layout_width="32dp"
+                    android:layout_height="4dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="16dp"
+                    android:background="@color/divider" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tvSheetTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tambal Ban Terdekat"
+                        android:textColor="@color/on_surface"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btnViewAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:text="Lihat Semua"
+                        android:textSize="14sp"
+                        android:textColor="@color/primary"/>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!-- Scrolling Content -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <!-- Skeleton Loading -->
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/emergency_closest"
-                        android:textColor="@color/on_primary"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/tvEmergencyName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@color/on_primary"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        tools:text="Tambal Ban Maju Jaya" />
-
-                    <TextView
-                        android:id="@+id/tvEmergencyDistance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/on_primary"
-                        android:textSize="14sp"
-                        tools:text="0.8 km" />
+                    android:visibility="gone"
+                    android:paddingHorizontal="16dp"
+                    app:shimmer_auto_start="true"
+                    tools:visibility="visible">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnEmergencyCall"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            android:text="@string/call"
-                            app:backgroundTint="@color/success" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnEmergencyNavigate"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/navigate"
-                            android:textColor="@color/on_primary"
-                            app:strokeColor="@color/on_primary" />
-
+                        android:orientation="vertical">
+                        <include layout="@layout/item_workshop_skeleton" />
+                        <include layout="@layout/item_workshop_skeleton" />
+                        <include layout="@layout/item_workshop_skeleton" />
+                        <include layout="@layout/item_workshop_skeleton" />
+                        <include layout="@layout/item_workshop_skeleton" />
                     </LinearLayout>
 
-                </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvWorkshopsNearby"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="16dp"
+                    android:paddingBottom="24dp"
+                    android:nestedScrollingEnabled="true"
+                    tools:listitem="@layout/item_workshop_nearby" />
 
-            <!-- Workshop List -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/title_map"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                <!-- Empty State -->
+                <include
+                    android:id="@+id/viewEmptyState"
+                    layout="@layout/view_empty_state"
+                    android:visibility="gone" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvWorkshops"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:nestedScrollingEnabled="false" />
+                <!-- Error State -->
+                <include
+                    android:id="@+id/viewErrorState"
+                    layout="@layout/view_error_state"
+                    android:visibility="gone" />
+
+            </FrameLayout>
 
         </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
+    </com.google.android.material.card.MaterialCardView>
 
-    <!-- Ad Container -->
-    <FrameLayout
-        android:id="@+id/adContainer"
-        android:layout_width="match_parent"
+    <!-- My Location FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabMyLocation"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/surface"
-        android:visibility="gone" />
+        android:layout_margin="16dp"
+        android:contentDescription="My Location"
+        android:src="@drawable/ic_my_location"
+        app:layout_anchor="@id/bottomSheet"
+        app:layout_anchorGravity="top|end"
+        android:translationY="-40dp"
+        app:backgroundTint="@color/white"
+        app:tint="@color/primary"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
-    <!-- Loading Progress -->
+    <!-- Global Loading Progress -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"

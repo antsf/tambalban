@@ -61,6 +61,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
+    implementation("androidx.preference:preference-ktx:1.2.1")
 
     // Lifecycle - ViewModel & LiveData
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
@@ -90,6 +91,12 @@ dependencies {
 
     // Security - EncryptedSharedPreferences
     implementation("androidx.security:security-crypto:1.1.0")
+
+    // UI Effects - Shimmer
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
+
+    // Image Loading - Coil
+    implementation("io.coil-kt:coil:2.6.0")
 
     // Testing
     testImplementation("junit:junit:4.13.2")
