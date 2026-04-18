@@ -82,8 +82,9 @@
         <item name="boxCornerRadiusBottomStart">10dp</item>
         <item name="boxCornerRadiusBottomEnd">10dp</item>
         <item name="boxBackgroundColor">#F5F5F5</item>
-        <item name="boxStrokeWidth">0dp</item>
-        <item name="boxStrokeWidthFocused">0dp</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <item name="boxStrokeColor">@color/divider</item>
         <item name="hintTextColor">#757575</item>
         <item name="android:textColorHint">#757575</item>
         <item name="startIconTint">#757575</item>
