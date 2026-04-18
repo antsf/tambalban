@@ -25,8 +25,18 @@ data class Workshop(
     val source: String? = null,
     @SerialName("created_at")
     val createdAt: String? = null,
+    @SerialName("image_url")
+    val imageUrl: String? = null,
 
     // UI fields
     @kotlinx.serialization.Transient
     var distance: Double? = null
+)
+
+@Serializable
+data class NearbyRequest(
+    val lat: Double,
+    val lon: Double,
+    @SerialName("radius_meters")
+    val radiusMeters: Int
 )

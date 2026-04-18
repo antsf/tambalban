@@ -13,6 +13,12 @@
     <color name="login_field_bg">#F5F5F5</color>
     <color name="login_text_secondary">#757575</color>
 
+    <!-- Map Refresh Palette -->
+    <color name="map_teal_light">#E0F2F1</color>
+    <color name="map_teal_dark">#004D40</color>
+    <color name="marker_orchid">#D672E1</color>
+    <color name="marker_label_bg">#FFFFFF</color>
+
     <!-- Surface Hierarchy (Tonal Layering) -->
     <color name="surface">#F8F9FA</color>
     <color name="surface_container_low">#F3F4F5</color>
@@ -41,6 +47,7 @@
     <color name="primary_light">#E1BEE7</color>
     
     <color name="background">@color/surface</color>
+    <color name="card">@color/white</color>
     <color name="error">#B3261E</color>
     <color name="on_error">#FFFFFF</color>
 </resources>

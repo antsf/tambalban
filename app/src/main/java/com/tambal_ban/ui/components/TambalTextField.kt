@@ -27,7 +27,7 @@ class TambalTextField @JvmOverloads constructor(
             try {
                 // Hint
                 val hint = getString(R.styleable.TambalTextField_fieldHint) ?: getString(R.styleable.TambalTextField_android_hint)
-                textInputLayout.hint = hint
+                editText.hint = hint
 
                 // Icon
                 val iconRes = getResourceId(R.styleable.TambalTextField_fieldIcon, -1)

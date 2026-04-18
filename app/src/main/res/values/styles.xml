@@ -82,11 +82,32 @@
         <item name="boxCornerRadiusBottomStart">10dp</item>
         <item name="boxCornerRadiusBottomEnd">10dp</item>
         <item name="boxBackgroundColor">#F5F5F5</item>
-        <item name="boxStrokeWidth">0dp</item>
-        <item name="boxStrokeWidthFocused">0dp</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <item name="boxStrokeColor">@color/divider</item>
         <item name="hintTextColor">#757575</item>
         <item name="android:textColorHint">#757575</item>
         <item name="startIconTint">#757575</item>
         <item name="endIconTint">#757575</item>
+    </style>
+
+    <!-- Home Screen Refresh Styles -->
+    <style name="Home.SearchCard" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">@dimen/radius_pill</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardBackgroundColor">@color/surface_container_lowest</item>
+    </style>
+
+    <style name="Home.BottomSheet" parent="">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Home.BottomSheet</item>
+        <item name="backgroundTint">@color/card</item>
+    </style>
+
+    <style name="ShapeAppearance.Home.BottomSheet" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">@dimen/radius_pill</item>
+        <item name="cornerSizeTopRight">@dimen/radius_pill</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
     </style>
 </resources>

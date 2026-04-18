@@ -1,109 +1,136 @@
 package com.tambal_ban.ui.main
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tambal_ban.R
-import com.tambal_ban.TambalBanApp
-import com.tambal_ban.ads.AdMobManager
 import com.tambal_ban.data.model.Workshop
 import com.tambal_ban.databinding.ActivityMainBinding
-import com.tambal_ban.ui.add.AddWorkshopActivity
-import com.tambal_ban.ui.detail.WorkshopDetailActivity
 import com.tambal_ban.utils.Constants
-import com.tambal_ban.utils.GeoUtils
-import com.tambal_ban.utils.IntentUtils
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
-import org.osmdroid.events.DelayedMapListener
-import org.osmdroid.events.MapListener
-import org.osmdroid.events.ScrollEvent
-import org.osmdroid.events.ZoomEvent
+import com.tambal_ban.utils.MapUtils
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
+/**
+ * T009: MainActivity with unified state management (Loading, Empty, Error, Content).
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
-
-    private lateinit var adMobManager: AdMobManager
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
-    private lateinit var workshopAdapter: WorkshopAdapter
-
     private var myLocationOverlay: MyLocationNewOverlay? = null
-    private var markerClusterer: RadiusMarkerClusterer? = null
+    private lateinit var workshopAdapter: NearbyWorkshopAdapter
+    private var searchFocusMarker: Marker? = null
+    private var hasCenteredOnUser = false
 
     private val locationPermissionRequest =
-            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-                    permissions ->
-                when {
-                    permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true -> {
-                        enableMyLocation()
-                    }
-                    else -> {
-                        Toast.makeText(
-                                        this,
-                                        R.string.location_permission_denied,
-                                        Toast.LENGTH_SHORT
-                                )
-                                .show()
-                    }
-                }
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+            ) {
+                enableMyLocation()
+            } else {
+                Toast.makeText(this, "Izin lokasi diperlukan untuk mencari tambal ban terdekat", Toast.LENGTH_SHORT).show()
             }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Initialize osmdroid
+        org.osmdroid.config.Configuration.getInstance().load(
+            this,
+            androidx.preference.PreferenceManager.getDefaultSharedPreferences(this)
+        )
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Apply window insets for safe areas
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) {
-                v: View,
-                windowInsets: WindowInsetsCompat ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(
-                    v.paddingStart,
-                    insets.top,
-                    v.paddingEnd,
-                    insets.bottom
-            )
-            windowInsets
-        }
-
-        adMobManager = (application as TambalBanApp).adMobManager
-
         setupMap()
         setupBottomSheet()
-        setupRecyclerView()
-        setupButtons()
+        setupSearch()
         setupObservers()
         checkLocationPermission()
+        
+        // Setup Retry Button
+        binding.viewErrorState.btnRetry.setOnClickListener {
+            val query = binding.searchOverlay.etSearch.text.toString()
+            if (query.isNotEmpty()) {
+                viewModel.searchWorkshops(query)
+            } else {
+                viewModel.userLocation.value?.let {
+                    viewModel.fetchNearbyWorkshops(it.latitude, it.longitude)
+                }
+            }
+        }
+    }
 
-        // T031: Delayed Ad Loading (2 seconds delay to prioritize map rendering)
-        lifecycleScope.launch {
-            delay(2000)
-            adMobManager.loadBannerAd(binding.adContainer)
+    private fun setupSearch() {
+        binding.searchOverlay.etSearch.addTextChangedListener(object : android.text.TextWatcher {
+            override fun afterTextChanged(s: android.text.Editable?) {
+                val query = s?.toString() ?: ""
+                viewModel.onSearchTextChanged(query)
+                if (query.isEmpty()) {
+                    searchFocusMarker?.let { 
+                        binding.mapView.overlays.remove(it)
+                        searchFocusMarker = null
+                        binding.mapView.invalidate()
+                    }
+                }
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        binding.searchOverlay.ivUserAvatar.setOnClickListener {
+            Toast.makeText(this, "Profile feature coming soon", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.searchOverlay.etSearch.setOnEditorActionListener { v, actionId, _ ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
+                
+                binding.searchOverlay.etSearch.clearFocus()
+                viewModel.searchWorkshops(v.text.toString())
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private fun setupBottomSheet() {
+        val behavior = com.google.android.material.bottomsheet.BottomSheetBehavior.from(binding.bottomSheet)
+        behavior.peekHeight = (resources.displayMetrics.density * 280).toInt()
+        behavior.state = com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
+
+        workshopAdapter = NearbyWorkshopAdapter { workshop ->
+            binding.mapView.controller.animateTo(GeoPoint(workshop.latitude, workshop.longitude))
+            addSearchFocusMarker(workshop)
+        }
+
+        binding.rvWorkshopsNearby.apply {
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MainActivity)
+            adapter = workshopAdapter
         }
     }
 
@@ -111,174 +138,94 @@ class MainActivity : AppCompatActivity() {
         binding.mapView.apply {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
-
-            controller.setZoom(Constants.DEFAULT_ZOOM)
+            overlayManager.tilesOverlay.setColorFilter(MapUtils.getColorFilter())
+            controller.setZoom(12.0)
             controller.setCenter(GeoPoint(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE))
-
-            addMapListener(
-                    DelayedMapListener(
-                            object : MapListener {
-                                override fun onScroll(event: ScrollEvent?): Boolean {
-                                    loadWorkshopsInViewport()
-                                    return true
-                                }
-
-                                override fun onZoom(event: ZoomEvent?): Boolean {
-                                    loadWorkshopsInViewport()
-                                    return true
-                                }
-                            },
-                            500
-                    )
-            )
         }
 
-        markerClusterer = RadiusMarkerClusterer(this).apply { setIcon(getClusterIcon()) }
-        binding.mapView.overlays.add(markerClusterer)
-    }
-
-    private fun getClusterIcon(): Bitmap? {
-        val size = 100
-        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        val paint =
-                android.graphics.Paint().apply {
-                    color = ContextCompat.getColor(this@MainActivity, R.color.primary)
-                    style = android.graphics.Paint.Style.FILL
-                    isAntiAlias = true
-                }
-        canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
-        return bitmap
-    }
-
-    private fun setupBottomSheet() {
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-
-        bottomSheetBehavior.addBottomSheetCallback(
-                object : BottomSheetBehavior.BottomSheetCallback() {
-                    override fun onStateChanged(bottomSheet: View, newState: Int) {
-                        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                            binding.emergencyFab.show()
-                        }
-                    }
-
-                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                        if (slideOffset > 0) {
-                            binding.emergencyFab.hide()
-                        } else {
-                            binding.emergencyFab.show()
-                        }
-                    }
-                }
-        )
-    }
-
-    private fun setupRecyclerView() {
-        workshopAdapter = WorkshopAdapter { workshop -> openWorkshopDetail(workshop) }
-        binding.rvWorkshops.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = workshopAdapter
-        }
-    }
-
-    private fun setupButtons() {
-        binding.emergencyFab.setOnClickListener { viewModel.activateEmergencyMode() }
-
-        binding.btnMyLocation.setOnClickListener { centerOnMyLocation() }
-
-        binding.btnFindNearest.setOnClickListener {
-            viewModel.findNearestWorkshops(viewModel.searchRadius.value ?: Constants.RADIUS_3KM)
-        }
-
-        binding.fabAddWorkshop.setOnClickListener {
-            startActivity(Intent(this, AddWorkshopActivity::class.java))
-        }
-
-        binding.chipGroupRadius.setOnCheckedStateChangeListener { _, checkedIds ->
-            if (checkedIds.isNotEmpty()) {
-                val radius =
-                        when (checkedIds.first()) {
-                            R.id.chip1km -> Constants.RADIUS_1KM
-                            R.id.chip3km -> Constants.RADIUS_3KM
-                            R.id.chip5km -> Constants.RADIUS_5KM
-                            else -> Constants.RADIUS_3KM
-                        }
-                viewModel.setSearchRadius(radius)
-                loadWorkshopsInViewport()
-            }
-        }
-
-        binding.btnEmergencyCall.setOnClickListener {
-            viewModel.emergencyWorkshop.value?.phone?.let { phone ->
-                IntentUtils.dialPhoneNumber(this, phone)
-            }
-        }
-
-        binding.btnEmergencyNavigate.setOnClickListener {
-            viewModel.emergencyWorkshop.value?.let { workshop ->
-                IntentUtils.openNavigation(
-                        this,
-                        workshop.latitude,
-                        workshop.longitude,
-                        workshop.name
-                )
+        binding.fabMyLocation.setOnClickListener {
+            myLocationOverlay?.myLocation?.let { point ->
+                binding.mapView.controller.setCenter(point)
+                binding.mapView.controller.setZoom(Constants.DEFAULT_ZOOM)
             }
         }
     }
 
     private fun setupObservers() {
         viewModel.workshops.observe(this) { workshops ->
-            updateMapMarkers(workshops)
+            updateMarkers(workshops)
             workshopAdapter.submitList(workshops)
+            updateUIStates()
         }
 
-        viewModel.nearestWorkshops.observe(this) { workshops ->
-            if (workshops.isNotEmpty()) {
-                showEmergencyMode(workshops.first())
-            }
-        }
+        viewModel.isLoading.observe(this) { updateUIStates() }
+        viewModel.error.observe(this) { updateUIStates() }
 
-        viewModel.userLocation.observe(this) { location ->
-            location?.let {
-                if (myLocationOverlay == null) {
-                    enableMyLocation()
+        viewModel.getLocationLiveData().observe(this) { location ->
+            viewModel.onLocationUpdated(location)
+            if (location != null) {
+                binding.fabMyLocation.visibility = View.VISIBLE
+                if (!hasCenteredOnUser) {
+                    binding.mapView.controller.setCenter(GeoPoint(location.latitude, location.longitude))
+                    binding.mapView.controller.setZoom(Constants.DEFAULT_ZOOM)
+                    hasCenteredOnUser = true
                 }
             }
         }
 
-        viewModel.isLoading.observe(this) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        viewModel.sheetTitle.observe(this) { title ->
+            binding.tvSheetTitle.text = title
+        }
+    }
+
+    private fun updateUIStates() {
+        val isLoading = viewModel.isLoading.value ?: false
+        val error = viewModel.error.value
+        val workshops = viewModel.workshops.value ?: emptyList()
+        val isSearching = binding.searchOverlay.etSearch.text.isNotEmpty()
+
+        // 1. Loading State
+        if (isLoading) {
+            binding.shimmerView.startShimmer()
+            binding.shimmerView.visibility = View.VISIBLE
+            binding.rvWorkshopsNearby.visibility = View.GONE
+            binding.viewEmptyState.root.visibility = View.GONE
+            binding.viewErrorState.root.visibility = View.GONE
+            return
+        }
+        binding.shimmerView.stopShimmer()
+        binding.shimmerView.visibility = View.GONE
+
+        // 2. Error State
+        if (error != null) {
+            binding.rvWorkshopsNearby.visibility = View.GONE
+            binding.viewEmptyState.root.visibility = View.GONE
+            binding.viewErrorState.root.visibility = View.VISIBLE
+            return
+        }
+        binding.viewErrorState.root.visibility = View.GONE
+
+        // 3. Empty State
+        if (workshops.isEmpty()) {
+            binding.rvWorkshopsNearby.visibility = View.GONE
+            binding.viewEmptyState.root.visibility = View.VISIBLE
+        } else {
+            binding.rvWorkshopsNearby.visibility = View.VISIBLE
+            binding.viewEmptyState.root.visibility = View.GONE
         }
 
-        viewModel.error.observe(this) { error ->
-            error?.let {
-                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
-                viewModel.clearError()
-            }
-        }
-
-        viewModel.isEmergencyMode.observe(this) { isEmergency ->
-            if (!isEmergency) {
-                hideEmergencyMode()
-            }
-        }
-
-        viewModel.getLocationLiveData().observe(this) { location ->
-            viewModel.onLocationUpdated(location)
+        // 4. Global Sheet Visibility
+        val behavior = com.google.android.material.bottomsheet.BottomSheetBehavior.from(binding.bottomSheet)
+        if (workshops.isEmpty() && !isSearching && !isLoading) {
+            behavior.state = com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
+        } else if (behavior.state == com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN) {
+            behavior.state = com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 
     private fun checkLocationPermission() {
-        val permissions =
-                arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-        if (permissions.all {
-                    ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-                }
-        ) {
+        val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        if (permissions.all { ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED }) {
             enableMyLocation()
         } else {
             locationPermissionRequest.launch(permissions)
@@ -287,92 +234,75 @@ class MainActivity : AppCompatActivity() {
 
     private fun enableMyLocation() {
         if (myLocationOverlay != null) return
-
-        myLocationOverlay =
-                MyLocationNewOverlay(GpsMyLocationProvider(this), binding.mapView).apply {
-                    enableMyLocation()
-                    enableFollowLocation()
-                }
+        myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), binding.mapView).apply { enableMyLocation() }
         binding.mapView.overlays.add(myLocationOverlay)
-
         viewModel.startLocationUpdates()
     }
 
-    private fun centerOnMyLocation() {
-        val location = viewModel.userLocation.value
-        location?.let { binding.mapView.controller.animateTo(GeoPoint(it.latitude, it.longitude)) }
+    private fun addSearchFocusMarker(workshop: Workshop) {
+        searchFocusMarker?.let { binding.mapView.overlays.remove(it) }
+        searchFocusMarker = Marker(binding.mapView).apply {
+            position = GeoPoint(workshop.latitude, workshop.longitude)
+            icon = createLabeledMarker(workshop.name)
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            setOnMarkerClickListener { _, _ ->
+                binding.mapView.controller.animateTo(position)
+                true
+            }
+        }
+        binding.mapView.overlays.add(searchFocusMarker)
+        binding.mapView.invalidate()
     }
 
-    private fun loadWorkshopsInViewport() {
-        val boundingBox = binding.mapView.projection.boundingBox
-        viewModel.loadWorkshopsByBounds(
-                minLat = boundingBox.latSouth,
-                maxLat = boundingBox.latNorth,
-                minLng = boundingBox.lonWest,
-                maxLng = boundingBox.lonEast
-        )
-    }
-
-    private fun updateMapMarkers(workshops: List<Workshop>) {
-        markerClusterer?.items?.clear()
+    private fun updateMarkers(workshops: List<Workshop>) {
+        binding.mapView.overlays.filterIsInstance<Marker>().forEach { 
+            if (it != searchFocusMarker) binding.mapView.overlays.remove(it)
+        }
         workshops.forEach { workshop ->
-            val marker =
-                    Marker(binding.mapView).apply {
-                        position = GeoPoint(workshop.latitude, workshop.longitude)
-                        title = workshop.name
-                        snippet = workshop.address
-                        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                        setOnMarkerClickListener { _, _ ->
-                            openWorkshopDetail(workshop)
-                            true
-                        }
-                    }
-            markerClusterer?.add(marker)
+            if (workshop.id == searchFocusMarker?.title) return@forEach
+            Marker(binding.mapView).apply {
+                position = GeoPoint(workshop.latitude, workshop.longitude)
+                icon = createLabeledMarker(workshop.name)
+                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                setOnMarkerClickListener { _, _ ->
+                    binding.mapView.controller.animateTo(position)
+                    val index = workshopAdapter.currentList.indexOfFirst { it.id == workshop.id }
+                    if (index != -1) binding.rvWorkshopsNearby.smoothScrollToPosition(index)
+                    true
+                }
+                binding.mapView.overlays.add(this)
+            }
         }
         binding.mapView.invalidate()
     }
 
-    private fun showEmergencyMode(workshop: Workshop) {
-        viewModel.setEmergencyWorkshop(workshop)
-        binding.cardEmergency.apply {
-            visibility = View.VISIBLE
-            binding.tvEmergencyName.text = workshop.name
-            binding.tvEmergencyDistance.text =
-                    workshop.distance?.let { GeoUtils.formatDistance(it) } ?: ""
-        }
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        binding.emergencyFab.hide()
+    private fun createLabeledMarker(name: String): BitmapDrawable {
+        val view = LayoutInflater.from(this).inflate(R.layout.view_marker_labeled, null)
+        view.findViewById<TextView>(R.id.tvMarkerName).text = name
+        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+        val bitmap = Bitmap.createBitmap(view.measuredWidth, view.measuredHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+        return BitmapDrawable(resources, bitmap)
     }
 
-    private fun hideEmergencyMode() {
-        binding.cardEmergency.visibility = View.GONE
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        binding.emergencyFab.show()
-    }
-
-    private fun openWorkshopDetail(workshop: Workshop) {
-        val intent =
-                Intent(this, WorkshopDetailActivity::class.java).apply {
-                    putExtra(Constants.EXTRA_WORKSHOP_ID, workshop.id)
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            val v = currentFocus
+            if (v is EditText) {
+                val outRect = Rect()
+                v.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    v.clearFocus()
+                    (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(v.windowToken, 0)
                 }
-        startActivity(intent)
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
-    override fun onResume() {
-        super.onResume()
-        binding.mapView.onResume()
-        adMobManager.resumeBannerAd()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        binding.mapView.onPause()
-        adMobManager.pauseBannerAd()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.stopLocationUpdates()
-        adMobManager.destroyBannerAd()
-    }
+    override fun onResume() { super.onResume(); binding.mapView.onResume() }
+    override fun onPause() { super.onPause(); binding.mapView.onPause() }
+    override fun onDestroy() { super.onDestroy(); viewModel.stopLocationUpdates() }
 }
