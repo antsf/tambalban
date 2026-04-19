@@ -9,6 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="56dp"
+        android:gravity="center"
+        app:iconGravity="textStart"
         app:cornerRadius="28dp" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator

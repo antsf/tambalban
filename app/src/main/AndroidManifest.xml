@@ -17,7 +17,7 @@
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TambalBanFinder"
+        android:theme="@style/Theme.TambalBan"
         android:networkSecurityConfig="@xml/network_security_config"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
@@ -32,7 +32,7 @@
             android:name=".ui.main.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.TambalBanFinder">
+            android:theme="@style/Theme.TambalBan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -44,20 +44,32 @@
             android:name=".ui.detail.WorkshopDetailActivity"
             android:exported="false"
             android:parentActivityName=".ui.main.MainActivity"
-            android:theme="@style/Theme.TambalBanFinder" />
+            android:theme="@style/Theme.TambalBan" />
 
         <!-- Add Workshop Activity -->
         <activity
             android:name=".ui.add.AddWorkshopActivity"
             android:exported="false"
             android:parentActivityName=".ui.main.MainActivity"
-            android:theme="@style/Theme.TambalBanFinder" />
+            android:theme="@style/Theme.TambalBan" />
 
         <!-- Login Activity -->
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="false"
-            android:theme="@style/Theme.TambalBanFinder" />
+            android:theme="@style/Theme.TambalBan" />
+
+        <!-- Profile Activity -->
+        <activity
+            android:name=".ui.auth.ProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TambalBan" />
+
+        <!-- Edit Profile Activity -->
+        <activity
+            android:name=".ui.auth.EditProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TambalBan" />
 
     </application>
 

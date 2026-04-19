@@ -101,7 +101,12 @@ class MainActivity : AppCompatActivity() {
         })
 
         binding.searchOverlay.ivUserAvatar.setOnClickListener {
-            Toast.makeText(this, "Profile feature coming soon", Toast.LENGTH_SHORT).show()
+            val intent = if ((application as com.tambal_ban.TambalBanApp).authRepository.isLoggedIn()) {
+                android.content.Intent(this, com.tambal_ban.ui.auth.ProfileActivity::class.java)
+            } else {
+                android.content.Intent(this, com.tambal_ban.ui.auth.LoginActivity::class.java)
+            }
+            startActivity(intent)
         }
 
         binding.searchOverlay.etSearch.setOnEditorActionListener { v, actionId, _ ->

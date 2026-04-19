@@ -51,6 +51,21 @@ class TambalButton @JvmOverloads constructor(
                 val isEnabled = getBoolean(R.styleable.TambalButton_android_enabled, true)
                 isEnabled(isEnabled)
 
+                // Custom Colors (Override variants)
+                val bgColor = getColor(R.styleable.TambalButton_btnBackgroundColor, -1)
+                if (bgColor != -1) {
+                    button.backgroundTintList = ColorStateList.valueOf(bgColor)
+                }
+
+                val contentColor = getColor(R.styleable.TambalButton_btnContentColor, -1)
+                if (contentColor != -1) {
+                    button.setTextColor(contentColor)
+                    button.iconTint = ColorStateList.valueOf(contentColor)
+                    progressBar.setIndicatorColor(contentColor)
+                    // For outlined variant, also set stroke color
+                    button.setStrokeColor(ColorStateList.valueOf(contentColor))
+                }
+
             } finally {
                 recycle()
             }

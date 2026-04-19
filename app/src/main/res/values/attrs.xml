@@ -6,10 +6,11 @@
         <attr name="fieldHint" format="string" />
         <attr name="fieldIcon" format="reference" />
         <attr name="fieldVariant" format="enum">
-            <enum name="text" value="0" />
-            <enum name="email" value="1" />
-            <enum name="password" value="2" />
-        </attr>
+    <enum name="text" value="0" />
+    <enum name="email" value="1" />
+    <enum name="password" value="2" />
+    <enum name="phone" value="3" />
+</attr>
     </declare-styleable>
 
     <declare-styleable name="TambalButton">
@@ -23,5 +24,11 @@
             <enum name="secondary" value="1" />
             <enum name="outlined" value="2" />
         </attr>
+        <attr name="btnBackgroundColor" format="color" />
+        <attr name="btnContentColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="AvatarView">
+        <attr name="showEditButton" format="boolean" />
+        <attr name="avatarSize" format="dimension" />
     </declare-styleable>
 </resources>

@@ -1,9 +1,9 @@
-# TambalBan Finder - Specification Document
+# TambalBan - Specification Document
 
 ## 1. Project Overview
 
 ### Project Name
-TambalBan Finder
+TambalBan
 
 ### Project Type
 Android Mobile Application
