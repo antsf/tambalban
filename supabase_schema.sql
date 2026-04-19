@@ -1,4 +1,4 @@
--- TambalBan Finder - Supabase Database Schema
+-- TambalBan - Supabase Database Schema
 -- Run this SQL in your Supabase SQL Editor to create the required tables
 
 -- Enable UUID extension

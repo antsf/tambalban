@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TambalBan Finder</string>
+    <string name="app_name">TambalBan</string>
 
     <!-- Map Screen -->
     <string name="title_map">Map</string>

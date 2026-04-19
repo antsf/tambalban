@@ -8,6 +8,7 @@ import com.tambal_ban.data.api.NetworkModule
 import com.tambal_ban.data.api.SupabaseService
 import com.tambal_ban.data.database.WorkshopDbHelper
 import com.tambal_ban.data.repository.AuthRepository
+import com.tambal_ban.data.repository.ProfileRepository
 import com.tambal_ban.data.repository.ReviewRepository
 import com.tambal_ban.data.repository.SubmissionRepository
 import com.tambal_ban.data.repository.WorkshopRepository
@@ -31,6 +32,9 @@ class TambalBanApp : Application() {
         private set
 
     lateinit var reviewRepository: ReviewRepository
+        private set
+
+    lateinit var profileRepository: ProfileRepository
         private set
 
     lateinit var adMobManager: AdMobManager
@@ -75,6 +79,9 @@ class TambalBanApp : Application() {
 
         // Initialize ReviewRepository
         reviewRepository = ReviewRepository(supabaseService)
+
+        // Initialize ProfileRepository
+        profileRepository = ProfileRepository(supabaseService)
 
         // T031: Initialize AdMob but don't load ads immediately
         adMobManager = AdMobManager(this)

@@ -74,4 +74,28 @@ interface SupabaseService {
     suspend fun getUserSubmissions(
         @Query("user_id") userId: String
     ): Response<List<WorkshopSubmission>>
+
+
+    // --- User Profiles ---
+
+    @GET("rest/v1/profiles")
+    suspend fun getProfile(
+        @Query("id") id: String = "eq.current_user",
+        @Query("select") select: String = "*"
+    ): Response<List<Profile>>
+
+    @PATCH("rest/v1/profiles")
+    suspend fun updateProfile(
+        @Query("id") id: String,
+        @Body profile: Map<String, String>
+    ): Response<Void>
+
+
+    // --- Storage ---
+
+    @POST("storage/v1/object/avatars/{path}")
+    suspend fun uploadAvatar(
+        @Path("path") path: String,
+        @Body body: okhttp3.RequestBody
+    ): Response<Void>
 }
