@@ -15,6 +15,9 @@ interface SupabaseService {
         @POST("auth/v1/signup")
         suspend fun register(@Body request: LoginRequest): Response<AuthResponse>
 
+        @POST("auth/v1/recover")
+        suspend fun recover(@Body request: Map<String, String>): Response<Void>
+
         // --- Workshops ---
 
         @GET("rest/v1/workshops")

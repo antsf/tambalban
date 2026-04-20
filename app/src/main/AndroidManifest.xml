@@ -72,6 +72,12 @@
             android:exported="false"
             android:theme="@style/Theme.TambalBanFinder" />
 
+        <!-- Forgot Password Activity -->
+        <activity
+            android:name=".ui.auth.ForgotPasswordActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TambalBanFinder" />
+
         <!-- Profile Activity -->
         <activity
             android:name=".ui.profile.ProfileActivity"

@@ -77,6 +77,32 @@
     <string name="full_name">Nama Lengkap</string>
     <string name="no_account">Belum punya akun? Daftar</string>
     <string name="already_have_account">Sudah punya akun? Masuk</string>
+
+    <!-- Auth Validation -->
+    <string name="error_email_invalid">Format email tidak valid</string>
+    <string name="error_password_too_short">Password minimal 8 karakter</string>
+    <string name="error_password_no_upper">Password harus mengandung huruf besar</string>
+    <string name="error_password_no_lower">Password harus mengandung huruf kecil</string>
+    <string name="error_password_no_digit">Password harus mengandung angka</string>
+    <string name="error_terms_not_accepted">Harap setujui Syarat &amp; Ketentuan</string>
+    <string name="terms_and_conditions">Saya setuju dengan Syarat &amp; Ketentuan</string>
+
+    <!-- Auth States -->
+    <string name="auth_loading">Memproses...</string>
+    <string name="auth_success_login">Selamat datang kembali!</string>
+    <string name="auth_success_register">Pendaftaran berhasil! Silakan masuk.</string>
+    <string name="error_invalid_credentials">Email atau kata sandi salah</string>
+    <string name="error_email_exists">Email sudah terdaftar</string>
+    <string name="error_network_offline">Tidak ada koneksi internet</string>
+    <string name="error_unknown">Terjadi kesalahan yang tidak diketahui</string>
+
+    <!-- Forgot Password -->
+    <string name="forgot_password">Lupa Kata Sandi?</string>
+    <string name="forgot_password_title">Pemulihan Akun</string>
+    <string name="forgot_password_instruction">Masukkan email Anda untuk menerima tautan pemulihan kata sandi.</string>
+    <string name="send_recovery_link">Kirim Tautan Pemulihan</string>
+    <string name="recovery_link_sent">Tautan pemulihan telah dikirim ke email Anda.</string>
+    <string name="error_recovery_failed">Gagal mengirim tautan pemulihan.</string>
     <string name="my_submissions">Kontribusi Saya</string>
     <string name="status_pending">Menunggu</string>
     <string name="status_approved">Disetujui</string>

@@ -9,8 +9,8 @@
 
 **Purpose**: Project initialization and basic structure updates
 
-- [ ] T001 Update strings.xml with new error strings and validation messages in `app/src/main/res/values/strings.xml`
-- [ ] T002 Update `AuthRepository.kt` to define and properly parse Supabase errors and offline scenarios in `app/src/main/java/com/example/tambalban/data/repository/AuthRepository.kt`
+- [x] T001 Update strings.xml with new error strings and validation messages in `app/src/main/res/values/strings.xml`
+- [x] T002 Update `AuthRepository.kt` to define and properly parse Supabase errors and offline scenarios in `app/src/main/java/com/example/tambalban/data/repository/AuthRepository.kt`
 
 ---
 
@@ -18,7 +18,7 @@
 
 **Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
 
-- [ ] T003 Create state classes `FormValidationState`, `PasswordStrength`, `AuthState`, `ErrorType` in `app/src/main/java/com/example/tambalban/ui/auth/AuthStates.kt`
+- [x] T003 Create state classes `FormValidationState`, `PasswordStrength`, `AuthState`, `ErrorType` in `app/src/main/java/com/example/tambalban/ui/auth/AuthStates.kt`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -32,9 +32,9 @@
 
 ### Implementation for User Story 1
 
-- [ ] T004 [P] [US1] Update `activity_register.xml` to use Material 3 `TextInputLayout`s with errorEnabled, terms checkbox, and progress bar for password strength indicator in `app/src/main/res/layout/activity_register.xml`
-- [ ] T005 [P] [US1] Implement `RegisterViewModel.kt` with password complexity logic, confirm password match, debounced input testing, and validation `StateFlow`s in `app/src/main/java/com/example/tambalban/viewmodel/RegisterViewModel.kt`
-- [ ] T006 [US1] Update `RegisterActivity.kt` to observe `StateFlow`s, handle Snackbars, manage loading state, and validate 'Done' action in `app/src/main/java/com/example/tambalban/ui/auth/RegisterActivity.kt`
+- [x] T004 [P] [US1] Update `activity_register.xml` to use Material 3 `TextInputLayout`s with errorEnabled, terms checkbox, and progress bar for password strength indicator in `app/src/main/res/layout/activity_register.xml`
+- [x] T005 [P] [US1] Implement `RegisterViewModel.kt` with password complexity logic, confirm password match, debounced input testing, and validation `StateFlow`s in `app/src/main/java/com/example/tambalban/ui/auth/RegisterViewModel.kt`
+- [x] T006 [US1] Update `RegisterActivity.kt` to observe `StateFlow`s, handle Snackbars, manage loading state, and validate 'Done' action in `app/src/main/java/com/example/tambalban/ui/auth/RegisterActivity.kt`
 
 **Checkpoint**: At this point, User Story 1 (Registration redesign) should be fully functional and testable independently.
 
@@ -48,9 +48,9 @@
 
 ### Implementation for User Story 2
 
-- [ ] T007 [P] [US2] Update `activity_login.xml` to use Material 3 `TextInputLayout`s with errorEnabled, and add loading spinner structure in `app/src/main/res/layout/activity_login.xml`
-- [ ] T008 [P] [US2] Implement `LoginViewModel.kt` with inline validation logic and form `StateFlow`s in `app/src/main/java/com/example/tambalban/viewmodel/LoginViewModel.kt`
-- [ ] T009 [US2] Update `LoginActivity.kt` to observe `StateFlow`s, display loading animations and Snackbars in `app/src/main/java/com/example/tambalban/ui/auth/LoginActivity.kt`
+- [x] T007 [P] [US2] Update `activity_login.xml` to use Material 3 `TextInputLayout`s with errorEnabled, and add loading spinner structure in `app/src/main/res/layout/activity_login.xml`
+- [x] T008 [P] [US2] Implement `LoginViewModel.kt` with inline validation logic and form `StateFlow`s in `app/src/main/java/com/example/tambalban/ui/auth/LoginViewModel.kt`
+- [x] T009 [US2] Update `LoginActivity.kt` to observe `StateFlow`s, display loading animations and Snackbars in `app/src/main/java/com/example/tambalban/ui/auth/LoginActivity.kt`
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently.
 
@@ -64,9 +64,9 @@
 
 ### Implementation for User Story 3
 
-- [ ] T010 [P] [US3] Create `activity_forgot_password.xml` layout for email input and submission in `app/src/main/res/layout/activity_forgot_password.xml`
-- [ ] T011 [P] [US3] Create `ForgotPasswordActivity.kt` and implement UI logic for triggering Supabase password reset in `app/src/main/java/com/example/tambalban/ui/auth/ForgotPasswordActivity.kt`
-- [ ] T012 [US3] Add "Forgot Password?" link interaction to `LoginActivity.kt` to launch `ForgotPasswordActivity` based on user interactions.
+- [x] T010 [P] [US3] Create `activity_forgot_password.xml` layout for email input and submission in `app/src/main/res/layout/activity_forgot_password.xml`
+- [x] T011 [P] [US3] Create `ForgotPasswordActivity.kt` and implement UI logic for triggering Supabase password reset in `app/src/main/java/com/example/tambalban/ui/auth/ForgotPasswordActivity.kt`
+- [x] T012 [US3] Add "Forgot Password?" link interaction to `LoginActivity.kt` to launch `ForgotPasswordActivity` based on user interactions.
 
 **Checkpoint**: All user stories should now be independently functional.
 
@@ -76,9 +76,9 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T013 Verify backward compatibility constraints in `AuthRepository.kt`.
-- [ ] T014 Run user manual flows to confirm offline safety responses correctly fire Snackbar notifications rather than fatal crashes.
-- [ ] T015 Verify visual elements (spacing, colors, layouts) strictly adhere to Material 3 design philosophy as mandated.
+- [x] T013 Verify backward compatibility constraints in `AuthRepository.kt`.
+- [x] T014 Run user manual flows to confirm offline safety responses correctly fire Snackbar notifications rather than fatal crashes.
+- [x] T015 Verify visual elements (spacing, colors, layouts) strictly adhere to Material 3 design philosophy as mandated.
 
 ---
 
