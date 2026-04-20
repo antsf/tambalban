@@ -78,13 +78,13 @@ interface SupabaseService {
 
     // --- User Profiles ---
 
-    @GET("rest/v1/profiles")
+    @GET("rest/v1/users_profile")
     suspend fun getProfile(
         @Query("id") id: String = "eq.current_user",
         @Query("select") select: String = "*"
     ): Response<List<Profile>>
 
-    @PATCH("rest/v1/profiles")
+    @PATCH("rest/v1/users_profile")
     suspend fun updateProfile(
         @Query("id") id: String,
         @Body profile: Map<String, String>
@@ -93,8 +93,9 @@ interface SupabaseService {
 
     // --- Storage ---
 
-    @POST("storage/v1/object/avatars/{path}")
-    suspend fun uploadAvatar(
+    @POST("storage/v1/object/{bucket}/{path}")
+    suspend fun uploadFile(
+        @Path("bucket") bucket: String,
         @Path("path") path: String,
         @Body body: okhttp3.RequestBody
     ): Response<Void>

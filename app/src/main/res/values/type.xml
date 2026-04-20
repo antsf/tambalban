@@ -22,6 +22,11 @@
         <item name="fontFamily">@font/inter_medium</item>
         <item name="android:textSize">22sp</item>
     </style>
+    
+    <style name="TextAppearance.Guardian.TitleMedium" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/inter_medium</item>
+        <item name="android:textSize">18sp</item>
+    </style>
 
     <style name="TextAppearance.Guardian.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
         <item name="fontFamily">@font/inter_regular</item>

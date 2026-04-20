@@ -1,26 +1,28 @@
 package com.tambal_ban.data.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Data model for User Profile.
  */
+@Serializable
 data class Profile(
-    @SerializedName("id")
+    @SerialName("id")
     val id: String,
     
-    @SerializedName("full_name")
-    val fullName: String,
+    @SerialName("full_name")
+    val fullName: String? = null,
     
-    @SerializedName("email")
-    val email: String,
+    @SerialName("email")
+    val email: String? = null,
     
-    @SerializedName("phone")
-    val phone: String,
+    @SerialName("phone")
+    val phone: String? = null,
     
-    @SerializedName("avatar_url")
-    val avatarUrl: String?,
+    @SerialName("avatar_url")
+    val avatarUrl: String? = null,
     
-    @SerializedName("updated_at")
+    @SerialName("updated_at")
     val updatedAt: String? = null
 )

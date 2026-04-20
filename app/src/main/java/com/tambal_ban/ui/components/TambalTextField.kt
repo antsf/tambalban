@@ -75,4 +75,10 @@ class TambalTextField @JvmOverloads constructor(
     }
     
     val text: String get() = editText.text.toString()
+
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        editText.isEnabled = enabled
+        textInputLayout.isEnabled = enabled
+    }
 }

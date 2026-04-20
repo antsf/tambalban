@@ -11,6 +11,7 @@ import coil.load
 import com.tambal_ban.R
 import com.tambal_ban.databinding.ActivityProfileBinding
 import com.tambal_ban.viewmodel.ProfileViewModel
+import androidx.core.net.toUri
 
 /**
  * US2: Profile Activity displaying user information.
@@ -28,15 +29,26 @@ class ProfileActivity : AppCompatActivity() {
         setupObservers()
         setupListeners()
         
+        // Pre-fill email from local storage immediately
+        viewModel.userEmail?.let {
+            binding.tvProfileEmail.text = it
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh data whenever returning to this screen
         viewModel.getProfile()
     }
 
     private fun setupObservers() {
         viewModel.profile.observe(this) { profile ->
             if (profile != null) {
-                binding.tvProfileName.text = profile.fullName
-                binding.tvProfileEmail.text = profile.email
-                binding.chipPhone.text = formatPhoneNumber(profile.phone)
+                binding.tvProfileName.text = if (profile.fullName.isNullOrEmpty()) "-" else profile.fullName
+                binding.tvProfileEmail.text = if (profile.email.isNullOrEmpty()) "-" else profile.email
+                
+                val formattedPhone = formatPhoneNumber(profile.phone)
+                binding.chipPhone.text = if (formattedPhone.isNullOrEmpty()) "-" else formattedPhone
                 
                 if (!profile.avatarUrl.isNullOrEmpty()) {
                     binding.avatarView.loadAvatar(profile.avatarUrl)
@@ -65,6 +77,10 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
         binding.btnEditProfile.setOnClickListener {
             val intent = Intent(this, EditProfileActivity::class.java)
             startActivity(intent)
@@ -90,12 +106,13 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun openPlayStore() {
         val appId = "com.tambal_ban"
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appId"))
-        try {
-            startActivity(intent)
-        } catch (e: Exception) {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appId")))
-        }
+//        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appId"))
+//        try {
+//            startActivity(intent)
+//        } catch (e: Exception) {
+            startActivity(Intent(Intent.ACTION_VIEW,
+                "https://play.google.com/store/apps/details?id=$appId".toUri()))
+//        }
     }
 
     private fun shareApp() {

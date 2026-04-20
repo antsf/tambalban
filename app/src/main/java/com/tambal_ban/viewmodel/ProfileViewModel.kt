@@ -1,6 +1,7 @@
 package com.tambal_ban.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -28,11 +29,16 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
+    private val _isUploading = MutableLiveData<Boolean>()
+    val isUploading: LiveData<Boolean> = _isUploading
+
     private val _isUpdateSuccess = MutableLiveData<Boolean>()
     val isUpdateSuccess: LiveData<Boolean> = _isUpdateSuccess
 
     private val _isLoggedOut = MutableLiveData<Boolean>()
     val isLoggedOut: LiveData<Boolean> = _isLoggedOut
+
+    val userEmail: String? get() = authRepository.getUserEmail()
 
     fun getProfile() {
         val userId = authRepository.getUserId() ?: return
@@ -43,6 +49,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 _profile.value = result.getOrNull()
             } else {
                 _error.value = result.exceptionOrNull()?.message
+                Log.d("Profile", "error get profile: ${_error.value}")
             }
             _isLoading.value = false
         }
@@ -70,7 +77,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun uploadAvatar(bytes: ByteArray, mimeType: String) {
         val userId = authRepository.getUserId() ?: return
         viewModelScope.launch {
-            _isLoading.value = true
+            _isUploading.value = true
             val result = profileRepository.uploadAvatar(userId, bytes, mimeType)
             if (result.isSuccess) {
                 val path = result.getOrNull()!!
@@ -79,7 +86,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 updateProfileAvatar(path)
             } else {
                 _error.value = result.exceptionOrNull()?.message
-                _isLoading.value = false
+                _isUploading.value = false
             }
         }
     }
@@ -94,7 +101,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             } else {
                 _error.value = result.exceptionOrNull()?.message
             }
-            _isLoading.value = false
+            _isUploading.value = false
         }
     }
 

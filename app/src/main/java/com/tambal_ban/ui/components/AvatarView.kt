@@ -21,11 +21,13 @@ class AvatarView @JvmOverloads constructor(
 
     private val ivAvatar: ShapeableImageView
     private val btnEditAvatar: View
+    private val progressAvatar: View
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_avatar, this, true)
         ivAvatar = findViewById(R.id.ivAvatar)
         btnEditAvatar = findViewById(R.id.btnEditAvatar)
+        progressAvatar = findViewById(R.id.progressAvatar)
 
         context.obtainStyledAttributes(attrs, R.styleable.AvatarView).apply {
             try {
@@ -52,5 +54,10 @@ class AvatarView @JvmOverloads constructor(
 
     fun setOnEditClickListener(listener: OnClickListener) {
         btnEditAvatar.setOnClickListener(listener)
+    }
+
+    fun setLoading(loading: Boolean) {
+        progressAvatar.visibility = if (loading) View.VISIBLE else View.GONE
+        btnEditAvatar.isEnabled = !loading
     }
 }

@@ -3,6 +3,7 @@ package com.tambal_ban.ui.auth
 import android.net.Uri
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -11,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import coil.load
 import com.tambal_ban.R
 import com.tambal_ban.databinding.ActivityEditProfileBinding
+import androidx.core.content.FileProvider
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.io.File
 import com.tambal_ban.viewmodel.ProfileViewModel
 
 /**
@@ -27,6 +31,21 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
+    private var cameraImageUri: Uri? = null
+    private val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            cameraImageUri?.let { onImageSelected(it) }
+        }
+    }
+
+    private val requestCameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) {
+            launchCamera()
+        } else {
+            Toast.makeText(this, "Izin kamera diperlukan", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditProfileBinding.inflate(layoutInflater)
@@ -35,20 +54,35 @@ class EditProfileActivity : AppCompatActivity() {
         setupObservers()
         setupListeners()
         
+        // Pre-fill email from Auth immediately
+        viewModel.userEmail?.let {
+            binding.etEmail.setText(it)
+            binding.etEmail.isEnabled = false
+        }
+
         viewModel.getProfile()
     }
 
     private fun setupObservers() {
         viewModel.profile.observe(this) { profile ->
             if (profile != null) {
-                binding.etFullName.setText(profile.fullName)
-                binding.etEmail.setText(profile.email)
+                binding.etFullName.setText(profile.fullName ?: "-")
+                binding.etEmail.setText(profile.email ?: "-")
+                binding.etEmail.isEnabled = false // Email is read-only
                 binding.etPhone.setText(formatPhoneNumber(profile.phone))
                 
                 if (!profile.avatarUrl.isNullOrEmpty()) {
                     binding.avatarView.loadAvatar(profile.avatarUrl)
                 }
             }
+        }
+
+        viewModel.isLoading.observe(this) { isLoading ->
+            binding.btnSave.setLoading(isLoading)
+        }
+
+        viewModel.isUploading.observe(this) { isUploading ->
+            binding.avatarView.setLoading(isUploading)
         }
 
         viewModel.isUpdateSuccess.observe(this) { success ->
@@ -66,13 +100,50 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
         binding.btnSave.setOnClickListener {
             validateAndSave()
         }
 
         binding.avatarView.setOnEditClickListener {
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            showImageSourceDialog()
         }
+    }
+
+    private fun showImageSourceDialog() {
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.dialog_choose_image_source, null)
+        
+        view.findViewById<View>(R.id.btnCamera).setOnClickListener {
+            checkCameraPermissionAndLaunch()
+            dialog.dismiss()
+        }
+        
+        view.findViewById<View>(R.id.btnGallery).setOnClickListener {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            dialog.dismiss()
+        }
+        
+        dialog.setContentView(view)
+        dialog.show()
+    }
+
+    private fun checkCameraPermissionAndLaunch() {
+        if (androidx.core.content.ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) 
+            == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            launchCamera()
+        } else {
+            requestCameraPermission.launch(android.Manifest.permission.CAMERA)
+        }
+    }
+
+    private fun launchCamera() {
+        val photoFile = File(getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES), "avatar_${System.currentTimeMillis()}.jpg")
+        cameraImageUri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", photoFile)
+        takePhoto.launch(cameraImageUri)
     }
 
     private fun validateAndSave() {
