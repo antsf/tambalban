@@ -1,5 +1,6 @@
 package com.tambal_ban.data.repository
 
+import android.util.Log
 import com.tambal_ban.data.api.SupabaseService
 import com.tambal_ban.data.model.Profile
 import kotlinx.coroutines.Dispatchers
@@ -21,8 +22,17 @@ class ProfileRepository(
                 val response = supabaseService.getProfile("eq.$userId")
                 if (response.isSuccessful && response.body() != null) {
                     val profileList = response.body()!!
+                    Log.d("Profile", "response: ${profileList}")
+
                     if (profileList.isNotEmpty()) {
-                        Result.success(profileList[0])
+                        val profile = profileList[0]
+                        // Transform avatar path to full URL
+                        val fullProfile = if (!profile.avatarUrl.isNullOrEmpty() && !profile.avatarUrl.startsWith("http")) {
+                            profile.copy(avatarUrl = getPublicUrl("avatars", profile.avatarUrl))
+                        } else {
+                            profile
+                        }
+                        Result.success(fullProfile)
                     } else {
                         Result.failure(Exception("Profile not found"))
                     }
@@ -55,15 +65,10 @@ class ProfileRepository(
                 val path = "$userId/$filename"
                 val requestBody = bytes.toRequestBody(mimeType.toMediaType())
                 
-                val response = supabaseService.uploadAvatar(path, requestBody)
+                val response = supabaseService.uploadFile("avatars", path, requestBody)
                 if (response.isSuccessful) {
-                    // In Supabase, the public URL is usually:
-                    // https://{project_id}.supabase.co/storage/v1/object/public/avatars/{path}
-                    // For simplicity, we'll return the path and let the UI/Service handle the base URL or 
-                    // assume we get the URL from the backend update.
-                    // Actually, we should return the final URL.
-                    // For now, let's just return the path to update the profile table.
-                    Result.success(path)
+                    val publicUrl = getPublicUrl("avatars", path)
+                    Result.success(publicUrl)
                 } else {
                     Result.failure(Exception("Failed to upload avatar: ${response.message()}"))
                 }
@@ -71,4 +76,8 @@ class ProfileRepository(
                 Result.failure(e)
             }
         }
+
+    private fun getPublicUrl(bucket: String = "avatars", path: String): String {
+        return "${com.tambal_ban.utils.SupabaseConfig.URL}storage/v1/object/public/$bucket/$path"
+    }
 }

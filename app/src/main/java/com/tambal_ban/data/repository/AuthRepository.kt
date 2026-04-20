@@ -24,6 +24,7 @@ class AuthRepository(
                     authPrefs.saveAccessToken(authResponse.accessToken)
                     authPrefs.saveRefreshToken(authResponse.refreshToken)
                     authPrefs.saveUserId(authResponse.user.id)
+                    authResponse.user.email?.let { authPrefs.saveEmail(it) }
                     Result.success(authResponse)
                 } else {
                     Result.failure(Exception("Login failed: ${response.message()}"))
@@ -42,6 +43,7 @@ class AuthRepository(
                     authPrefs.saveAccessToken(authResponse.accessToken)
                     authPrefs.saveRefreshToken(authResponse.refreshToken)
                     authPrefs.saveUserId(authResponse.user.id)
+                    authResponse.user.email?.let { authPrefs.saveEmail(it) }
                     Result.success(authResponse)
                 } else {
                     Result.failure(Exception("Registration failed: ${response.message()}"))
@@ -60,4 +62,6 @@ class AuthRepository(
     fun getAccessToken(): String? = authPrefs.getAccessToken()
 
     fun getUserId(): String? = authPrefs.getUserId()
+
+    fun getUserEmail(): String? = authPrefs.getEmail()
 }

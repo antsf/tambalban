@@ -46,6 +46,14 @@ class AuthPrefs(context: Context) {
         return sharedPreferences.getString(KEY_USER_ID, null)
     }
 
+    fun saveEmail(email: String) {
+        sharedPreferences.edit().putString(KEY_EMAIL, email).apply()
+    }
+
+    fun getEmail(): String? {
+        return sharedPreferences.getString(KEY_EMAIL, null)
+    }
+
     fun clear() {
         sharedPreferences.edit().clear().apply()
     }
@@ -58,5 +66,6 @@ class AuthPrefs(context: Context) {
         private const val KEY_ACCESS_TOKEN = "access_token"
         private const val KEY_REFRESH_TOKEN = "refresh_token"
         private const val KEY_USER_ID = "user_id"
+        private const val KEY_EMAIL = "user_email"
     }
 }
