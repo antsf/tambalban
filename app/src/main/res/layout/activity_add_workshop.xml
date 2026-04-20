@@ -122,7 +122,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/my_location"
-                    app:icon="@android:drawable/ic_menu_mylocation" />
+                    app:icon="@android:drawable/ic_menu_mylocation"
+                    app:iconSize="20dp" />
 
                 <!-- Selected Location Display -->
                 <TextView

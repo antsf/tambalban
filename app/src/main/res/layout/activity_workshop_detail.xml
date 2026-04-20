@@ -203,7 +203,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/call"
                     app:backgroundTint="@color/success"
-                    app:icon="@android:drawable/ic_menu_call" />
+                    app:icon="@android:drawable/ic_menu_call"
+                    app:iconSize="20dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnNavigate"
@@ -212,7 +213,8 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/navigate"
                     app:backgroundTint="@color/primary"
-                    app:icon="@android:drawable/ic_menu_directions" />
+                    app:icon="@android:drawable/ic_menu_directions"
+                    app:iconSize="20dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnReport"

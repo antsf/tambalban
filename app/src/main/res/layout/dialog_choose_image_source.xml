@@ -28,7 +28,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@android:drawable/ic_menu_camera"
+            android:src="@drawable/ic_camera"
             app:tint="@color/primary" />
 
         <TextView
@@ -52,7 +52,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@android:drawable/ic_menu_gallery"
+            android:src="@drawable/ic_gallery"
             app:tint="@color/primary" />
 
         <TextView

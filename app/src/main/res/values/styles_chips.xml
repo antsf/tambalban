@@ -8,5 +8,6 @@
         <item name="strokeWidth">0dp</item>
         <item name="android:layout_height">32dp</item>
         <item name="android:textAppearance">@style/TextAppearance.Guardian.LabelMedium</item>
+        <item name="chipIconSize">20dp</item>
     </style>
 </resources>
