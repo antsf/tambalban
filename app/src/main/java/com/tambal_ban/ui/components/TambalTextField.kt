@@ -59,6 +59,7 @@ class TambalTextField @JvmOverloads constructor(
             2 -> { // Password
                 editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                 textInputLayout.endIconMode = TextInputLayout.END_ICON_PASSWORD_TOGGLE
+                textInputLayout.setEndIconDrawable(R.drawable.selector_password_toggle)
             }
             else -> { // Text
                 editText.inputType = InputType.TYPE_CLASS_TEXT

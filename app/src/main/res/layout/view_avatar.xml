@@ -17,21 +17,21 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/btnEditAvatar"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="0dp"
         android:clickable="true"
         android:focusable="true"
         app:cardBackgroundColor="@color/primary"
-        app:cardCornerRadius="12dp"
+        app:cardCornerRadius="14dp"
         app:cardElevation="2dp"
         app:strokeColor="@color/surface"
         app:strokeWidth="1.5dp">
 
         <ImageView
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_edit"
             app:tint="@color/on_primary" />

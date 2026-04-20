@@ -48,11 +48,11 @@
 
             <com.tambal_ban.ui.components.AvatarView
                 android:id="@+id/avatarView"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                app:avatarSize="60dp"
+                app:avatarSize="80dp"
                 app:showEditButton="true" />
 
             <TextView
@@ -122,8 +122,8 @@
                     style="@style/TextAppearance.Guardian.BodyLarge" />
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_arrow_forward"
                     app:tint="@color/outline_variant_ghost" />
             </LinearLayout>
@@ -164,8 +164,8 @@
                     style="@style/TextAppearance.Guardian.BodyLarge" />
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_arrow_forward"
                     app:tint="@color/outline_variant_ghost" />
             </LinearLayout>
@@ -195,8 +195,8 @@
                     style="@style/TextAppearance.Guardian.BodyLarge" />
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_arrow_forward"
                     app:tint="@color/outline_variant_ghost" />
             </LinearLayout>

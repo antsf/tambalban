@@ -1,16 +1,11 @@
 <!--
 Sync Impact Report:
-- Version change: [N/A] → 1.0.0
+- Version change: 1.0.0 → 1.1.0
 - List of modified principles:
-  - Simplicity First (Added)
-  - MVVM Architecture Enforcement (Added)
-  - API-Driven Development (Added)
-  - Offline Safety (Added)
-  - Secure Authentication (Added)
-  - Performance for Large Map Data (Added)
-- Added sections: Technology Constraints, Code Organization Rules, Testing Policy, Development Workflow, Code Review Requirements, Security Requirements, Performance Requirements
+  - Design Consistency (Added)
+- Added sections: N/A
 - Removed sections: N/A
-- Templates requiring updates (⚠ pending): .specify/templates/plan-template.md, .specify/templates/spec-template.md, .specify/templates/tasks-template.md
+- Templates requiring updates (✅ updated): .specify/templates/plan-template.md, .specify/templates/spec-template.md, .specify/templates/tasks-template.md
 -->
 
 # Tambal Ban Finder Constitution
@@ -48,6 +43,10 @@ The map system must remain responsive even with 10,000+ workshop markers. Marker
 - Loading only essential marker data (ID, name, coordinate) initially.
 - Using radius-based or viewport-based queries to limit data transfer.
 - Implementing clustering or lazy loading for high-density areas.
+
+### VII. Design Consistency (UI Standards)
+All interactive icons, menu icons, and status indicators must adhere to a standard size of 20dp to ensure a uniform visual language across the application. Any exceptions must be documented and justified in the implementation plan.
+Rationale: A consistent UI improves user recognition and maintains a premium, polished feel.
 
 ## Technology Constraints
 The following technologies are mandatory. Any deviation requires a constitution amendment.
@@ -117,4 +116,4 @@ All generated and submitted code must respect:
 - **Amendments**: Major architectural changes or technology stack shifts require a formal update to this document.
 - **Guidance**: The constitution serves as the primary guidance for long-term project maintenance.
 
-**Version**: 1.0.0 | **Ratified**: 2026-03-15 | **Last Amended**: 2026-03-15
+**Version**: 1.1.0 | **Ratified**: 2026-03-15 | **Last Amended**: 2026-04-20
