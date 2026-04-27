@@ -46,7 +46,7 @@
             android:textColor="@color/on_surface"
             android:textSize="14sp" />
 
-        <com.tambal_ban.ui.components.TambalTextField
+        <com.tambal_ban.core.ui.TambalTextField
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
 
         </RelativeLayout>
 
-        <com.tambal_ban.ui.components.TambalTextField
+        <com.tambal_ban.core.ui.TambalTextField
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
             app:fieldIcon="@drawable/ic_lock"
             app:fieldVariant="password" />
 
-        <com.tambal_ban.ui.components.TambalButton
+        <com.tambal_ban.core.ui.TambalButton
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

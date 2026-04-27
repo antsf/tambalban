@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.main.MainActivity">
+    tools:context=".map.ui.MainActivity">
 
     <!-- T007: Map View Base Layer -->
     <org.osmdroid.views.MapView

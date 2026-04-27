@@ -46,7 +46,7 @@
             android:paddingHorizontal="24dp"
             android:paddingBottom="24dp">
 
-            <com.tambal_ban.ui.components.AvatarView
+            <com.tambal_ban.core.ui.AvatarView
                 android:id="@+id/avatarView"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -211,7 +211,7 @@
         android:padding="24dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <com.tambal_ban.ui.components.TambalButton
+        <com.tambal_ban.core.ui.TambalButton
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

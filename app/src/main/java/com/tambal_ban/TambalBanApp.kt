@@ -1,18 +1,20 @@
 package com.tambal_ban
+import com.tambal_ban.auth.data.* 
+import com.tambal_ban.workshop.data.* 
 
 import android.app.Application
 import android.content.ComponentCallbacks2
 import android.util.Log
-import com.tambal_ban.ads.AdMobManager
-import com.tambal_ban.data.api.NetworkModule
-import com.tambal_ban.data.api.SupabaseService
-import com.tambal_ban.data.database.WorkshopDbHelper
-import com.tambal_ban.data.repository.AuthRepository
-import com.tambal_ban.data.repository.ProfileRepository
-import com.tambal_ban.data.repository.ReviewRepository
-import com.tambal_ban.data.repository.SubmissionRepository
-import com.tambal_ban.data.repository.WorkshopRepository
-import com.tambal_ban.utils.AuthPrefs
+import com.tambal_ban.core.ads.AdMobManager
+import com.tambal_ban.core.network.NetworkModule
+import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.workshop.data.database.WorkshopDbHelper
+import com.tambal_ban.auth.data.AuthRepository
+import com.tambal_ban.auth.data.ProfileRepository
+import com.tambal_ban.workshop.data.ReviewRepository
+import com.tambal_ban.workshop.data.SubmissionRepository
+import com.tambal_ban.workshop.data.WorkshopRepository
+import com.tambal_ban.core.utils.AuthPrefs
 import org.osmdroid.config.Configuration
 
 class TambalBanApp : Application() {

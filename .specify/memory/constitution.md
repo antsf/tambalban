@@ -59,19 +59,18 @@ The following technologies are mandatory. Any deviation requires a constitution 
 - **Forbidden**: Firebase (Core, Firestore, Auth), Google Maps SDK.
 
 ## Code Organization Rules
-The project follows a strict directory structure to ensure separation of concerns:
+The project follows a **Feature-based Packaging** structure to maximize cohesion and simplify maintenance. Files are grouped by the user feature they support rather than their technical layer.
 
-- `data/`:
-  - `api/`: Retrofit interfaces and network models.
-  - `repository/`: Implementation of data repositories.
-  - `model/`: Plain Kotlin objects for internal data representation.
-- `ui/`:
-  - `map/`: Map view, markers, and location logic.
-  - `detail/`: Workshop details page.
-  - `review/`: Review listing and submission.
-  - `auth/`: Login, registration, and profile.
-- `viewmodel/`: All ViewModel classes.
-- `utils/`: Shared helper functions and constants.
+- `core/`: Shared infrastructure used by multiple features.
+  - `network/`: Retrofit interfaces, Interceptors, and Network configurations.
+  - `ui/`: Common UI components (buttons, text fields, etc.).
+  - `utils/`: Shared helper functions, constants, and global preferences.
+  - `location/` & `ads/`: System-level services.
+- `auth/`: Everything related to user identity (Login, Registration, Profile).
+- `workshop/`: Everything related to workshop interaction (Details, Submissions, Reviews, Local Caching).
+- `map/`: The primary map interface and navigation coordination.
+
+**Rule**: While files are grouped by feature, the **MVVM boundary** must still be respected within each package. Activities and ViewModels for a single feature should reside in the same package to improve locality.
 
 **Rule**: No feature should mix UI logic with networking code. Repositories must be the single source of truth.
 
@@ -116,4 +115,4 @@ All generated and submitted code must respect:
 - **Amendments**: Major architectural changes or technology stack shifts require a formal update to this document.
 - **Guidance**: The constitution serves as the primary guidance for long-term project maintenance.
 
-**Version**: 1.1.0 | **Ratified**: 2026-03-15 | **Last Amended**: 2026-04-20
+**Version**: 1.2.0 | **Ratified**: 2026-03-15 | **Last Amended**: 2026-04-27
