@@ -46,7 +46,7 @@
             android:padding="24dp">
 
 
-            <com.tambal_ban.ui.components.AvatarView
+            <com.tambal_ban.core.ui.AvatarView
                 android:id="@+id/avatarView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <com.tambal_ban.ui.components.TambalTextField
+            <com.tambal_ban.core.ui.TambalTextField
                 android:id="@+id/etFullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <com.tambal_ban.ui.components.TambalTextField
+            <com.tambal_ban.core.ui.TambalTextField
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <com.tambal_ban.ui.components.TambalTextField
+            <com.tambal_ban.core.ui.TambalTextField
                 android:id="@+id/etPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <com.tambal_ban.ui.components.TambalButton
+    <com.tambal_ban.core.ui.TambalButton
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

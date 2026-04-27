@@ -37,7 +37,7 @@
             android:textColor="@color/login_text_secondary"
             android:textSize="14sp" />
 
-        <com.tambal_ban.ui.components.TambalTextField
+        <com.tambal_ban.core.ui.TambalTextField
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             app:fieldHint="@string/register_name_hint"
             app:fieldIcon="@drawable/ic_person" />
 
-        <com.tambal_ban.ui.components.TambalTextField
+        <com.tambal_ban.core.ui.TambalTextField
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
             app:fieldIcon="@drawable/ic_mail"
             app:fieldVariant="email" />
 
-        <com.tambal_ban.ui.components.TambalTextField
+        <com.tambal_ban.core.ui.TambalTextField
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
             app:fieldIcon="@drawable/ic_lock"
             app:fieldVariant="password" />
 
-        <com.tambal_ban.ui.components.TambalButton
+        <com.tambal_ban.core.ui.TambalButton
             android:id="@+id/btnRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

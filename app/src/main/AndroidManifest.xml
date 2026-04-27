@@ -30,7 +30,7 @@
 
         <!-- Main Activity -->
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".map.ui.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/Theme.TambalBan">
@@ -42,37 +42,37 @@
 
         <!-- Workshop Detail Activity -->
         <activity
-            android:name=".ui.detail.WorkshopDetailActivity"
+            android:name=".workshop.ui.WorkshopDetailActivity"
             android:exported="false"
-            android:parentActivityName=".ui.main.MainActivity"
+            android:parentActivityName=".map.ui.MainActivity"
             android:theme="@style/Theme.TambalBan" />
 
         <!-- Add Workshop Activity -->
         <activity
-            android:name=".ui.add.AddWorkshopActivity"
+            android:name=".workshop.ui.AddWorkshopActivity"
             android:exported="false"
-            android:parentActivityName=".ui.main.MainActivity"
+            android:parentActivityName=".map.ui.MainActivity"
             android:theme="@style/Theme.TambalBan" />
 
         <!-- Login Activity -->
         <activity
-            android:name=".ui.auth.LoginActivity"
+            android:name=".auth.ui.LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.TambalBan" />
 
         <activity
-            android:name=".ui.auth.RegisterActivity"
+            android:name=".auth.ui.RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.TambalBan" />
 
         <!-- Profile Activity -->
         <activity
-            android:name=".ui.auth.ProfileActivity"
+            android:name=".auth.ui.ProfileActivity"
             android:exported="false"
             android:theme="@style/Theme.TambalBan" />
 
         <activity
-            android:name=".ui.auth.EditProfileActivity"
+            android:name=".auth.ui.EditProfileActivity"
             android:exported="false"
             android:theme="@style/Theme.TambalBan" />
 
