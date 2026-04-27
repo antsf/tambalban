@@ -60,6 +60,11 @@
             android:exported="false"
             android:theme="@style/Theme.TambalBan" />
 
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TambalBan" />
+
         <!-- Profile Activity -->
         <activity
             android:name=".ui.auth.ProfileActivity"

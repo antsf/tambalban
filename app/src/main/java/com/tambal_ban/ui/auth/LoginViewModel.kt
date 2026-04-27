@@ -32,7 +32,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun register(email: String, password: String) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = authRepository.register(email, password)
+            val result = authRepository.register("", email, password)
             _loginResult.value = result
             _isLoading.value = false
         }

@@ -67,4 +67,20 @@
     <string name="error">Error</string>
     <string name="km">km</string>
     <string name="m">m</string>
+
+    <!-- Registration -->
+    <string name="register_title">Daftar Akun</string>
+    <string name="register_subtitle">Bergabung dengan komunitas Tambal Ban</string>
+    <string name="register_name_hint">Nama Lengkap</string>
+    <string name="register_email_hint">Email</string>
+    <string name="register_password_hint">Kata Sandi</string>
+    <string name="register_button">Daftar Sekarang</string>
+    <string name="register_already_have_account">Sudah punya akun? </string>
+    <string name="register_login_link"> Masuk di sini</string>
+    <string name="register_success">Pendaftaran berhasil! Selamat bergabung.</string>
+    <string name="register_error_name_required">Nama wajib diisi</string>
+    <string name="register_error_email_required">Email wajib diisi</string>
+    <string name="register_error_email_invalid">Format email tidak valid</string>
+    <string name="register_error_password_required">Kata sandi wajib diisi</string>
+    <string name="register_error_password_short">Kata sandi minimal 8 karakter</string>
 </resources>
