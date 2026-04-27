@@ -10,6 +10,13 @@ data class LoginRequest(
 )
 
 @Serializable
+data class RegisterRequest(
+    val email: String,
+    val password: String,
+    val data: Map<String, String> = emptyMap()
+)
+
+@Serializable
 data class AuthResponse(
     @SerialName("access_token")
     val accessToken: String,

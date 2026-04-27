@@ -1,5 +1,6 @@
 package com.tambal_ban.ui.auth
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -36,8 +37,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.tvRegister.setOnClickListener {
-            // Navigate to RegisterActivity
-            Toast.makeText(this, "Membuka pendaftaran...", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
 
         binding.tvForgot.setOnClickListener {

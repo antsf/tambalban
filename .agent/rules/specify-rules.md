@@ -1,6 +1,6 @@
 ﻿# tambalban Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-20
+Auto-generated from all feature plans. Last updated: 2026-04-25
 
 ## Active Technologies
 - Kotlin 1.9+, Android SDK 35+ + osmdroid 6.x (Map), OSMBonusPack (Clustering), AdMob SDK (Monetization), ViewModel, LiveData (001-tambal_ban-finder)
@@ -12,6 +12,7 @@ Auto-generated from all feature plans. Last updated: 2026-04-20
 - Kotlin 1.9 + [osmdroid](https://github.com/osmdroid/osmdroid), [Material Components for Android (M3)](https://github.com/material-components/material-components-android), Retrofit 2 (011-refresh-home-screen)
 - Kotlin 1.9+, Android SDK (Min 24) + Retrofit 2, OkHttp 4, Supabase Auth/Rest, Coil (Image Loading) (012-user-profile-screen)
 - Supabase (PostgreSQL `profiles` table, Storage `avatars` bucket) (012-user-profile-screen)
+- Kotlin 1.9 + Android SDK (Min 24), Material Components, Supabase Auth, Retrofit 2, OkHttp 4 (013-auth-register)
 
 - Kotlin 1.9+, Android SDK 35+ + Retrofit 2.x, OkHttp 4.x, Room 2.6+, osmdroid 6.x, ViewModel, LiveData, AdMob SDK (001-tambalban-finder)
 
@@ -31,9 +32,9 @@ tests/
 Kotlin 1.9+, Android SDK 35+: Follow standard conventions
 
 ## Recent Changes
+- 013-auth-register: Added Kotlin 1.9 + Android SDK (Min 24), Material Components, Supabase Auth, Retrofit 2, OkHttp 4
 - 012-user-profile-screen: Added Kotlin 1.9+, Android SDK (Min 24) + Retrofit 2, OkHttp 4, Supabase Auth/Rest, Coil (Image Loading)
 - 011-refresh-home-screen: Added Kotlin 1.9 + [osmdroid](https://github.com/osmdroid/osmdroid), [Material Components for Android (M3)](https://github.com/material-components/material-components-android), Retrofit 2
-- 009-design-system-guardian: Added Kotlin 1.9+, Android SDK (Min SDK 24) + Retrofit 2, OkHttp 4, osmdroid (Map System), Material Components for Android (Material 3)
 
 
 <!-- MANUAL ADDITIONS START -->

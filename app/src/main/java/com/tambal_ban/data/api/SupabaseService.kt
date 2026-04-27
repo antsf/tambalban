@@ -18,7 +18,7 @@ interface SupabaseService {
 
     @POST("auth/v1/signup")
     suspend fun register(
-        @Body request: LoginRequest
+        @Body request: RegisterRequest
     ): Response<AuthResponse>
 
 
