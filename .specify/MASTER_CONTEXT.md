@@ -28,6 +28,7 @@
 | 012 | User Profile Screen | ✅ Done | ProfileActivity, EditProfileActivity, ProfileViewModel, ProfileRepository | — |
 | 013 | Auth Register | ✅ Done | RegisterActivity, RegisterViewModel, AuthRepository | — |
 | 014 | Modular Structure | ✅ Done | Feature-based packaging applied across all packages | — |
+| 015 | Workshops List | ✅ Done | WorkshopListActivity, WorkshopListViewModel, WorkshopListAdapter | — |
 
 ---
 
@@ -60,6 +61,9 @@
 - [ ] T022 Add RecyclerView for search suggestions in view_search_overlay.xml
 - [ ] T023 Create SearchSuggestionAdapter.kt + bind in MainActivity.kt
 - [ ] T024 Implement snap-to-marker logic on suggestion click in MainActivity.kt
+
+### 015 - Workshops List
+- [ ] T025 Set click listener on `btnViewAll` in `MainActivity.kt` to open `WorkshopListActivity`
 
 ---
 

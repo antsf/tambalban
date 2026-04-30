@@ -15,8 +15,8 @@
 | auth/ui | ✅ Done | LoginActivity, RegisterActivity, ProfileActivity, EditProfileActivity | T010-T015 polish pending |
 | auth/viewmodel | ✅ Done | LoginViewModel, RegisterViewModel, ProfileViewModel | — |
 | workshop/data | ✅ Done | Workshop, Review, WorkshopSubmission, WorkshopRepository, ReviewRepository, SubmissionRepository, WorkshopDbHelper, WorkshopMapper | — |
-| workshop/ui | ✅ Done | WorkshopDetailActivity, AddWorkshopActivity, ReviewAdapter | — |
-| workshop/viewmodel | ✅ Done | WorkshopDetailViewModel, AddWorkshopViewModel | — |
+| workshop/ui | ✅ Done | WorkshopDetailActivity, AddWorkshopActivity, WorkshopListActivity, ReviewAdapter, WorkshopListAdapter | — |
+| workshop/viewmodel | ✅ Done | WorkshopDetailViewModel, AddWorkshopViewModel, WorkshopListViewModel | — |
 | map/data | ⬜ Not Started | — | No dedicated map repository/data models |
 | map/ui | 🔄 In Progress | MainActivity, NearbyWorkshopAdapter, SearchSuggestionAdapter | T020-T024 pending |
 | map/viewmodel | ✅ Done | MainViewModel | — |

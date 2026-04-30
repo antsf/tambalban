@@ -54,6 +54,13 @@
             android:parentActivityName=".map.ui.MainActivity"
             android:theme="@style/Theme.TambalBan" />
 
+        <!-- Workshop List Activity -->
+        <activity
+            android:name=".workshop.ui.WorkshopListActivity"
+            android:exported="false"
+            android:parentActivityName=".map.ui.MainActivity"
+            android:theme="@style/Theme.TambalBan" />
+
         <!-- Login Activity -->
         <activity
             android:name=".auth.ui.LoginActivity"

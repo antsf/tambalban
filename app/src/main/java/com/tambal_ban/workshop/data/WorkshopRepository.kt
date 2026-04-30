@@ -34,11 +34,11 @@ class WorkshopRepository(
             withContext(Dispatchers.IO) {
                 if (isNetworkAvailable(context)) {
                     try {
-                        val response = supabaseService.getWorkshops(
+                        val response = supabaseService.getWorkshopsInBounds(
                             minLat = "gte.$minLat",
                             maxLat = "lte.$maxLat",
-                            minLng = "gte.$minLng",
-                            maxLng = "lte.$maxLng"
+                            minLon = "gte.$minLng",
+                            maxLon = "lte.$maxLng"
                         )
                         if (response.isSuccessful) {
                             val workshops = response.body() ?: emptyList()
@@ -80,11 +80,11 @@ class WorkshopRepository(
 
             if (isNetworkAvailable(context)) {
                 try {
-                    val response = supabaseService.getWorkshops(
+                    val response = supabaseService.getWorkshopsInBounds(
                         minLat = "gte.$minLat",
                         maxLat = "lte.$maxLat",
-                        minLng = "gte.$minLng",
-                        maxLng = "lte.$maxLng"
+                        minLon = "gte.$minLng",
+                        maxLon = "lte.$maxLng"
                     )
                     if (response.isSuccessful) {
                         val workshops = response.body() ?: emptyList()
@@ -152,7 +152,7 @@ class WorkshopRepository(
         withContext(Dispatchers.IO) {
             if (isNetworkAvailable(context)) {
                 try {
-                    val response = supabaseService.getWorkshopsByName("ilike.*$query*")
+                    val response = supabaseService.searchWorkshops("ilike.*$query*")
                     if (response.isSuccessful) {
                         return@withContext response.body() ?: emptyList()
                     }

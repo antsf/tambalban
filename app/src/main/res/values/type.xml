@@ -28,9 +28,14 @@
         <item name="android:textSize">22sp</item>
     </style>
     
-    <style name="TextAppearance.Guardian.TitleMedium" parent="TextAppearance.Material3.TitleLarge">
+    <style name="TextAppearance.Guardian.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
         <item name="fontFamily">@font/inter_medium</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextAppearance.Guardian.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/inter_medium</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="TextAppearance.Guardian.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
@@ -43,6 +48,11 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="TextAppearance.Guardian.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">@font/inter_regular</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="TextAppearance.Guardian.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
         <item name="fontFamily">@font/inter_medium</item>
         <item name="android:textSize">14sp</item>
@@ -51,6 +61,12 @@
     <style name="TextAppearance.Guardian.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
         <item name="fontFamily">@font/inter_medium</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/on_surface_variant</item>
+    </style>
+
+    <style name="TextAppearance.Guardian.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">@font/inter_medium</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/on_surface_variant</item>
     </style>
 </resources>
