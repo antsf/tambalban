@@ -28,33 +28,24 @@ interface SupabaseService {
     // --- Workshops ---
 
     @GET("rest/v1/workshops")
-    suspend fun getWorkshopsByName(
-        @Query("name") nameQuery: String,
+    suspend fun getWorkshopsInBounds(
+        @Query("latitude") minLat: String,
+        @Query("latitude") maxLat: String,
+        @Query("longitude") minLon: String,
+        @Query("longitude") maxLon: String,
         @Query("verified") verified: String = "eq.true"
     ): Response<List<Workshop>>
 
     @GET("rest/v1/workshops")
-    suspend fun getWorkshops(
-        @Query("verified") verified: String = "eq.true",
-        @Query("latitude") minLat: String?,
-        @Query("latitude") maxLat: String?,
-        @Query("longitude") minLng: String?,
-        @Query("longitude") maxLng: String?
+    suspend fun searchWorkshops(
+        @Query("name") query: String, // format: ilike.*query*
+        @Query("verified") verified: String = "eq.true"
     ): Response<List<Workshop>>
 
     @GET("rest/v1/workshops")
     suspend fun getWorkshopById(
-        @Query("id") id: String
+        @Query("id") id: String // format: eq.uuid
     ): Response<List<Workshop>>
-
-    @POST("rest/v1/rpc/nearby_workshops")
-    suspend fun getNearbyWorkshops(
-        @Body request: NearbyRequest
-    ): Response<List<Workshop>>
-
-
-    // --- Reviews ---
-
     @GET("rest/v1/reviews")
     suspend fun getReviews(
         @Query("workshop_id") workshopId: String

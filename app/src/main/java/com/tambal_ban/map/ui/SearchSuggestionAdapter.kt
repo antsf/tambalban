@@ -1,48 +1,43 @@
 package com.tambal_ban.map.ui
-import com.tambal_ban.map.ui.* 
-import com.tambal_ban.map.viewmodel.* 
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.tambal_ban.databinding.ItemSearchSuggestionBinding
 import com.tambal_ban.workshop.data.Workshop
 
-/**
- * T023: Adapter for real-time search suggestions in the overlay list.
- */
 class SearchSuggestionAdapter(
     private val onSuggestionClick: (Workshop) -> Unit
-) : ListAdapter<Workshop, SearchSuggestionAdapter.ViewHolder>(WorkshopDiffCallback()) {
+) : RecyclerView.Adapter<SearchSuggestionAdapter.ViewHolder>() {
+
+    private var suggestions: List<Workshop> = emptyList()
+
+    fun submitList(newList: List<Workshop>) {
+        suggestions = newList
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_1, parent, false)
-        return ViewHolder(view)
+        val binding = ItemSearchSuggestionBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val workshop = getItem(position)
-        holder.bind(workshop)
+        holder.bind(suggestions[position])
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val textView: TextView = view.findViewById(android.R.id.text1)
+    override fun getItemCount(): Int = suggestions.size
 
+    inner class ViewHolder(private val binding: ItemSearchSuggestionBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(workshop: Workshop) {
-            textView.text = workshop.name
-            itemView.setOnClickListener { onSuggestionClick(workshop) }
+            binding.tvSuggestionName.text = workshop.name
+            binding.tvSuggestionAddress.text = workshop.address ?: "No address"
+            binding.root.setOnClickListener { onSuggestionClick(workshop) }
         }
-    }
-
-    private class WorkshopDiffCallback : DiffUtil.ItemCallback<Workshop>() {
-        override fun areItemsTheSame(oldItem: Workshop, newItem: Workshop): Boolean =
-            oldItem.id == newItem.id
-
-        override fun areContentsTheSame(oldItem: Workshop, newItem: Workshop): Boolean =
-            oldItem == newItem
     }
 }

@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private var myLocationOverlay: MyLocationNewOverlay? = null
     private lateinit var workshopAdapter: NearbyWorkshopAdapter
+    private lateinit var suggestionAdapter: SearchSuggestionAdapter
     private var searchFocusMarker: Marker? = null
     private var hasCenteredOnUser = false
 
@@ -91,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                 val query = s?.toString() ?: ""
                 viewModel.onSearchTextChanged(query)
                 if (query.isEmpty()) {
+                    binding.searchOverlay.suggestionsCard.visibility = View.GONE
                     searchFocusMarker?.let { 
                         binding.mapView.overlays.remove(it)
                         searchFocusMarker = null
@@ -117,12 +119,26 @@ class MainActivity : AppCompatActivity() {
                 imm.hideSoftInputFromWindow(v.windowToken, 0)
                 
                 binding.searchOverlay.etSearch.clearFocus()
+                binding.searchOverlay.suggestionsCard.visibility = View.GONE
                 viewModel.searchWorkshops(v.text.toString())
                 true
             } else {
                 false
             }
         }
+
+        suggestionAdapter = SearchSuggestionAdapter { workshop ->
+            binding.searchOverlay.etSearch.setText(workshop.name)
+            binding.searchOverlay.etSearch.clearFocus()
+            binding.searchOverlay.suggestionsCard.visibility = View.GONE
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(binding.searchOverlay.etSearch.windowToken, 0)
+            
+            binding.mapView.controller.animateTo(GeoPoint(workshop.latitude, workshop.longitude))
+            addSearchFocusMarker(workshop)
+        }
+
+        binding.searchOverlay.rvSuggestions.adapter = suggestionAdapter
     }
 
     private fun setupBottomSheet() {
@@ -138,6 +154,15 @@ class MainActivity : AppCompatActivity() {
         binding.rvWorkshopsNearby.apply {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MainActivity)
             adapter = workshopAdapter
+        }
+
+        binding.btnViewAll.setOnClickListener {
+            val intent = android.content.Intent(this, com.tambal_ban.workshop.ui.WorkshopListActivity::class.java).apply {
+                val location = viewModel.userLocation.value
+                putExtra("LAT", location?.latitude ?: com.tambal_ban.core.utils.Constants.DEFAULT_LATITUDE)
+                putExtra("LON", location?.longitude ?: com.tambal_ban.core.utils.Constants.DEFAULT_LONGITUDE)
+            }
+            startActivity(intent)
         }
     }
 
@@ -165,6 +190,15 @@ class MainActivity : AppCompatActivity() {
             updateUIStates()
         }
 
+        viewModel.searchSuggestions.observe(this) { suggestions ->
+            if (suggestions.isNotEmpty() && binding.searchOverlay.etSearch.hasFocus()) {
+                suggestionAdapter.submitList(suggestions)
+                binding.searchOverlay.suggestionsCard.visibility = View.VISIBLE
+            } else {
+                binding.searchOverlay.suggestionsCard.visibility = View.GONE
+            }
+        }
+
         viewModel.isLoading.observe(this) { updateUIStates() }
         viewModel.error.observe(this) { updateUIStates() }
 
@@ -180,9 +214,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.sheetTitle.observe(this) { title ->
-            binding.tvSheetTitle.text = title
-        }
+//        viewModel.sheetTitle.observe(this) { title ->
+//            binding.tvSheetTitle.text = title
+//        }
     }
 
     private fun updateUIStates() {

@@ -43,8 +43,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
-    private val _sheetTitle = MutableLiveData<String>("Tambal Ban Terdekat")
-    val sheetTitle: LiveData<String> = _sheetTitle
+    private val _searchSuggestions = MutableLiveData<List<Workshop>>()
+    val searchSuggestions: LiveData<List<Workshop>> = _searchSuggestions
 
     private val _searchFlow = MutableStateFlow("")
 
@@ -52,12 +52,23 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             @OptIn(FlowPreview::class)
             _searchFlow
-                .debounce(500)
-                .filter { it.length >= 3 }
+                .debounce(300)
+                .filter { it.length >= 2 }
                 .distinctUntilChanged()
                 .collect { query ->
-                    searchWorkshops(query)
+                    updateSearchSuggestions(query)
                 }
+        }
+    }
+
+    private fun updateSearchSuggestions(query: String) {
+        viewModelScope.launch {
+            try {
+                val list = repository.searchWorkshops(query, getApplication())
+                _searchSuggestions.value = list
+            } catch (e: Exception) {
+                // Silently fail for suggestions
+            }
         }
     }
 
@@ -83,7 +94,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun fetchNearbyWorkshops(lat: Double, lon: Double, radiusKm: Int = Constants.RADIUS_3KM) {
-        _sheetTitle.value = "Tambal Ban Terdekat"
+//        _sheetTitle.value = "Tambal Ban Terdekat"
         viewModelScope.launch {
             _isLoading.value = true
             try {
@@ -113,7 +124,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun searchWorkshops(query: String) {
         _searchQuery.value = query
-        _sheetTitle.value = "Hasil Pencarian"
+//        _sheetTitle.value = "Hasil Pencarian"
         viewModelScope.launch {
             _isLoading.value = true
             try {

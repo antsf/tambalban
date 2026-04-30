@@ -13,22 +13,26 @@ class AuthInterceptor(private val authPrefs: AuthPrefs) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val requestBuilder = originalRequest.newBuilder()
-            .addHeader("apikey", SupabaseConfig.ANON_KEY)
+        
+        // 1. Mandatory Supabase API Key
+        requestBuilder.addHeader("apikey", SupabaseConfig.ANON_KEY)
 
         val token = authPrefs.getAccessToken()
         val isAuthRequest = originalRequest.url.toString().contains("/auth/v1/")
 
+        // 2. Authorization Header logic
         if (!token.isNullOrEmpty()) {
-            requestBuilder.addHeader("Authorization", "Bearer $token")
+            // Logged in: Use user's JWT
+            requestBuilder.header("Authorization", "Bearer $token")
         } else if (!isAuthRequest) {
-            // Only add anon token to data requests, not auth/login requests
-            requestBuilder.addHeader("Authorization", "Bearer ${SupabaseConfig.ANON_KEY}")
+            // Not logged in: Use ANON_KEY as fallback for public RLS access
+            requestBuilder.header("Authorization", "Bearer ${SupabaseConfig.ANON_KEY}")
         }
 
         val response = chain.proceed(requestBuilder.build())
 
-        if (response.code == 401) {
-            // Handle unauthorized error - could trigger token refresh or logout
+        if (response.code == 401 && !isAuthRequest) {
+            // Handle unauthorized error - clear invalid tokens
             authPrefs.clear()
         }
 
