@@ -46,7 +46,6 @@ interface SupabaseService {
     suspend fun getWorkshopById(
         @Query("id") id: String
     ): Response<List<Workshop>>
-
     @GET("rest/v1/reviews")
     suspend fun getReviews(
         @Query("workshop_id") workshopId: String
