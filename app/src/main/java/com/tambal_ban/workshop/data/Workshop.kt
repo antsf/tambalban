@@ -36,10 +36,4 @@ data class Workshop(
     var distance: Double? = null
 )
 
-@Serializable
-data class NearbyRequest(
-    val lat: Double,
-    val lon: Double,
-    @SerialName("radius_meters")
-    val radiusMeters: Int
-)
+

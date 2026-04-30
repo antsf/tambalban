@@ -47,14 +47,6 @@ interface SupabaseService {
         @Query("id") id: String
     ): Response<List<Workshop>>
 
-    @POST("rest/v1/rpc/nearby_workshops")
-    suspend fun getNearbyWorkshops(
-        @Body request: NearbyRequest
-    ): Response<List<Workshop>>
-
-
-    // --- Reviews ---
-
     @GET("rest/v1/reviews")
     suspend fun getReviews(
         @Query("workshop_id") workshopId: String

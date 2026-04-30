@@ -61,7 +61,7 @@ class WorkshopRepository(
             }
 
     /**
-     * T005: Get nearby workshops using RPC with local DB fallback.
+     * Get nearby workshops using bounding box query on the 'workshops' table.
      */
     suspend fun getNearbyWorkshops(
         lat: Double,
@@ -70,23 +70,35 @@ class WorkshopRepository(
         context: Context
     ): List<Workshop> =
         withContext(Dispatchers.IO) {
+            val radiusKm = radiusMeters / 1000.0
+            // Approximate 1 degree = 111km
+            val radiusDegrees = radiusKm / 111.0
+            val minLat = lat - radiusDegrees
+            val maxLat = lat + radiusDegrees
+            val minLng = lon - radiusDegrees
+            val maxLng = lon + radiusDegrees
+
             if (isNetworkAvailable(context)) {
                 try {
-                    val response = supabaseService.getNearbyWorkshops(
-                        com.tambal_ban.workshop.data.NearbyRequest(lat, lon, radiusMeters)
+                    val response = supabaseService.getWorkshops(
+                        minLat = "gte.$minLat",
+                        maxLat = "lte.$maxLat",
+                        minLng = "gte.$minLng",
+                        maxLng = "lte.$maxLng"
                     )
                     if (response.isSuccessful) {
                         val workshops = response.body() ?: emptyList()
                         saveWorkshopsToDb(workshops)
                         return@withContext workshops.onEach {
                             it.distance = GeoUtils.calculateDistance(lat, lon, it.latitude, it.longitude)
-                        }.sortedBy { it.distance }
+                        }.filter { it.distance!! <= radiusKm }
+                         .sortedBy { it.distance }
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error fetching nearby workshops", e)
                 }
             }
-            return@withContext findNearestWorkshops(lat, lon, radiusMeters / 1000)
+            return@withContext findNearestWorkshops(lat, lon, radiusKm.toInt())
         }
 
     /** 
