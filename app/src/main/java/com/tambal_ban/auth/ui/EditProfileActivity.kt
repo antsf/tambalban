@@ -23,7 +23,7 @@ import com.tambal_ban.auth.viewmodel.ProfileViewModel
 /**
  * US3 & US4: Edit Profile Activity.
  */
-class EditProfileActivity : AppCompatActivity() {
+class EditProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
 
     private lateinit var binding: ActivityEditProfileBinding
     private val viewModel: ProfileViewModel by viewModels()
@@ -53,6 +53,7 @@ class EditProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityEditProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        applySafeArea(binding.root)
 
         setupObservers()
         setupListeners()

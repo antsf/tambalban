@@ -16,7 +16,7 @@ import com.tambal_ban.databinding.ActivityWorkshopDetailBinding
 import com.tambal_ban.core.utils.Constants
 import com.tambal_ban.core.utils.IntentUtils
 
-class WorkshopDetailActivity : AppCompatActivity() {
+class WorkshopDetailActivity : com.tambal_ban.core.ui.BaseActivity() {
 
     private lateinit var binding: ActivityWorkshopDetailBinding
     private val viewModel: WorkshopDetailViewModel by viewModels()
@@ -28,6 +28,7 @@ class WorkshopDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityWorkshopDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        applySafeArea(binding.root)
 
         workshopId = intent.getStringExtra(Constants.EXTRA_WORKSHOP_ID)
 

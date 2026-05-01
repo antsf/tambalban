@@ -33,13 +33,24 @@ interface SupabaseService {
         @Query("latitude") maxLat: String,
         @Query("longitude") minLon: String,
         @Query("longitude") maxLon: String,
-        @Query("verified") verified: String = "eq.true"
+        @Query("verified") verified: String = "eq.true",
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
     ): Response<List<Workshop>>
 
     @GET("rest/v1/workshops")
     suspend fun searchWorkshops(
         @Query("name") query: String, // format: ilike.*query*
-        @Query("verified") verified: String = "eq.true"
+        @Query("verified") verified: String = "eq.true",
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
+    ): Response<List<Workshop>>
+
+    @GET("rest/v1/workshops")
+    suspend fun getAllWorkshops(
+        @Query("verified") verified: String = "eq.true",
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
     ): Response<List<Workshop>>
 
     @GET("rest/v1/workshops")

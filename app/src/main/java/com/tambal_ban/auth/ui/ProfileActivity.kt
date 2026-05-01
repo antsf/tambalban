@@ -19,7 +19,7 @@ import androidx.core.net.toUri
 /**
  * US2: Profile Activity displaying user information.
  */
-class ProfileActivity : AppCompatActivity() {
+class ProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
 
     private lateinit var binding: ActivityProfileBinding
     private val viewModel: ProfileViewModel by viewModels()
@@ -28,6 +28,7 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        applySafeArea(binding.root)
 
         setupObservers()
         setupListeners()
