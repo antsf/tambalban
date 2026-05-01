@@ -25,6 +25,9 @@ class WorkshopDetailViewModel(application: Application) : AndroidViewModel(appli
     private val _workshop = MutableLiveData<Workshop?>()
     val workshop: LiveData<Workshop?> = _workshop
 
+    private val _uiState = MutableLiveData<WorkshopDetailUIState>()
+    val uiState: LiveData<WorkshopDetailUIState> = _uiState
+
     private val _reviews = MutableLiveData<List<Review>>()
     val reviews: LiveData<List<Review>> = _reviews
 
@@ -50,6 +53,7 @@ class WorkshopDetailViewModel(application: Application) : AndroidViewModel(appli
             try {
                 val workshopResult = workshopRepository.getWorkshopById(workshopId)
                 _workshop.value = workshopResult
+                workshopResult?.let { mapToUIState(it) }
 
                 val reviewsResult = reviewRepository.getReviews(workshopId)
                 if (reviewsResult.isSuccess) {
@@ -61,6 +65,38 @@ class WorkshopDetailViewModel(application: Application) : AndroidViewModel(appli
                 _isLoading.value = false
             }
         }
+    }
+
+    private fun mapToUIState(workshop: Workshop) {
+        val context = getApplication<Application>()
+        
+        // Simple open/closed logic for now (can be expanded with actual business hours)
+        val isOpen = workshop.is24h || true // Placeholder, but ensuring it's never empty
+        val statusTextRes = if (isOpen) com.tambal_ban.R.string.status_open_now 
+                           else com.tambal_ban.R.string.status_closed
+        val statusText = context.getString(statusTextRes)
+        val statusColor = if (isOpen) com.tambal_ban.R.color.success 
+                         else com.tambal_ban.R.color.error
+
+        val businessHours = if (workshop.is24h) {
+            context.getString(com.tambal_ban.R.string.open_24h)
+        } else {
+            "${workshop.openTime ?: "08:00"} - ${workshop.closeTime ?: "17:00"}"
+        }
+
+        _uiState.value = WorkshopDetailUIState(
+            id = workshop.id,
+            name = workshop.name,
+            imageUrl = workshop.imageUrl,
+            fullAddress = workshop.address ?: context.getString(com.tambal_ban.R.string.address),
+            phoneNumber = workshop.phone ?: context.getString(com.tambal_ban.R.string.phone_number),
+            businessHours = businessHours,
+            ratingAvg = workshop.ratingAvg.toString(),
+            reviewCountText = "(${workshop.ratingCount} ${context.getString(com.tambal_ban.R.string.reviews)})",
+            statusText = statusText,
+            statusColorRes = statusColor,
+            is24h = workshop.is24h
+        )
     }
 
     fun submitReview(workshopId: String, rating: Int, comment: String) {

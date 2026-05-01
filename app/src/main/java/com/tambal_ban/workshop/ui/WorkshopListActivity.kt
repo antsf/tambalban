@@ -75,7 +75,7 @@ class WorkshopListActivity : BaseActivity() {
     private fun setupRecyclerView() {
         adapter = WorkshopListAdapter { workshop ->
             val intent = Intent(this, WorkshopDetailActivity::class.java).apply {
-                putExtra("WORKSHOP_ID", workshop.id)
+                putExtra(com.tambal_ban.core.utils.Constants.EXTRA_WORKSHOP_ID, workshop.id)
             }
             startActivity(intent)
         }

@@ -290,7 +290,7 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
             setOnMarkerClickListener { _, _ ->
                 binding.mapView.controller.animateTo(position)
                 val intent = android.content.Intent(this@MainActivity, com.tambal_ban.workshop.ui.WorkshopDetailActivity::class.java).apply {
-                    putExtra("WORKSHOP_ID", workshop.id)
+                    putExtra(Constants.EXTRA_WORKSHOP_ID, workshop.id)
                 }
                 startActivity(intent)
                 true
@@ -316,7 +316,7 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
                     if (index != -1) binding.rvWorkshopsNearby.smoothScrollToPosition(index)
                     
                     val intent = android.content.Intent(this@MainActivity, com.tambal_ban.workshop.ui.WorkshopDetailActivity::class.java).apply {
-                        putExtra("WORKSHOP_ID", workshop.id)
+                        putExtra(Constants.EXTRA_WORKSHOP_ID, workshop.id)
                     }
                     startActivity(intent)
                     true
