@@ -34,6 +34,11 @@
         <item name="cornerSize">@dimen/radius_xl</item>
     </style>
 
+    <style name="ShapeAppearance.Guardian.MediumComponent" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/radius_md</item>
+    </style>
+
     <!-- Emergency Chips Style (Safety Green) -->
     <style name="Guardian.Chip.Emergency" parent="Widget.Material3.Chip.Suggestion">
         <item name="chipBackgroundColor">@color/tertiary_container</item>

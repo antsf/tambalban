@@ -5,11 +5,20 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.lifecycleScope
+import com.tambal_ban.core.ui.BaseActivity
 import com.tambal_ban.databinding.ActivityWorkshopListBinding
 import com.tambal_ban.workshop.viewmodel.WorkshopListViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
-class WorkshopListActivity : AppCompatActivity() {
+class WorkshopListActivity : BaseActivity() {
 
     private lateinit var binding: ActivityWorkshopListBinding
     private val viewModel: WorkshopListViewModel by viewModels()
@@ -19,21 +28,48 @@ class WorkshopListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityWorkshopListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        applySafeArea(binding.root)
 
         setupToolbar()
+        setupSearch()
         setupRecyclerView()
         setupObservers()
 
-        // Default: fetch workshops for current location (mocked or from intent)
-        val lat = intent.getDoubleExtra("LAT", -6.2000)
-        val lon = intent.getDoubleExtra("LON", 106.8166)
-        viewModel.fetchNearbyWorkshops(lat, lon, 5000)
+        // Default: fetch all workshops
+        viewModel.fetchAllWorkshops()
     }
 
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.toolbar.setNavigationOnClickListener { finish() }
+    }
+
+    private fun setupSearch() {
+        binding.etSearch.setOnEditorActionListener { v, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val query = v.text.toString()
+                viewModel.searchWorkshops(query)
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
+                true
+            } else {
+                false
+            }
+        }
+
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            private var searchJob: kotlinx.coroutines.Job? = null
+            override fun afterTextChanged(s: Editable?) {
+                searchJob?.cancel()
+                searchJob = lifecycleScope.launch {
+                    delay(500)
+                    viewModel.searchWorkshops(s?.toString() ?: "")
+                }
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
     }
 
     private fun setupRecyclerView() {
@@ -44,11 +80,25 @@ class WorkshopListActivity : AppCompatActivity() {
             startActivity(intent)
         }
         binding.rvWorkshops.adapter = adapter
+
+        binding.rvWorkshops.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0) {
+                    viewModel.loadMore()
+                }
+            }
+        })
     }
 
     private fun setupObservers() {
         viewModel.workshops.observe(this) { workshops ->
-            if (workshops.isEmpty()) {
+            if (workshops.isEmpty() && viewModel.isLoading.value == false) {
                 binding.rvWorkshops.visibility = View.GONE
                 binding.emptyState.visibility = View.VISIBLE
             } else {
@@ -68,6 +118,10 @@ class WorkshopListActivity : AppCompatActivity() {
                 binding.shimmerView.stopShimmer()
                 binding.shimmerView.visibility = View.GONE
             }
+        }
+
+        viewModel.isMoreLoading.observe(this) { isMoreLoading ->
+            // Optionally show a small loading indicator at the bottom
         }
 
         viewModel.error.observe(this) { error ->

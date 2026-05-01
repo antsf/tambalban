@@ -25,7 +25,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 
-class AddWorkshopActivity : AppCompatActivity() {
+class AddWorkshopActivity : com.tambal_ban.core.ui.BaseActivity() {
 
     private lateinit var binding: ActivityAddWorkshopBinding
     private val viewModel: AddWorkshopViewModel by viewModels()
@@ -48,6 +48,7 @@ class AddWorkshopActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddWorkshopBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        applySafeArea(binding.root)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 

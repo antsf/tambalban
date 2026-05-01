@@ -15,7 +15,7 @@ import com.tambal_ban.core.utils.AuthErrorMapper
 /**
  * Activity for user registration.
  */
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : com.tambal_ban.core.ui.BaseActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
     private val viewModel: RegisterViewModel by viewModels()
@@ -24,6 +24,7 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        applySafeArea(binding.root)
 
         setupButtons()
         setupObservers()

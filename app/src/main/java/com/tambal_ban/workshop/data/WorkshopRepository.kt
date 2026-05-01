@@ -67,7 +67,9 @@ class WorkshopRepository(
         lat: Double,
         lon: Double,
         radiusMeters: Int,
-        context: Context
+        context: Context,
+        limit: Int? = null,
+        offset: Int? = null
     ): List<Workshop> =
         withContext(Dispatchers.IO) {
             val radiusKm = radiusMeters / 1000.0
@@ -84,7 +86,9 @@ class WorkshopRepository(
                         minLat = "gte.$minLat",
                         maxLat = "lte.$maxLat",
                         minLon = "gte.$minLng",
-                        maxLon = "lte.$maxLng"
+                        maxLon = "lte.$maxLng",
+                        limit = limit,
+                        offset = offset
                     )
                     if (response.isSuccessful) {
                         val workshops = response.body() ?: emptyList()
@@ -133,6 +137,48 @@ class WorkshopRepository(
                 return@withContext workshops.sortedBy { it.distance }
             }
 
+    suspend fun getAllWorkshops(
+        context: Context,
+        limit: Int? = null,
+        offset: Int? = null
+    ): List<Workshop> =
+        withContext(Dispatchers.IO) {
+            if (isNetworkAvailable(context)) {
+                try {
+                    val response = supabaseService.getAllWorkshops(
+                        limit = limit,
+                        offset = offset
+                    )
+                    Log.d(TAG, "getAllWorkshops: successful=${response.isSuccessful}, code=${response.code()}")
+                    if (response.isSuccessful) {
+                        val workshops = response.body() ?: emptyList()
+                        Log.d(TAG, "getAllWorkshops: count=${workshops.size}")
+                        saveWorkshopsToDb(workshops)
+                        return@withContext workshops
+                    } else {
+                        Log.e(TAG, "getAllWorkshops error: ${response.errorBody()?.string()}")
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error fetching all workshops", e)
+                }
+            }
+            
+            val workshops = mutableListOf<Workshop>()
+            Log.d(TAG, "getAllWorkshops: falling back to local DB")
+            val db = dbHelper.readableDatabase
+            val cursor = db.query(
+                WorkshopDbHelper.TABLE_WORKSHOPS,
+                null, null, null, null, null, null,
+                if (limit != null) "$limit" else null
+            )
+            cursor.use {
+                while (it.moveToNext()) {
+                    workshops.add(WorkshopMapper.fromCursor(it))
+                }
+            }
+            return@withContext workshops
+        }
+
     suspend fun getClosestWorkshop(userLat: Double, userLng: Double): Workshop? =
             withContext(Dispatchers.IO) {
                 val cursor = dbHelper.getClosestWorkshop(userLat, userLng, 0.05)
@@ -148,11 +194,20 @@ class WorkshopRepository(
                 return@withContext null
             }
 
-    suspend fun searchWorkshops(query: String, context: Context): List<Workshop> =
+    suspend fun searchWorkshops(
+        query: String, 
+        context: Context,
+        limit: Int? = null,
+        offset: Int? = null
+    ): List<Workshop> =
         withContext(Dispatchers.IO) {
             if (isNetworkAvailable(context)) {
                 try {
-                    val response = supabaseService.searchWorkshops("ilike.*$query*")
+                    val response = supabaseService.searchWorkshops(
+                        query = "ilike.*$query*",
+                        limit = limit,
+                        offset = offset
+                    )
                     if (response.isSuccessful) {
                         return@withContext response.body() ?: emptyList()
                     }

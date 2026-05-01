@@ -34,7 +34,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 /**
  * T009: MainActivity with unified state management (Loading, Empty, Error, Content).
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        applySafeArea(binding.root)
 
         setupMap()
         setupBottomSheet()
@@ -214,9 +215,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        viewModel.sheetTitle.observe(this) { title ->
-//            binding.tvSheetTitle.text = title
-//        }
+        viewModel.sheetTitle.observe(this) { title ->
+            binding.tvSheetTitle.text = title
+        }
     }
 
     private fun updateUIStates() {
@@ -288,6 +289,10 @@ class MainActivity : AppCompatActivity() {
             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             setOnMarkerClickListener { _, _ ->
                 binding.mapView.controller.animateTo(position)
+                val intent = android.content.Intent(this@MainActivity, com.tambal_ban.workshop.ui.WorkshopDetailActivity::class.java).apply {
+                    putExtra("WORKSHOP_ID", workshop.id)
+                }
+                startActivity(intent)
                 true
             }
         }
@@ -309,6 +314,11 @@ class MainActivity : AppCompatActivity() {
                     binding.mapView.controller.animateTo(position)
                     val index = workshopAdapter.currentList.indexOfFirst { it.id == workshop.id }
                     if (index != -1) binding.rvWorkshopsNearby.smoothScrollToPosition(index)
+                    
+                    val intent = android.content.Intent(this@MainActivity, com.tambal_ban.workshop.ui.WorkshopDetailActivity::class.java).apply {
+                        putExtra("WORKSHOP_ID", workshop.id)
+                    }
+                    startActivity(intent)
                     true
                 }
                 binding.mapView.overlays.add(this)
