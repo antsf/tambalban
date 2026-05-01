@@ -1,34 +1,30 @@
 package com.tambal_ban.workshop.ui
-import com.tambal_ban.workshop.ui.* 
-import com.tambal_ban.workshop.viewmodel.* 
-import com.tambal_ban.workshop.data.* 
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
 import com.tambal_ban.R
-import com.tambal_ban.workshop.data.Workshop
-import com.tambal_ban.databinding.ActivityWorkshopDetailBinding
+import com.tambal_ban.core.ui.BaseActivity
 import com.tambal_ban.core.utils.Constants
 import com.tambal_ban.core.utils.IntentUtils
+import com.tambal_ban.databinding.ActivityWorkshopDetailBinding
+import com.tambal_ban.workshop.data.WorkshopDetailUIState
+import com.tambal_ban.workshop.viewmodel.WorkshopDetailViewModel
 
-class WorkshopDetailActivity : com.tambal_ban.core.ui.BaseActivity() {
+class WorkshopDetailActivity : BaseActivity() {
 
     private lateinit var binding: ActivityWorkshopDetailBinding
     private val viewModel: WorkshopDetailViewModel by viewModels()
     private var workshopId: String? = null
-    private var currentWorkshop: Workshop? = null
     private lateinit var reviewAdapter: ReviewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWorkshopDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        applySafeArea(binding.root)
 
         workshopId = intent.getStringExtra(Constants.EXTRA_WORKSHOP_ID)
 
@@ -48,25 +44,22 @@ class WorkshopDetailActivity : com.tambal_ban.core.ui.BaseActivity() {
 
     private fun setupListeners() {
         binding.btnCall.setOnClickListener {
-            currentWorkshop?.phone?.let { phone -> IntentUtils.dialPhoneNumber(this, phone) }
-                    ?: run {
-                        Toast.makeText(this, "No phone number available", Toast.LENGTH_SHORT).show()
-                    }
-        }
-
-        binding.btnNavigate.setOnClickListener {
-            currentWorkshop?.let { workshop ->
-                IntentUtils.openNavigation(
-                        this,
-                        workshop.latitude,
-                        workshop.longitude,
-                        workshop.name
-                )
+            viewModel.uiState.value?.phoneNumber?.let { phone -> 
+                IntentUtils.dialPhoneNumber(this, phone) 
+            } ?: run {
+                Toast.makeText(this, "Nomor telepon tidak tersedia", Toast.LENGTH_SHORT).show()
             }
         }
 
-        binding.btnReport.setOnClickListener {
-            Toast.makeText(this, "Report feature coming soon", Toast.LENGTH_SHORT).show()
+        binding.btnNavigate.setOnClickListener {
+            viewModel.workshop.value?.let { workshop ->
+                IntentUtils.openNavigation(
+                    this,
+                    workshop.latitude,
+                    workshop.longitude,
+                    workshop.name
+                )
+            }
         }
     }
 
@@ -79,18 +72,12 @@ class WorkshopDetailActivity : com.tambal_ban.core.ui.BaseActivity() {
     }
 
     private fun setupObservers() {
-        viewModel.workshop.observe(this) { workshop ->
-            if (workshop != null) {
-                bindWorkshopData(workshop)
-            }
+        viewModel.uiState.observe(this) { uiState ->
+            bindUIState(uiState)
         }
 
         viewModel.reviews.observe(this) { reviews ->
             reviewAdapter.submitList(reviews)
-        }
-
-        viewModel.isLoading.observe(this) { isLoading ->
-            // Show/hide progress bar if needed
         }
 
         viewModel.error.observe(this) { error ->
@@ -101,31 +88,33 @@ class WorkshopDetailActivity : com.tambal_ban.core.ui.BaseActivity() {
 
         viewModel.reviewSubmissionResult.observe(this) { result ->
             if (result.isSuccess) {
-                Toast.makeText(this, "Review submitted!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Ulasan terkirim!", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Failed to submit review", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Gagal mengirim ulasan", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun bindWorkshopData(workshop: Workshop) {
-        currentWorkshop = workshop
+    private fun bindUIState(uiState: WorkshopDetailUIState) {
         binding.apply {
-            tvWorkshopName.text = workshop.name
-            tvAddress.text = workshop.address ?: "No address available"
-            tvPhone.text = workshop.phone ?: "No phone number"
-            tvRating.text = String.format("%.1f", workshop.ratingAvg)
-            tvRatingCount.text = "(${workshop.ratingCount} reviews)"
+            collapsingToolbar.title = getString(R.string.workshop_detail)
+            tvWorkshopName.text = uiState.name
+            tvFullAddress.text = uiState.fullAddress
+            tvPhoneNumber.text = uiState.phoneNumber
+            tvBusinessHours.text = uiState.businessHours
+            tvRatingText.text = "${uiState.ratingAvg} ${uiState.reviewCountText}"
+            ratingBar.rating = uiState.ratingAvg.toFloatOrNull() ?: 0f
+            
+            tvStatusBadge.text = uiState.statusText.ifEmpty { "BUKA SEKARANG" }
+            val colorStateList = androidx.core.content.ContextCompat.getColorStateList(this@WorkshopDetailActivity, uiState.statusColorRes)
+            tvStatusBadge.backgroundTintList = colorStateList
+            tvStatusBadge.visibility = android.view.View.VISIBLE
 
-            if (workshop.is24h) {
-                tvOpenHours.text = getString(R.string.open_24h)
-            } else if (!workshop.openTime.isNullOrEmpty()) {
-                tvOpenHours.text = getString(R.string.open_time, workshop.openTime)
-            } else {
-                tvOpenHours.text = "Hours not specified"
+            ivWorkshopImage.load(uiState.imageUrl) {
+                crossfade(true)
+                placeholder(R.drawable.bg_placeholder_workshop)
+                error(R.drawable.bg_placeholder_workshop)
             }
-
-            workshop.distance?.let { tvDistance.text = String.format("%.1f km", it) }
         }
     }
 

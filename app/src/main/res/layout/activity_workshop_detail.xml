@@ -4,236 +4,273 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".workshop.ui.WorkshopDetailActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="300dp"
+        android:fitsSystemWindows="true">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary"
-            app:navigationIconTint="@color/on_primary"
-            app:titleTextColor="@color/on_primary" />
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:toolbarId="@+id/toolbar">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_collapseMode="parallax">
+
+                <ImageView
+                    android:id="@+id/ivWorkshopImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/bg_placeholder_workshop"
+                    tools:ignore="ContentDescription" />
+
+            </FrameLayout>
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:navigationIcon="@drawable/ic_arrow_back" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="24dp">
 
-            <!-- Workshop Name -->
             <TextView
                 android:id="@+id/tvWorkshopName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/on_surface"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                tools:text="Tambal Ban Maju Jaya" />
+                android:textSize="28sp"
+                android:fontFamily="sans-serif-black"
+                tools:text="Master Tire &amp; Rim Specialists" />
 
-            <!-- Address -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@android:drawable/ic_menu_mapmode"
-                    android:contentDescription="@null" />
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:progressTint="@color/rating_star"
+                    android:rating="4.8" />
 
                 <TextView
-                    android:id="@+id/tvAddress"
-                    android:layout_width="match_parent"
+                    android:id="@+id/tvRatingText"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp"
-                    tools:text="Jl. Sudirman No. 123, Jakarta Pusat" />
-
-            </LinearLayout>
-
-            <!-- Phone -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@android:drawable/ic_menu_call"
-                    android:contentDescription="@null" />
+                    tools:text="4.8 (124 reviews)" />
 
                 <TextView
-                    android:id="@+id/tvPhone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:textColor="@color/secondary"
-                    android:textSize="14sp"
-                    tools:text="+62 812 3456 7890" />
-
-            </LinearLayout>
-
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="16dp"
-                android:background="@color/divider" />
-
-            <!-- Rating Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvRating"
+                    android:id="@+id/tvStatusBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/rating_star"
-                    android:textSize="28sp"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/bg_status_open"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
                     android:textStyle="bold"
-                    tools:text="4.5" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:orientation="vertical">
-
-                    <RatingBar
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:isIndicator="true"
-                        android:numStars="5"
-                        android:rating="4.5"
-                        android:stepSize="0.5"
-                        style="?android:attr/ratingBarStyleSmall" />
-
-                    <TextView
-                        android:id="@+id/tvRatingCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        tools:text="(25 reviews)" />
-
-                </LinearLayout>
+                    tools:text="BUKA SEKARANG" />
 
             </LinearLayout>
 
-            <!-- Open Hours -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@android:drawable/ic_menu_recent_history"
-                    android:contentDescription="@null" />
-
-                <TextView
-                    android:id="@+id/tvOpenHours"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:textColor="@color/success"
-                    android:textSize="14sp"
-                    tools:text="Open 24 Hours" />
-
-            </LinearLayout>
-
-            <!-- Distance -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@android:drawable/ic_menu_directions"
-                    android:contentDescription="@null" />
-
-                <TextView
-                    android:id="@+id/tvDistance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp"
-                    tools:text="0.8 km" />
-
-            </LinearLayout>
-
-            <!-- Action Buttons -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCall"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/call"
-                    app:backgroundTint="@color/success"
-                    app:icon="@android:drawable/ic_menu_call"
-                    app:iconSize="20dp" />
+                    app:cornerRadius="32dp"
+                    app:backgroundTint="#D674D6"
+                    app:icon="@drawable/ic_phone"
+                    app:iconGravity="textStart" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnNavigate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
                     android:text="@string/navigate"
-                    app:backgroundTint="@color/primary"
-                    app:icon="@android:drawable/ic_menu_directions"
-                    app:iconSize="20dp" />
+                    android:textColor="@color/on_surface"
+                    app:cornerRadius="32dp"
+                    app:backgroundTint="#E0E0E0"
+                    app:icon="@drawable/ic_marker_pin"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/on_surface" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnReport"
-                    style="@style/Widget.Material3.Button.TextButton"
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_ghost_border"
+                    android:src="@drawable/ic_marker_pin"
+                    app:tint="@color/primary" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/report"
-                    android:textColor="@color/error" />
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_full_address"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvFullAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/on_surface"
+                        android:textSize="16sp"
+                        tools:text="Jl. Kebon Jeruk No. 88, Kemanggisan, Palmerah, Jakarta Barat 11480" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_ghost_border"
+                    android:src="@drawable/ic_phone"
+                    app:tint="@color/primary" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_phone_number"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvPhoneNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/on_surface"
+                        android:textSize="16sp"
+                        tools:text="+62 21 5550 9988" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_ghost_border"
+                    android:src="@drawable/ic_schedule"
+                    app:tint="@color/primary" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_business_hours"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvBusinessHours"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/on_surface"
+                        android:textSize="16sp"
+                        tools:text="Mon - Sat: 08:00 AM - 10:00 PM\nSun: Emergency Calls Only" />
+                </LinearLayout>
             </LinearLayout>
 
             <!-- Reviews Section -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Reviews"
-                android:textSize="18sp"
+                android:layout_marginTop="32dp"
+                android:text="@string/reviews"
+                android:textAllCaps="true"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView

@@ -15,17 +15,24 @@
     <string name="radius_5km">5 km</string>
 
     <!-- Workshop Detail -->
-    <string name="workshop_detail">Workshop Details</string>
-    <string name="call">Call</string>
-    <string name="navigate">Navigate</string>
-    <string name="report">Report</string>
-    <string name="distance">Distance</string>
+    <string name="workshop_detail">Detail Bengkel</string>
+    <string name="call">Telepon</string>
+    <string name="navigate">Navigasi</string>
+    <string name="report">Laporkan</string>
+    <string name="distance">Jarak</string>
     <string name="rating">Rating</string>
-    <string name="reviews">reviews</string>
-    <string name="open_24h">Open 24 Hours</string>
-    <string name="open_time">Open: %s</string>
-    <string name="close_time">Close: %s</string>
-    <string name="no_rating">No rating yet</string>
+    <string name="reviews">ulasan</string>
+    <string name="open_24h">Buka 24 Jam</string>
+    <string name="open_time">Buka: %s</string>
+    <string name="close_time">Tutup: %s</string>
+    <string name="no_rating">Belum ada rating</string>
+
+    <!-- Workshop Detail Refresh -->
+    <string name="label_full_address">ALAMAT LENGKAP</string>
+    <string name="label_phone_number">NOMOR TELEPON</string>
+    <string name="label_business_hours">JAM OPERASIONAL</string>
+    <string name="status_open_now">BUKA SEKARANG</string>
+    <string name="status_closed">TUTUP</string>
 
     <!-- Add Workshop -->
     <string name="add_workshop">Add Workshop</string>
