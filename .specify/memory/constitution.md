@@ -1,118 +1,114 @@
-<!--
-Sync Impact Report:
-- Version change: 1.0.0 → 1.1.0
-- List of modified principles:
-  - Design Consistency (Added)
-- Added sections: N/A
-- Removed sections: N/A
-- Templates requiring updates (✅ updated): .specify/templates/plan-template.md, .specify/templates/spec-template.md, .specify/templates/tasks-template.md
--->
-
-# Tambal Ban Finder Constitution
+# TambalBan Constitution
 
 ## Core Principles
 
-### I. Simplicity First
-The application must prioritize a simple and understandable architecture. Avoid unnecessary frameworks or complex abstractions. Follow YAGNI (You Ain't Gonna Need It) principles strictly: only implement functionality that is required for the current features. Rationale: Maintainability and speed of development are critical for this project.
+### I. Package-by-Feature (NON-NEGOTIABLE)
 
-### II. MVVM Architecture Enforcement
-All Android code must strictly adhere to the Model-View-ViewModel (MVVM) architecture.
-- **UI Layer**: Activities, Fragments, and XML layouts handle only UI presentation and user events.
-- **Logic Layer**: ViewModels manage UI state and handle business logic.
-- **Data Layer**: Repositories act as the single source of truth for data.
-Network calls or direct database access must never be executed inside Activities or fragments.
+All code lives in its feature package. `feature/X` MUST NOT import from `feature/Y`.
 
-### III. API-Driven Development
-All application data must come from Supabase APIs. The mobile application must not contain hardcoded data for core features. All database interaction must be handled through Repositories, ensuring a clean separation between the network/database logic and the rest of the application.
+- `auth/` → `workshop/` imports: **FORBIDDEN**
+- `workshop/` → `auth/` imports: **FORBIDDEN**
+- `map/` → `auth/` or `workshop/` direct imports: **FORBIDDEN**
+- Cross-feature navigation: `Intent.setClassName("com.tambal_ban", "com.tambal_ban.workshop.ui.WorkshopDetailActivity")` only
+- Shared code goes in `core/` — any feature may import from `core/`
 
-### IV. Offline Safety
-The application must fail gracefully when internet connectivity is unavailable. The UI must explicitly handle and display:
-- **Empty states** when no data is returned.
-- **Loading states** during network requests.
-- **Error states** with user-friendly messages for failures.
-The app must never crash due to network failures or unexpected API responses.
+Grep enforcement: `grep -r "import com.tambal_ban.auth" app/src/main/java/com/tambal_ban/workshop/`
 
-### V. Secure Authentication
-Access control is enforced via Supabase Auth:
-- **Authenticated Users**: Required for submitting workshops and writing reviews.
-- **Anonymous Users**: May view the map, view workshop details, call workshops, and open navigation.
-Auth tokens must be stored securely using Android's Keystore system or encrypted shared preferences.
+### II. XML-First
 
-### VI. Performance for Large Map Data
-The map system must remain responsive even with 10,000+ workshop markers. Marker loading must be optimized by:
-- Loading only essential marker data (ID, name, coordinate) initially.
-- Using radius-based or viewport-based queries to limit data transfer.
-- Implementing clustering or lazy loading for high-density areas.
+This project uses XML layouts with ViewBinding. No Jetpack Compose.
 
-### VII. Design Consistency (UI Standards)
-All interactive icons, menu icons, and status indicators must adhere to a standard size of 20dp to ensure a uniform visual language across the application. Any exceptions must be documented and justified in the implementation plan.
-Rationale: A consistent UI improves user recognition and maintains a premium, polished feel.
+- No new Compose dependencies
+- No `@Composable` functions
+- ViewBinding is enabled: `ActivityXxxBinding.inflate(layoutInflater)`
+- All Activities extend `BaseActivity` for edge-to-edge + safe area
+- Custom components before raw Material3 widgets — see CLAUDE.md custom component table
 
-## Technology Constraints
-The following technologies are mandatory. Any deviation requires a constitution amendment.
+### III. Simplicity — No Premature Abstractions
 
-- **Mobile**: Kotlin 1.9+, Android SDK (Min SDK 24), XML layouts.
-- **Architecture**: MVVM, Repository Pattern.
-- **Networking**: Retrofit 2, OkHttp 4.
-- **Backend/Auth**: Supabase (PostgreSQL, Supabase Auth).
-- **Map System**: OpenStreetMap via osmdroid.
-- **Forbidden**: Firebase (Core, Firestore, Auth), Google Maps SDK.
+Follow YAGNI strictly.
 
-## Code Organization Rules
-The project follows a **Feature-based Packaging** structure to maximize cohesion and simplify maintenance. Files are grouped by the user feature they support rather than their technical layer.
+- No DI frameworks (no Hilt, no Dagger, no Koin) — use `TambalBanApp` service locator
+- No multi-module — single `:app` module
+- No Room — use `WorkshopDbHelper` (SQLiteOpenHelper) for local DB
+- No use-cases/interactors layer — ViewModel calls Repository directly
+- No BaseViewModel, no generic Response wrapper classes
+- Three similar lines > premature abstraction
 
-- `core/`: Shared infrastructure used by multiple features.
-  - `network/`: Retrofit interfaces, Interceptors, and Network configurations.
-  - `ui/`: Common UI components (buttons, text fields, etc.).
-  - `utils/`: Shared helper functions, constants, and global preferences.
-  - `location/` & `ads/`: System-level services.
-- `auth/`: Everything related to user identity (Login, Registration, Profile).
-- `workshop/`: Everything related to workshop interaction (Details, Submissions, Reviews, Local Caching).
-- `map/`: The primary map interface and navigation coordination.
+### IV. MVVM-Chain
 
-**Rule**: While files are grouped by feature, the **MVVM boundary** must still be respected within each package. Activities and ViewModels for a single feature should reside in the same package to improve locality.
+Strict one-way data flow. No skipping layers.
 
-**Rule**: No feature should mix UI logic with networking code. Repositories must be the single source of truth.
+```
+Activity/Adapter
+    ↓ user events
+ViewModel (LiveData exposed, MutableLiveData private, viewModelScope.launch)
+    ↓ coroutine calls
+Repository (runCatching/try-catch, no Android Context, single source of truth)
+    ↓ suspend calls
+SupabaseService (Retrofit interface, suspend fun, Response<T>)
+    ↓ HTTP
+Supabase REST API
+```
 
-## Testing Policy
-While 100% coverage is not mandatory, critical business logic must have automated tests:
-- **Repository Logic**: Testing data mapping and error handling.
-- **Submission Validation**: Ensuring workshop data entries are valid.
-- **Authentication Logic**: Verifying login/logout flows and token handling.
-- **Integration Tests**: Covering core API communication paths.
+- `MutableLiveData` is always `private`; expose as `LiveData`
+- No network calls in Activity, Fragment, or ViewModel
+- No Android `Context` in Repository
+- Loading/Error/Success states mandatory for every async operation
+
+### V. Build-First Verification
+
+`./gradlew assembleDebug` MUST pass zero errors before any PR or task is marked complete.
+
+- Kotlin compile check after each layer (Model/Network/Repo): `./gradlew compileDebugKotlin`
+- Full build after UI layer: `./gradlew assembleDebug`
+- No `!!` operator — Kotlin null safety enforced at compile time
+
+---
+
+## Tech Stack Constraints
+
+- **Language**: Kotlin 1.9.22 only
+- **UI**: XML + ViewBinding (no Compose, no DataBinding)
+- **Architecture**: MVVM + Repository (no MVP, no MVI)
+- **Networking**: Retrofit 2.9 + OkHttp 4.12 + AuthInterceptor
+- **Serialization**: kotlinx-serialization (no Gson, no Moshi)
+- **Backend**: Supabase REST API (no Firebase, no custom backend)
+- **Maps**: osmdroid (no Google Maps SDK)
+- **Local DB**: SQLiteOpenHelper (no Room)
+- **Auth storage**: EncryptedSharedPreferences via AuthPrefs (no plaintext prefs)
+- **Images**: Coil (no Glide, no Picasso)
+- **Min SDK**: 24 (Android 7.0)
+- **Secrets**: via BuildConfig fields only (no hardcoded keys)
+
+---
+
+## Changelog
+
+Every change — direct or via agent — MUST be recorded in `CHANGELOG.md` under `## [Unreleased]` before the task is considered complete.
+
+Format: `### Added / Changed / Removed / Fixed` — one line per change.
+
+---
 
 ## Development Workflow
-Every new feature or major modification must follow this sequential flow:
-1. **Define API Contract**: Confirm Supabase table/API structure.
-2. **Create Data Models**: Implement Kotlin models for the feature.
-3. **Implement Repository**: Build the data fetching/storage logic.
-4. **Implement ViewModel**: Connect repository data to UI state.
-5. **Implement UI**: Build the XML layouts and Activity/Fragment logic.
-Never start from the UI layer without the data layer being fully defined.
 
-## Code Review Requirements
-All generated and submitted code must respect:
-- **MVVM Boundaries**: No business logic in UI, no UI references in ViewModels.
-- **Repository Pattern**: No direct API calls outside repositories.
-- **Null Safety**: Leverage Kotlin's type system to prevent NullPointerExceptions.
-- **Kotlin Idiomatic Style**: Efficient use of Kotlin features (val/var, scope functions, extension functions).
-- **Activity/Fragment Size**: Classes should focus on UI coordination; complex logic should be moved to ViewModels or use cases.
+1. `/speckit-specify` — define WHAT (spec.md)
+2. `/speckit-clarify` — resolve ambiguity (optional)
+3. `/speckit-plan` — define HOW (technical plan)
+4. `/speckit-tasks` — break into tasks (tasks.md)
+5. `/speckit-implement` — execute phase by phase
 
-## Security Requirements
-- **User Privacy**: Sensitive user data must never be logged or transmitted over unencrypted channels.
-- **Credential Storage**: Auth tokens must be stored in secure storage.
-- **API Security**: API keys must not be hardcoded in the primary repository. Use build-time configuration (BuildConfig).
-- **Input Validation**: All user-submitted content must be validated client-side and server-side.
+Agents: `BRIEF:` → `BUILD:` → `TEST:`
 
-## Performance Requirements
-- **Response Time**: UI must remain responsive during marker loading.
-- **Data Usage**: Avoid fetching full workshop details when just displaying markers on a map.
-- **Map Efficiency**: Support at least 10,000 workshop locations with minimal overhead.
+---
 
 ## Governance
-- **Precedence**: This constitution overrides all informal coding practices and patterns.
-- **Compliance**: AI agents (Antigravity) and human developers must verify all design artifacts against these rules.
-- **Amendments**: Major architectural changes or technology stack shifts require a formal update to this document.
-- **Guidance**: The constitution serves as the primary guidance for long-term project maintenance.
 
-**Version**: 1.2.0 | **Ratified**: 2026-03-15 | **Last Amended**: 2026-04-27
+Amendments require ALL of:
+1. Update this constitution
+2. Update `.claude/agents/brief.md`, `build.md`, `test.md`
+3. Update `CLAUDE.md`
+4. Record change in `CHANGELOG.md`
+
+**Version**: 2.0.0 | **Ratified**: 2026-05-03 | **Last Amended**: 2026-05-03
