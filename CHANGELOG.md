@@ -7,6 +7,22 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+### Changed
+- Migrated data layer from `workshops` table to `tambal_ban` Supabase table
+- `Workshop` model: renamed coords to `lat`/`lon`; replaced open/close time fields with `openingHours`; replaced `ratingAvg`/`ratingCount` with `rating`/`totalReviews`; added `city`, `province`, `verified`
+- `WorkshopSubmission`: new fields `city` (required), `province`, `openingHours`, `imageUrl`; hardcodes `source="user"`, `verified=false`
+- All workshop API endpoints now target `rest/v1/tambal_ban` with `verified=eq.true` filter
+- Search now queries name OR city via PostgREST OR filter
+- User-submitted workshops insert directly to `tambal_ban` with `verified=false`; hidden until admin approves
+- Workshop detail screen now shows city/province and opening hours
+- Add Workshop form now collects city (required), province, opening hours, optional photo
+- Photo upload to Supabase Storage public bucket `workshops/`; stored as `image_url`
+- On submission success: Snackbar "Terkirim, sedang ditinjau admin" then back to map
+
+### Removed
+- `SubmissionRepository` (retired; add-workshop now via `WorkshopRepository.addWorkshop()`)
+- `workshop_submissions` endpoint usage
+
 ### Added
 - `CLAUDE.md`: Complete Android agent setup with tech stack, custom components, code style, and do-not rules
 - `.specify/memory/constitution.md`: Rewritten v2.0.0 with package-by-feature rule, XML-first, MVVM chain, build verification

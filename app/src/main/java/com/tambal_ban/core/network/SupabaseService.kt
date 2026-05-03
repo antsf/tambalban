@@ -1,84 +1,65 @@
 package com.tambal_ban.core.network
-import com.tambal_ban.auth.data.* 
-import com.tambal_ban.workshop.data.* 
+import com.tambal_ban.auth.data.*
+import com.tambal_ban.workshop.data.*
 
 import com.tambal_ban.auth.*
 import com.tambal_ban.workshop.*
 import retrofit2.Response
 import retrofit2.http.*
 
-/**
- * Retrofit interface for Supabase REST API and Auth API.
- */
 interface SupabaseService {
 
     // --- Authentication ---
 
     @POST("auth/v1/token?grant_type=password")
-    suspend fun login(
-        @Body request: LoginRequest
-    ): Response<AuthResponse>
+    suspend fun login(@Body request: LoginRequest): Response<AuthResponse>
 
     @POST("auth/v1/signup")
-    suspend fun register(
-        @Body request: RegisterRequest
-    ): Response<AuthResponse>
+    suspend fun register(@Body request: RegisterRequest): Response<AuthResponse>
 
 
     // --- Workshops ---
 
-    @GET("rest/v1/workshops")
+    @GET("rest/v1/tambal_ban")
     suspend fun getWorkshopsInBounds(
-        @Query("latitude") minLat: String,
-        @Query("latitude") maxLat: String,
-        @Query("longitude") minLon: String,
-        @Query("longitude") maxLon: String,
+        @Query("lat") minLat: String,
+        @Query("lat") maxLat: String,
+        @Query("lon") minLon: String,
+        @Query("lon") maxLon: String,
         @Query("verified") verified: String = "eq.true",
         @Query("limit") limit: Int? = null,
         @Query("offset") offset: Int? = null
     ): Response<List<Workshop>>
 
-    @GET("rest/v1/workshops")
+    @GET("rest/v1/tambal_ban")
     suspend fun searchWorkshops(
-        @Query("name") query: String, // format: ilike.*query*
+        @Query("or") or: String, // format: (name.ilike.*query*,city.ilike.*query*)
         @Query("verified") verified: String = "eq.true",
         @Query("limit") limit: Int? = null,
         @Query("offset") offset: Int? = null
     ): Response<List<Workshop>>
 
-    @GET("rest/v1/workshops")
+    @GET("rest/v1/tambal_ban")
     suspend fun getAllWorkshops(
         @Query("verified") verified: String = "eq.true",
         @Query("limit") limit: Int? = null,
         @Query("offset") offset: Int? = null
     ): Response<List<Workshop>>
 
-    @GET("rest/v1/workshops")
+    @GET("rest/v1/tambal_ban")
     suspend fun getWorkshopById(
         @Query("id") id: String // format: eq.uuid
     ): Response<List<Workshop>>
+
     @GET("rest/v1/reviews")
-    suspend fun getReviews(
-        @Query("workshop_id") workshopId: String
-    ): Response<List<Review>>
+    suspend fun getReviews(@Query("workshop_id") workshopId: String): Response<List<Review>>
 
     @POST("rest/v1/reviews")
-    suspend fun submitReview(
-        @Body review: Review
-    ): Response<Void>
+    suspend fun submitReview(@Body review: Review): Response<Void>
 
-
-    // --- Submissions ---
-
-    @POST("rest/v1/workshop_submissions")
-    suspend fun submitWorkshop(
-        @Body submission: WorkshopSubmission
-    ): Response<Void>
-
-    @GET("rest/v1/workshop_submissions")
-    suspend fun getUserSubmissions(
-        @Query("user_id") userId: String
-    ): Response<List<WorkshopSubmission>>
+    @Headers("Prefer: return=representation")
+    @POST("rest/v1/tambal_ban")
+    suspend fun addWorkshop(@Body submission: WorkshopSubmission): Response<List<Workshop>>
 
 
     // --- User Profiles ---
@@ -101,7 +82,7 @@ interface SupabaseService {
     @POST("storage/v1/object/{bucket}/{path}")
     suspend fun uploadFile(
         @Path("bucket") bucket: String,
-        @Path("path") path: String,
+        @Path("path", encoded = true) path: String,
         @Body body: okhttp3.RequestBody
     ): Response<Void>
 }

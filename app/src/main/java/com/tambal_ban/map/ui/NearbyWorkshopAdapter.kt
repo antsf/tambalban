@@ -48,12 +48,11 @@ class NearbyWorkshopAdapter(private val onItemClick: (Workshop) -> Unit) :
                 tvWorkshopName.text = workshop.name
                 
                 // Rating and Distance subtext
-                val ratingStr = if (workshop.ratingCount > 0) String.format("%.1f", workshop.ratingAvg) else "0.0"
+                val ratingStr = if (workshop.totalReviews > 0) String.format("%.1f", workshop.rating) else "0.0"
                 val distanceStr = workshop.distance?.let { GeoUtils.formatDistance(it) } ?: "?? km"
                 tvWorkshopSubtext.text = "$ratingStr • $distanceStr"
 
-                // Status Badge Logic
-                tvWorkshopStatus.text = if (workshop.is24h) "24 JAM" else "BUKA"
+                tvWorkshopStatus.text = "BUKA"
                 
                 // T010: Workshop images loaded via Coil
                 ivWorkshopImage.load(workshop.imageUrl) {

@@ -1,9 +1,10 @@
 package com.tambal_ban.workshop.viewmodel
-import com.tambal_ban.workshop.ui.* 
-import com.tambal_ban.workshop.viewmodel.* 
-import com.tambal_ban.workshop.data.* 
+import com.tambal_ban.workshop.ui.*
+import com.tambal_ban.workshop.viewmodel.*
+import com.tambal_ban.workshop.data.*
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,12 +12,12 @@ import androidx.lifecycle.viewModelScope
 import com.tambal_ban.TambalBanApp
 import com.tambal_ban.workshop.data.WorkshopSubmission
 import com.tambal_ban.auth.data.AuthRepository
-import com.tambal_ban.workshop.data.SubmissionRepository
+import com.tambal_ban.workshop.data.WorkshopRepository
 import kotlinx.coroutines.launch
 
 class AddWorkshopViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val submissionRepository: SubmissionRepository = (application as TambalBanApp).submissionRepository
+    private val workshopRepository: WorkshopRepository = (application as TambalBanApp).workshopRepository
     private val authRepository: AuthRepository = (application as TambalBanApp).authRepository
 
     private val _submissionResult = MutableLiveData<Result<Unit>>()
@@ -32,20 +33,32 @@ class AddWorkshopViewModel(application: Application) : AndroidViewModel(applicat
         _isLoggedIn.value = authRepository.isLoggedIn()
     }
 
-    fun submitWorkshop(name: String, address: String, latitude: Double, longitude: Double, phone: String) {
+    fun addWorkshop(
+        name: String,
+        address: String,
+        city: String,
+        lat: Double,
+        lon: Double,
+        phone: String,
+        province: String? = null,
+        openingHours: String? = null,
+        imageUri: Uri? = null
+    ) {
         viewModelScope.launch {
             _isLoading.value = true
             val userId = authRepository.getUserId()
             val submission = WorkshopSubmission(
                 name = name,
                 address = address,
-                latitude = latitude,
-                longitude = longitude,
+                city = city,
+                lat = lat,
+                lon = lon,
                 phone = phone,
-                userId = userId
+                province = province?.takeIf { it.isNotBlank() },
+                openingHours = openingHours?.takeIf { it.isNotBlank() }
             )
-            val result = submissionRepository.submitWorkshop(submission)
-            _submissionResult.value = result
+            val result = workshopRepository.addWorkshop(submission, imageUri, userId, getApplication())
+            _submissionResult.value = result.map { Unit }
             _isLoading.value = false
         }
     }

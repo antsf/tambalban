@@ -1,20 +1,21 @@
 package com.tambal_ban.workshop.data
-import com.tambal_ban.workshop.ui.* 
-import com.tambal_ban.workshop.viewmodel.* 
-import com.tambal_ban.workshop.data.* 
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class WorkshopSubmission(
-    val id: String? = null,
     val name: String,
     val address: String,
-    val latitude: Double,
-    val longitude: Double,
+    val city: String,
+    val lat: Double,
+    val lon: Double,
     val phone: String,
-    @SerialName("user_id")
-    val userId: String? = null,
-    val status: String = "pending"
+    val province: String? = null,
+    @SerialName("opening_hours")
+    val openingHours: String? = null,
+    @SerialName("image_url")
+    val imageUrl: String? = null,
+    val source: String = "user",
+    val verified: Boolean = false
 )

@@ -2,7 +2,6 @@ package com.tambal_ban.workshop.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
@@ -42,13 +41,12 @@ class WorkshopListAdapter(
         fun bind(workshop: Workshop) {
             binding.apply {
                 tvName.text = workshop.name
-                tvAddress.text = workshop.address ?: "No address provided"
+                tvAddress.text = workshop.address ?: "Alamat tidak tersedia"
                 tvDistance.text = workshop.distance?.let { String.format("%.1f km", it) } ?: ""
-                tvRating.text = workshop.ratingAvg.toString()
-                tvRatingCount.text = "(${workshop.ratingCount})"
-                
-                tvStatus.text = if (workshop.is24h) "Open 24h" else "Open"
-                tvStatus.setTextColor(ContextCompat.getColor(root.context, R.color.success))
+                tvRating.text = String.format("%.1f", workshop.rating)
+                tvRatingCount.text = "(${workshop.totalReviews})"
+
+                tvStatus.text = "Buka"
 
                 ivWorkshop.load(workshop.imageUrl) {
                     crossfade(true)
