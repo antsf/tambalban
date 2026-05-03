@@ -11,6 +11,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.*
 import com.tambal_ban.core.utils.Constants
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 /**
  * Service for handling location updates
@@ -120,6 +122,25 @@ class LocationService(private val context: Context) {
      */
     fun clearError() {
         _locationError.value = null
+    }
+
+    /**
+     * Get last known location asynchronously
+     */
+    @SuppressLint("MissingPermission")
+    suspend fun getLastKnownLocation(): Location? = suspendCancellableCoroutine { continuation ->
+        if (!hasLocationPermission()) {
+            continuation.resume(null)
+            return@suspendCancellableCoroutine
+        }
+
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location ->
+                continuation.resume(location)
+            }
+            .addOnFailureListener {
+                continuation.resume(null)
+            }
     }
 
     companion object {

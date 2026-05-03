@@ -99,4 +99,15 @@
     <string name="register_error_email_invalid">Format email tidak valid</string>
     <string name="register_error_password_required">Kata sandi wajib diisi</string>
     <string name="register_error_password_short">Kata sandi minimal 8 karakter</string>
+
+    <!-- Spec 018: Add Workshop -->
+    <string name="screen_add_workshop">Tambah Tambal Ban</string>
+    <string name="label_name">Nama Bengkel</string>
+    <string name="label_address">Alamat Lengkap</string>
+    <string name="label_phone">Nomor Telepon</string>
+    <string name="btn_current_location">Lokasi Saat Ini</string>
+    <string name="btn_submit">Kirim</string>
+    <string name="btn_cancel">Batal</string>
+    <string name="hint_latitude">-6.2</string>
+    <string name="hint_longitude">106.8</string>
 </resources>

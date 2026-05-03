@@ -1,8 +1,9 @@
 package com.tambal_ban.auth.ui
-import com.tambal_ban.auth.ui.* 
-import com.tambal_ban.auth.viewmodel.* 
-import com.tambal_ban.auth.data.* 
+import com.tambal_ban.auth.ui.*
+import com.tambal_ban.auth.viewmodel.*
+import com.tambal_ban.auth.data.*
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Patterns
@@ -19,6 +20,7 @@ import androidx.core.content.FileProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.io.File
 import com.tambal_ban.auth.viewmodel.ProfileViewModel
+import com.tambal_ban.workshop.ui.AddWorkshopActivity
 
 /**
  * US3 & US4: Edit Profile Activity.
@@ -106,6 +108,11 @@ class EditProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
     private fun setupListeners() {
         binding.btnBack.setOnClickListener {
             finish()
+        }
+
+        binding.btnAddWorkshop.setOnClickListener {
+            val intent = Intent(this, AddWorkshopActivity::class.java)
+            startActivity(intent)
         }
 
         binding.btnSave.setOnClickListener {
