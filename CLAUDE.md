@@ -116,6 +116,8 @@ com.tambal_ban/
 Full rules: `.specify/memory/constitution.md`
 
 <!-- SPECKIT START -->
-For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+**Current**: `specs/018-add-workshop/` — Add Workshop from Edit Profile feature  
+Next: BUILD tasks.md phase by phase
+
+Tech stack, structure, patterns: `.specify/context/stack.md`
 <!-- SPECKIT END -->

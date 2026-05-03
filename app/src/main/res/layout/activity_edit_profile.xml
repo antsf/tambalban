@@ -25,12 +25,22 @@
             app:tint="@color/on_surface" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginStart="8dp"
             android:text="Edit Profil"
             style="@style/TextAppearance.Guardian.TitleMedium"
             android:textColor="@color/on_surface" />
+
+        <ImageButton
+            android:id="@+id/btnAddWorkshop"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_add"
+            android:contentDescription="Tambah Bengkel"
+            app:tint="@color/on_surface" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
