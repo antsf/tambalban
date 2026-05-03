@@ -135,7 +135,7 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(binding.searchOverlay.etSearch.windowToken, 0)
             
-            binding.mapView.controller.animateTo(GeoPoint(workshop.latitude, workshop.longitude))
+            binding.mapView.controller.animateTo(GeoPoint(workshop.lat, workshop.lon))
             addSearchFocusMarker(workshop)
         }
 
@@ -148,7 +148,7 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
         behavior.state = com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 
         workshopAdapter = NearbyWorkshopAdapter { workshop ->
-            binding.mapView.controller.animateTo(GeoPoint(workshop.latitude, workshop.longitude))
+            binding.mapView.controller.animateTo(GeoPoint(workshop.lat, workshop.lon))
             addSearchFocusMarker(workshop)
         }
 
@@ -284,7 +284,7 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
     private fun addSearchFocusMarker(workshop: Workshop) {
         searchFocusMarker?.let { binding.mapView.overlays.remove(it) }
         searchFocusMarker = Marker(binding.mapView).apply {
-            position = GeoPoint(workshop.latitude, workshop.longitude)
+            position = GeoPoint(workshop.lat, workshop.lon)
             icon = createLabeledMarker(workshop.name)
             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             setOnMarkerClickListener { _, _ ->
@@ -307,7 +307,7 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
         workshops.forEach { workshop ->
             if (workshop.id == searchFocusMarker?.title) return@forEach
             Marker(binding.mapView).apply {
-                position = GeoPoint(workshop.latitude, workshop.longitude)
+                position = GeoPoint(workshop.lat, workshop.lon)
                 icon = createLabeledMarker(workshop.name)
                 setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                 setOnMarkerClickListener { _, _ ->

@@ -1,39 +1,30 @@
 package com.tambal_ban.workshop.data
-import com.tambal_ban.workshop.ui.* 
-import com.tambal_ban.workshop.viewmodel.* 
-import com.tambal_ban.workshop.data.* 
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/** Data class representing a tire repair workshop */
 @Serializable
 data class Workshop(
     val id: String,
     val name: String,
-    val latitude: Double,
-    val longitude: Double,
-    val phone: String?,
-    val address: String?,
-    @SerialName("open_time")
-    val openTime: String?,
-    @SerialName("close_time")
-    val closeTime: String?,
-    @SerialName("is_24h")
-    val is24h: Boolean = false,
-    @SerialName("rating_avg")
-    val ratingAvg: Double = 0.0,
-    @SerialName("rating_count")
-    val ratingCount: Int = 0,
-    val source: String? = null,
-    @SerialName("created_at")
-    val createdAt: String? = null,
+    val lat: Double,
+    val lon: Double,
+    val phone: String? = null,
+    val address: String? = null,
+    val city: String? = null,
+    val province: String? = null,
+    @SerialName("opening_hours")
+    val openingHours: String? = null,
+    val rating: Double = 0.0,
+    @SerialName("total_reviews")
+    val totalReviews: Int = 0,
     @SerialName("image_url")
     val imageUrl: String? = null,
+    val source: String? = null,
+    val verified: Boolean = false,
+    @SerialName("created_at")
+    val createdAt: String? = null,
 
-    // UI fields
     @kotlinx.serialization.Transient
     var distance: Double? = null
 )
-
-

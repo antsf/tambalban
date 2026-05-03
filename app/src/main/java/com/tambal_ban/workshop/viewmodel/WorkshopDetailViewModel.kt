@@ -1,7 +1,7 @@
 package com.tambal_ban.workshop.viewmodel
-import com.tambal_ban.workshop.ui.* 
-import com.tambal_ban.workshop.viewmodel.* 
-import com.tambal_ban.workshop.data.* 
+import com.tambal_ban.workshop.ui.*
+import com.tambal_ban.workshop.viewmodel.*
+import com.tambal_ban.workshop.data.*
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -69,33 +69,27 @@ class WorkshopDetailViewModel(application: Application) : AndroidViewModel(appli
 
     private fun mapToUIState(workshop: Workshop) {
         val context = getApplication<Application>()
-        
-        // Simple open/closed logic for now (can be expanded with actual business hours)
-        val isOpen = workshop.is24h || true // Placeholder, but ensuring it's never empty
-        val statusTextRes = if (isOpen) com.tambal_ban.R.string.status_open_now 
-                           else com.tambal_ban.R.string.status_closed
-        val statusText = context.getString(statusTextRes)
-        val statusColor = if (isOpen) com.tambal_ban.R.color.success 
-                         else com.tambal_ban.R.color.error
 
-        val businessHours = if (workshop.is24h) {
-            context.getString(com.tambal_ban.R.string.open_24h)
-        } else {
-            "${workshop.openTime ?: "08:00"} - ${workshop.closeTime ?: "17:00"}"
-        }
+        val statusTextRes = com.tambal_ban.R.string.status_open_now
+        val statusText = context.getString(statusTextRes)
+        val statusColor = com.tambal_ban.R.color.success
+
+        val openingHoursDisplay = workshop.openingHours
+            ?: context.getString(com.tambal_ban.R.string.open_24h)
 
         _uiState.value = WorkshopDetailUIState(
             id = workshop.id,
             name = workshop.name,
             imageUrl = workshop.imageUrl,
             fullAddress = workshop.address ?: context.getString(com.tambal_ban.R.string.address),
+            city = workshop.city,
+            province = workshop.province,
             phoneNumber = workshop.phone ?: context.getString(com.tambal_ban.R.string.phone_number),
-            businessHours = businessHours,
-            ratingAvg = workshop.ratingAvg.toString(),
-            reviewCountText = "(${workshop.ratingCount} ${context.getString(com.tambal_ban.R.string.reviews)})",
+            openingHours = openingHoursDisplay,
+            rating = workshop.rating.toString(),
+            reviewCountText = "(${workshop.totalReviews} ${context.getString(com.tambal_ban.R.string.reviews)})",
             statusText = statusText,
-            statusColorRes = statusColor,
-            is24h = workshop.is24h
+            statusColorRes = statusColor
         )
     }
 
@@ -117,7 +111,7 @@ class WorkshopDetailViewModel(application: Application) : AndroidViewModel(appli
             val result = reviewRepository.submitReview(review)
             _reviewSubmissionResult.value = result
             if (result.isSuccess) {
-                loadWorkshop(workshopId) // Refresh reviews
+                loadWorkshop(workshopId)
             }
             _isLoading.value = false
         }

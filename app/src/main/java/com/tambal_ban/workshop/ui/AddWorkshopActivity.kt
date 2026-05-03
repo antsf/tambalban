@@ -1,25 +1,28 @@
 package com.tambal_ban.workshop.ui
-import com.tambal_ban.workshop.ui.* 
-import com.tambal_ban.workshop.viewmodel.* 
-import com.tambal_ban.workshop.data.* 
+import com.tambal_ban.workshop.ui.*
+import com.tambal_ban.workshop.viewmodel.*
+import com.tambal_ban.workshop.data.*
 
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.tambal_ban.R
 import com.tambal_ban.databinding.ActivityAddWorkshopBinding
 import com.tambal_ban.auth.ui.LoginActivity
 import com.tambal_ban.core.utils.Constants
+import coil.load
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.MapEventsOverlay
@@ -31,6 +34,7 @@ class AddWorkshopActivity : com.tambal_ban.core.ui.BaseActivity() {
     private val viewModel: AddWorkshopViewModel by viewModels()
     private var selectedPoint: GeoPoint? = null
     private var marker: Marker? = null
+    private var selectedImageUri: Uri? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val requestPermissionLauncher = registerForActivityResult(
@@ -42,6 +46,12 @@ class AddWorkshopActivity : com.tambal_ban.core.ui.BaseActivity() {
         } else {
             Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private val pickImageLauncher = registerForActivityResult(
+            ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let { handleImageSelected(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +71,7 @@ class AddWorkshopActivity : com.tambal_ban.core.ui.BaseActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Add Workshop"
+        supportActionBar?.title = getString(R.string.add_workshop)
     }
 
     private fun setupMap() {
@@ -90,27 +100,41 @@ class AddWorkshopActivity : com.tambal_ban.core.ui.BaseActivity() {
         binding.tvSelectedLocation.apply {
             visibility = View.VISIBLE
             text = buildString {
-        append("Lat: ")
-        append("%.4f".format(point.latitude))
-        append(", Lng: ")
-        append("%.4f".format(point.longitude))
-    }
+                append("Lat: ")
+                append("%.4f".format(point.latitude))
+                append(", Lng: ")
+                append("%.4f".format(point.longitude))
+            }
         }
 
         if (marker == null) {
-            marker =
-                    Marker(binding.mapView).apply {
-                        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                    }
+            marker = Marker(binding.mapView).apply {
+                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            }
             binding.mapView.overlays.add(marker)
         }
         marker?.position = point
         binding.mapView.invalidate()
     }
 
+    private fun handleImageSelected(uri: Uri) {
+        selectedImageUri = uri
+        binding.ivPhotoPreview.apply {
+            visibility = View.VISIBLE
+            load(uri) {
+                crossfade(true)
+                placeholder(R.drawable.bg_placeholder_workshop)
+            }
+        }
+    }
+
     private fun setupListeners() {
         binding.btnUseCurrentLocation.setOnClickListener {
             checkLocationPermissions()
+        }
+
+        binding.btnAddPhoto.setOnClickListener {
+            pickImageLauncher.launch("image/*")
         }
 
         binding.btnCancel.setOnClickListener { finish() }
@@ -165,13 +189,34 @@ class AddWorkshopActivity : com.tambal_ban.core.ui.BaseActivity() {
     private fun validateInput(): Boolean {
         val name = binding.etName.text.toString().trim()
         if (name.isEmpty()) {
-            binding.tilName.error = "Name is required"
+            binding.tilName.error = getString(R.string.fill_required_fields)
             return false
         }
         binding.tilName.error = null
 
+        val phone = binding.etPhone.text.toString().trim()
+        if (phone.isEmpty()) {
+            binding.tilPhone.error = getString(R.string.fill_required_fields)
+            return false
+        }
+        binding.tilPhone.error = null
+
+        val address = binding.etAddress.text.toString().trim()
+        if (address.isEmpty()) {
+            binding.tilAddress.error = getString(R.string.fill_required_fields)
+            return false
+        }
+        binding.tilAddress.error = null
+
+        val city = binding.etCity.text.toString().trim()
+        if (city.isEmpty()) {
+            binding.tilCity.error = getString(R.string.fill_required_fields)
+            return false
+        }
+        binding.tilCity.error = null
+
         if (selectedPoint == null) {
-            Toast.makeText(this, "Please select a location on the map", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Pilih lokasi di peta", Toast.LENGTH_SHORT).show()
             return false
         }
 
@@ -181,8 +226,8 @@ class AddWorkshopActivity : com.tambal_ban.core.ui.BaseActivity() {
     private fun setupObservers() {
         viewModel.submissionResult.observe(this) { result ->
             if (result.isSuccess) {
-                Toast.makeText(this, "Workshop submitted successfully!", Toast.LENGTH_LONG).show()
-                finish()
+                Snackbar.make(binding.root, getString(R.string.msg_submission_pending), Snackbar.LENGTH_LONG).show()
+                binding.root.postDelayed({ finish() }, 1500)
             } else {
                 Toast.makeText(this, "Error: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
             }
@@ -195,7 +240,7 @@ class AddWorkshopActivity : com.tambal_ban.core.ui.BaseActivity() {
 
         viewModel.isLoggedIn.observe(this) { isLoggedIn ->
             if (!isLoggedIn) {
-                Toast.makeText(this, "Please log in to submit a workshop", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Silakan login terlebih dahulu", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, LoginActivity::class.java))
             }
         }
@@ -205,9 +250,22 @@ class AddWorkshopActivity : com.tambal_ban.core.ui.BaseActivity() {
         val name = binding.etName.text.toString().trim()
         val phone = binding.etPhone.text.toString().trim()
         val address = binding.etAddress.text.toString().trim()
+        val city = binding.etCity.text.toString().trim()
+        val province = binding.etProvince.text.toString().trim()
+        val openingHours = binding.etOpeningHours.text.toString().trim()
         val point = selectedPoint ?: return
 
-        viewModel.submitWorkshop(name, address, point.latitude, point.longitude, phone)
+        viewModel.addWorkshop(
+            name = name,
+            address = address,
+            city = city,
+            lat = point.latitude,
+            lon = point.longitude,
+            phone = phone,
+            province = province,
+            openingHours = openingHours,
+            imageUri = selectedImageUri
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
