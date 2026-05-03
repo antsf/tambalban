@@ -18,6 +18,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Add Workshop form now collects city (required), province, opening hours, optional photo
 - Photo upload to Supabase Storage public bucket `workshops/`; stored as `image_url`
 - On submission success: Snackbar "Terkirim, sedang ditinjau admin" then back to map
+- Edit Profile screen: added "Tambah Tambal Ban" menu button to submit new workshops
 
 ### Removed
 - `SubmissionRepository` (retired; add-workshop now via `WorkshopRepository.addWorkshop()`)
