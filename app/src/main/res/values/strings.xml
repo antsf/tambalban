@@ -29,8 +29,11 @@
 
     <!-- Workshop Detail Refresh -->
     <string name="label_full_address">ALAMAT LENGKAP</string>
+    <string name="label_city_province">KOTA / PROVINSI</string>
     <string name="label_phone_number">NOMOR TELEPON</string>
     <string name="label_business_hours">JAM OPERASIONAL</string>
+    <string name="label_opening_hours">Jam Buka</string>
+    <string name="label_total_reviews">ulasan</string>
     <string name="status_open_now">BUKA SEKARANG</string>
     <string name="status_closed">TUTUP</string>
 
@@ -39,6 +42,12 @@
     <string name="workshop_name">Workshop Name</string>
     <string name="phone_number">Phone Number</string>
     <string name="address">Address</string>
+    <string name="label_city">Kota *</string>
+    <string name="label_province">Provinsi (opsional)</string>
+    <string name="hint_opening_hours">Contoh: Mo-Fr 08:00-17:00 atau 24/7</string>
+    <string name="btn_add_photo">Tambah Foto</string>
+    <string name="label_photo_optional">Foto (opsional)</string>
+    <string name="msg_submission_pending">Terkirim, sedang ditinjau admin</string>
     <string name="select_location">Select Location on Map</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>

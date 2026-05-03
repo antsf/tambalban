@@ -1,29 +1,30 @@
 package com.tambal_ban.workshop.data
-import com.tambal_ban.workshop.ui.* 
-import com.tambal_ban.workshop.viewmodel.* 
-import com.tambal_ban.workshop.data.* 
+import com.tambal_ban.workshop.ui.*
+import com.tambal_ban.workshop.viewmodel.*
+import com.tambal_ban.workshop.data.*
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.util.Log
 import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.utils.GeoUtils
+import com.tambal_ban.core.utils.SupabaseConfig
 import com.tambal_ban.workshop.data.database.WorkshopDbHelper
 import com.tambal_ban.workshop.data.database.mappers.WorkshopMapper
-import com.tambal_ban.workshop.data.Workshop
-import com.tambal_ban.core.utils.Constants
-import com.tambal_ban.core.utils.GeoUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.util.UUID
 
-/** Repository for workshop data using native components */
 class WorkshopRepository(
     private val dbHelper: WorkshopDbHelper,
     private val supabaseService: SupabaseService
 ) {
     private val TAG = "WorkshopRepository"
 
-    /** Get workshops within bounding box - Try API, then Cache */
     suspend fun getWorkshopsInBounds(
             minLat: Double,
             maxLat: Double,
@@ -49,7 +50,7 @@ class WorkshopRepository(
                         Log.e(TAG, "Error fetching workshops", e)
                     }
                 }
-                
+
                 val workshops = mutableListOf<Workshop>()
                 val cursor = dbHelper.getWorkshopsInBounds(minLat, maxLat, minLng, maxLng)
                 cursor?.use {
@@ -60,9 +61,6 @@ class WorkshopRepository(
                 return@withContext workshops
             }
 
-    /**
-     * Get nearby workshops using bounding box query on the 'workshops' table.
-     */
     suspend fun getNearbyWorkshops(
         lat: Double,
         lon: Double,
@@ -73,7 +71,6 @@ class WorkshopRepository(
     ): List<Workshop> =
         withContext(Dispatchers.IO) {
             val radiusKm = radiusMeters / 1000.0
-            // Approximate 1 degree = 111km
             val radiusDegrees = radiusKm / 111.0
             val minLat = lat - radiusDegrees
             val maxLat = lat + radiusDegrees
@@ -94,7 +91,7 @@ class WorkshopRepository(
                         val workshops = response.body() ?: emptyList()
                         saveWorkshopsToDb(workshops)
                         return@withContext workshops.onEach {
-                            it.distance = GeoUtils.calculateDistance(lat, lon, it.latitude, it.longitude)
+                            it.distance = GeoUtils.calculateDistance(lat, lon, it.lat, it.lon)
                         }.filter { it.distance!! <= radiusKm }
                          .sortedBy { it.distance }
                     }
@@ -105,17 +102,13 @@ class WorkshopRepository(
             return@withContext findNearestWorkshops(lat, lon, radiusKm.toInt())
         }
 
-    /** 
-     * T026 Optimization: Find nearest workshops within radius using SQL-level bounding box first
-     */
     suspend fun findNearestWorkshops(
             userLat: Double,
             userLng: Double,
             radiusKm: Int
     ): List<Workshop> =
             withContext(Dispatchers.IO) {
-                // Approximate 1km = 0.009 degrees
-                val radiusDegrees = radiusKm * 0.01 
+                val radiusDegrees = radiusKm * 0.01
                 val minLat = userLat - radiusDegrees
                 val maxLat = userLat + radiusDegrees
                 val minLng = userLng - radiusDegrees
@@ -127,7 +120,7 @@ class WorkshopRepository(
                     while (it.moveToNext()) {
                         val workshop = WorkshopMapper.fromCursor(it)
                         workshop.distance = GeoUtils.calculateDistance(
-                            userLat, userLng, workshop.latitude, workshop.longitude
+                            userLat, userLng, workshop.lat, workshop.lon
                         )
                         if (workshop.distance!! <= radiusKm) {
                             workshops.add(workshop)
@@ -145,14 +138,9 @@ class WorkshopRepository(
         withContext(Dispatchers.IO) {
             if (isNetworkAvailable(context)) {
                 try {
-                    val response = supabaseService.getAllWorkshops(
-                        limit = limit,
-                        offset = offset
-                    )
-                    Log.d(TAG, "getAllWorkshops: successful=${response.isSuccessful}, code=${response.code()}")
+                    val response = supabaseService.getAllWorkshops(limit = limit, offset = offset)
                     if (response.isSuccessful) {
                         val workshops = response.body() ?: emptyList()
-                        Log.d(TAG, "getAllWorkshops: count=${workshops.size}")
                         saveWorkshopsToDb(workshops)
                         return@withContext workshops
                     } else {
@@ -162,9 +150,8 @@ class WorkshopRepository(
                     Log.e(TAG, "Error fetching all workshops", e)
                 }
             }
-            
+
             val workshops = mutableListOf<Workshop>()
-            Log.d(TAG, "getAllWorkshops: falling back to local DB")
             val db = dbHelper.readableDatabase
             val cursor = db.query(
                 WorkshopDbHelper.TABLE_WORKSHOPS,
@@ -186,7 +173,7 @@ class WorkshopRepository(
                     if (it.moveToFirst()) {
                         val workshop = WorkshopMapper.fromCursor(it)
                         workshop.distance = GeoUtils.calculateDistance(
-                            userLat, userLng, workshop.latitude, workshop.longitude
+                            userLat, userLng, workshop.lat, workshop.lon
                         )
                         return@withContext workshop
                     }
@@ -195,7 +182,7 @@ class WorkshopRepository(
             }
 
     suspend fun searchWorkshops(
-        query: String, 
+        query: String,
         context: Context,
         limit: Int? = null,
         offset: Int? = null
@@ -203,8 +190,9 @@ class WorkshopRepository(
         withContext(Dispatchers.IO) {
             if (isNetworkAvailable(context)) {
                 try {
+                    val orFilter = "(name.ilike.*$query*,city.ilike.*$query*)"
                     val response = supabaseService.searchWorkshops(
-                        query = "ilike.*$query*",
+                        or = orFilter,
                         limit = limit,
                         offset = offset
                     )
@@ -215,15 +203,14 @@ class WorkshopRepository(
                     Log.e(TAG, "Error searching workshops", e)
                 }
             }
-            
-            // Local DB fuzzy search
+
             val workshops = mutableListOf<Workshop>()
             val db = dbHelper.readableDatabase
             val cursor = db.query(
                 WorkshopDbHelper.TABLE_WORKSHOPS,
                 null,
-                "${WorkshopDbHelper.COLUMN_NAME} LIKE ?",
-                arrayOf("%$query%"),
+                "${WorkshopDbHelper.COLUMN_NAME} LIKE ? OR ${WorkshopDbHelper.COLUMN_CITY} LIKE ?",
+                arrayOf("%$query%", "%$query%"),
                 null, null, null
             )
             cursor.use {
@@ -261,6 +248,45 @@ class WorkshopRepository(
                 return@withContext null
             }
 
+    suspend fun addWorkshop(
+        submission: WorkshopSubmission,
+        imageUri: Uri? = null,
+        userId: String? = null,
+        context: Context
+    ): Result<Workshop> = withContext(Dispatchers.IO) {
+        try {
+            var finalSubmission = submission
+            if (imageUri != null && !userId.isNullOrBlank()) {
+                val imageUrl = uploadImage(imageUri, userId, context)
+                finalSubmission = submission.copy(imageUrl = imageUrl)
+            }
+
+            val response = supabaseService.addWorkshop(finalSubmission)
+            if (response.isSuccessful) {
+                val workshop = response.body()?.firstOrNull()
+                    ?: return@withContext Result.failure(Exception("Empty response from server"))
+                Result.success(workshop)
+            } else {
+                Result.failure(Exception("Submit failed: ${response.code()} ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error adding workshop", e)
+            Result.failure(e)
+        }
+    }
+
+    private suspend fun uploadImage(imageUri: Uri, userId: String, context: Context): String {
+        val uuid = UUID.randomUUID().toString()
+        val path = "$userId/$uuid.jpg"
+        val bytes = context.contentResolver.openInputStream(imageUri)?.readBytes()
+            ?: throw Exception("Cannot read image from URI")
+        val requestBody = bytes.toRequestBody("image/jpeg".toMediaType())
+        val response = supabaseService.uploadFile("workshops", path, requestBody)
+        if (!response.isSuccessful) {
+            throw Exception("Image upload failed: ${response.code()}")
+        }
+        return "${SupabaseConfig.STORAGE_PUBLIC_URL}/workshops/$path"
+    }
 
     private fun saveWorkshopsToDb(workshops: List<Workshop>) {
         val db = dbHelper.writableDatabase

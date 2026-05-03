@@ -12,7 +12,6 @@ import com.tambal_ban.workshop.data.database.WorkshopDbHelper
 import com.tambal_ban.auth.data.AuthRepository
 import com.tambal_ban.auth.data.ProfileRepository
 import com.tambal_ban.workshop.data.ReviewRepository
-import com.tambal_ban.workshop.data.SubmissionRepository
 import com.tambal_ban.workshop.data.WorkshopRepository
 import com.tambal_ban.core.utils.AuthPrefs
 import org.osmdroid.config.Configuration
@@ -28,9 +27,6 @@ class TambalBanApp : Application() {
         private set
 
     lateinit var authRepository: AuthRepository
-        private set
-
-    lateinit var submissionRepository: SubmissionRepository
         private set
 
     lateinit var reviewRepository: ReviewRepository
@@ -75,9 +71,6 @@ class TambalBanApp : Application() {
 
         // Initialize AuthRepository
         authRepository = AuthRepository(supabaseService, authPrefs)
-
-        // Initialize SubmissionRepository
-        submissionRepository = SubmissionRepository(supabaseService)
 
         // Initialize ReviewRepository
         reviewRepository = ReviewRepository(supabaseService)

@@ -2,6 +2,7 @@ package com.tambal_ban.workshop.ui
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,8 +45,8 @@ class WorkshopDetailActivity : BaseActivity() {
 
     private fun setupListeners() {
         binding.btnCall.setOnClickListener {
-            viewModel.uiState.value?.phoneNumber?.let { phone -> 
-                IntentUtils.dialPhoneNumber(this, phone) 
+            viewModel.uiState.value?.phoneNumber?.let { phone ->
+                IntentUtils.dialPhoneNumber(this, phone)
             } ?: run {
                 Toast.makeText(this, "Nomor telepon tidak tersedia", Toast.LENGTH_SHORT).show()
             }
@@ -55,8 +56,8 @@ class WorkshopDetailActivity : BaseActivity() {
             viewModel.workshop.value?.let { workshop ->
                 IntentUtils.openNavigation(
                     this,
-                    workshop.latitude,
-                    workshop.longitude,
+                    workshop.lat,
+                    workshop.lon,
                     workshop.name
                 )
             }
@@ -100,15 +101,30 @@ class WorkshopDetailActivity : BaseActivity() {
             collapsingToolbar.title = getString(R.string.workshop_detail)
             tvWorkshopName.text = uiState.name
             tvFullAddress.text = uiState.fullAddress
+
+            if (!uiState.city.isNullOrBlank()) {
+                val cityProvinceText = if (!uiState.province.isNullOrBlank()) {
+                    "${uiState.city}, ${uiState.province}"
+                } else {
+                    uiState.city
+                }
+                tvCityProvince.text = cityProvinceText
+                rowCityProvince.visibility = View.VISIBLE
+            } else {
+                rowCityProvince.visibility = View.GONE
+            }
+
             tvPhoneNumber.text = uiState.phoneNumber
-            tvBusinessHours.text = uiState.businessHours
-            tvRatingText.text = "${uiState.ratingAvg} ${uiState.reviewCountText}"
-            ratingBar.rating = uiState.ratingAvg.toFloatOrNull() ?: 0f
-            
+            tvBusinessHours.text = uiState.openingHours
+            tvRatingText.text = "${uiState.rating} ${uiState.reviewCountText}"
+            ratingBar.rating = uiState.rating.toFloatOrNull() ?: 0f
+
             tvStatusBadge.text = uiState.statusText.ifEmpty { "BUKA SEKARANG" }
-            val colorStateList = androidx.core.content.ContextCompat.getColorStateList(this@WorkshopDetailActivity, uiState.statusColorRes)
+            val colorStateList = androidx.core.content.ContextCompat.getColorStateList(
+                this@WorkshopDetailActivity, uiState.statusColorRes
+            )
             tvStatusBadge.backgroundTintList = colorStateList
-            tvStatusBadge.visibility = android.view.View.VISIBLE
+            tvStatusBadge.visibility = View.VISIBLE
 
             ivWorkshopImage.load(uiState.imageUrl) {
                 crossfade(true)
