@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".auth.ui.AddWorkshopActivity">
+    tools:context=".workshop.ui.AddWorkshopActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -15,9 +15,13 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary"
-            app:navigationIconTint="@color/on_primary"
-            app:titleTextColor="@color/on_primary" />
+            android:background="@color/surface"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/on_surface"
+            app:title="Tambah Tambal Ban"
+            app:titleCentered="true"
+            app:titleTextColor="@color/on_surface"
+            app:titleTextAppearance="@style/TextAppearance.Guardian.TitleMedium" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -131,7 +135,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:hint="@string/hint_opening_hours" />
+                    android:hint="@string/hint_opening_hours"
+                    android:text="08:00-17:00"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -186,68 +191,82 @@
                 <!-- Current Location Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCurrentLocation"
-                    style="@style/Widget.Material3.Button.IconButton.Outlined"
+                    style="@style/Widget.Material3.Button.IconButton.Filled"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="top|end"
                     android:layout_marginTop="8dp"
                     android:contentDescription="@string/btn_current_location"
-                    app:icon="@android:drawable/ic_dialog_map"
-                    app:iconGravity="textStart" />
+                    app:icon="@android:drawable/ic_dialog_map" />
 
             </FrameLayout>
 
             <!-- Photo Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAddPhoto"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/btn_add_photo" />
-
-                <ImageView
-                    android:id="@+id/ivPhotoPreview"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_marginTop="8dp"
-                    android:contentDescription="@string/label_photo_optional"
-                    android:scaleType="centerCrop"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-            <!-- Submit / Cancel Buttons -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:text="@string/label_photo_optional"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAddPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/outline_variant_ghost"
+                app:strokeWidth="1dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:id="@+id/placeholderPhoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_camera"
+                            app:tint="@color/primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Pilih Foto Bengkel"
+                            android:textColor="@color/primary" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/ivPhotoPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
+
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Submit Button -->
+            <com.tambal_ban.core.ui.TambalButton
+                android:id="@+id/btnSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp"
-                android:orientation="horizontal"
-                android:spacing="8dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSubmit"
-                    style="@style/Widget.Material3.Button.UnelevatedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/btn_submit" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCancel"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/btn_cancel" />
-
-            </LinearLayout>
+                app:btnText="@string/btn_submit" />
 
         </LinearLayout>
 

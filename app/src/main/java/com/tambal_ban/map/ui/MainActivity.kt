@@ -21,6 +21,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.tambal_ban.R
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.tambal_ban.workshop.data.Workshop
 import com.tambal_ban.databinding.ActivityMainBinding
 import com.tambal_ban.core.utils.Constants
@@ -218,6 +220,19 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
         viewModel.sheetTitle.observe(this) { title ->
             binding.tvSheetTitle.text = title
         }
+
+        viewModel.userProfile.observe(this) { profile ->
+            if (profile?.avatarUrl != null) {
+                binding.searchOverlay.ivUserAvatar.load(profile.avatarUrl) {
+                    crossfade(true)
+                    placeholder(R.drawable.ic_avatar)
+                    error(R.drawable.ic_avatar)
+                    transformations(CircleCropTransformation())
+                }
+            } else {
+                binding.searchOverlay.ivUserAvatar.setImageResource(R.drawable.ic_avatar)
+            }
+        }
     }
 
     private fun updateUIStates() {
@@ -353,7 +368,11 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
         return super.dispatchTouchEvent(event)
     }
 
-    override fun onResume() { super.onResume(); binding.mapView.onResume() }
+    override fun onResume() { 
+        super.onResume()
+        binding.mapView.onResume()
+        viewModel.fetchUserProfile()
+    }
     override fun onPause() { super.onPause(); binding.mapView.onPause() }
     override fun onDestroy() { super.onDestroy(); viewModel.stopLocationUpdates() }
 }

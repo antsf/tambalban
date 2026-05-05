@@ -7,6 +7,14 @@
     android:padding="24dp"
     android:background="@drawable/bg_bottom_sheet">
 
+    <!-- Drag Handle -->
+    <View
+        android:layout_width="32dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:background="@color/divider" />
+
     <TextView
         style="@style/TextAppearance.Guardian.TitleMedium"
         android:layout_width="wrap_content"

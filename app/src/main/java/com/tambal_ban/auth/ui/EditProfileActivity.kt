@@ -20,7 +20,6 @@ import androidx.core.content.FileProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.io.File
 import com.tambal_ban.auth.viewmodel.ProfileViewModel
-import com.tambal_ban.workshop.ui.AddWorkshopActivity
 
 /**
  * US3 & US4: Edit Profile Activity.
@@ -106,13 +105,8 @@ class EditProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
     }
 
     private fun setupListeners() {
-        binding.btnBack.setOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             finish()
-        }
-
-        binding.btnAddWorkshop.setOnClickListener {
-            val intent = Intent(this, AddWorkshopActivity::class.java)
-            startActivity(intent)
         }
 
         binding.btnSave.setOnClickListener {

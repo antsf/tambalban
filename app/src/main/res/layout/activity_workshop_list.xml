@@ -11,15 +11,18 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/surface"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/surface"
             app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/on_surface"
             app:title="Daftar Bengkel"
+            app:titleCentered="true"
+            app:titleTextColor="@color/on_surface"
             app:titleTextAppearance="@style/TextAppearance.Guardian.TitleMedium" />
 
         <com.google.android.material.textfield.TextInputLayout
