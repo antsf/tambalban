@@ -15,6 +15,7 @@ import com.tambal_ban.R
 import com.tambal_ban.databinding.ActivityProfileBinding
 import com.tambal_ban.auth.viewmodel.ProfileViewModel
 import androidx.core.net.toUri
+import com.tambal_ban.workshop.ui.AddWorkshopActivity
 
 /**
  * US2: Profile Activity displaying user information.
@@ -81,12 +82,17 @@ class ProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
     }
 
     private fun setupListeners() {
-        binding.btnBack.setOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             finish()
         }
 
         binding.btnEditProfile.setOnClickListener {
             val intent = Intent(this, EditProfileActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnAddWorkshop.setOnClickListener {
+            val intent = Intent(this, AddWorkshopActivity::class.java)
             startActivity(intent)
         }
 

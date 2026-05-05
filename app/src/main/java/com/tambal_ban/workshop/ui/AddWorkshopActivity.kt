@@ -1,28 +1,55 @@
 package com.tambal_ban.workshop.ui
 
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
+import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
+import coil.load
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import com.tambal_ban.R
 import com.tambal_ban.core.ui.BaseActivity
 import com.tambal_ban.databinding.ActivityAddWorkshopBinding
 import com.tambal_ban.workshop.viewmodel.AddWorkshopViewModel
-import com.google.android.material.snackbar.Snackbar
-import coil.load
+import java.io.File
 
 class AddWorkshopActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAddWorkshopBinding
     private lateinit var viewModel: AddWorkshopViewModel
 
-    private val photoPickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let {
-            viewModel.updateFormField("selectedImageUri", it)
-            binding.ivPhotoPreview.load(it)
-            binding.ivPhotoPreview.visibility = android.view.View.VISIBLE
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) {
+            onImageSelected(uri)
         }
+    }
+
+    private var cameraImageUri: Uri? = null
+    private val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            cameraImageUri?.let { onImageSelected(it) }
+        }
+    }
+
+    private val requestCameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) {
+            launchCamera()
+        } else {
+            Toast.makeText(this, "Izin kamera diperlukan", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun onImageSelected(uri: Uri) {
+        viewModel.updateFormField("selectedImageUri", uri)
+        binding.ivPhotoPreview.load(uri)
+        binding.ivPhotoPreview.visibility = android.view.View.VISIBLE
+        binding.placeholderPhoto.visibility = android.view.View.GONE
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,10 +67,7 @@ class AddWorkshopActivity : BaseActivity() {
     }
 
     private fun setupToolbar() {
-        binding.toolbar.apply {
-            title = getString(R.string.screen_add_workshop)
-            setNavigationOnClickListener { finish() }
-        }
+        binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
     private fun setupFormWiring() {
@@ -69,8 +93,18 @@ class AddWorkshopActivity : BaseActivity() {
 
     private fun observeViewModel() {
         viewModel.formState.observe(this) { formState ->
-            binding.tilLat.editText?.setText(formState.lat.toString())
-            binding.tilLon.editText?.setText(formState.lon.toString())
+            // Only update if value is different to avoid infinite loops with TextWatcher
+            val currentLat = binding.tilLat.editText?.text.toString()
+            val newLat = formState.lat.toString()
+            if (currentLat != newLat) {
+                binding.tilLat.editText?.setText(newLat)
+            }
+
+            val currentLon = binding.tilLon.editText?.text.toString()
+            val newLon = formState.lon.toString()
+            if (currentLon != newLon) {
+                binding.tilLon.editText?.setText(newLon)
+            }
 
             binding.btnCurrentLocation.isEnabled = !formState.isLoadingLocation
             if (formState.isLoadingLocation) {
@@ -85,8 +119,7 @@ class AddWorkshopActivity : BaseActivity() {
         }
 
         viewModel.isLoading.observe(this) { isLoading ->
-            binding.btnSubmit.isEnabled = !isLoading
-            binding.btnCancel.isEnabled = !isLoading
+            binding.btnSubmit.setLoading(isLoading)
         }
 
         viewModel.submissionResult.observe(this) { result ->
@@ -118,8 +151,8 @@ class AddWorkshopActivity : BaseActivity() {
             viewModel.fetchCurrentLocation()
         }
 
-        binding.btnAddPhoto.setOnClickListener {
-            photoPickerLauncher.launch("image/*")
+        binding.cardAddPhoto.setOnClickListener {
+            showImageSourceDialog()
         }
 
         binding.btnSubmit.setOnClickListener {
@@ -127,9 +160,37 @@ class AddWorkshopActivity : BaseActivity() {
                 viewModel.submitWorkshop(form)
             }
         }
+    }
+    private fun showImageSourceDialog() {
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.dialog_choose_image_source, null)
 
-        binding.btnCancel.setOnClickListener {
-            finish()
+        view.findViewById<View>(R.id.btnCamera).setOnClickListener {
+            checkCameraPermissionAndLaunch()
+            dialog.dismiss()
         }
+
+        view.findViewById<View>(R.id.btnGallery).setOnClickListener {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            dialog.dismiss()
+        }
+
+        dialog.setContentView(view)
+        dialog.show()
+    }
+
+    private fun checkCameraPermissionAndLaunch() {
+        if (androidx.core.content.ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+            == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            launchCamera()
+        } else {
+            requestCameraPermission.launch(android.Manifest.permission.CAMERA)
+        }
+    }
+
+    private fun launchCamera() {
+        val photoFile = File(getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES), "workshop_${System.currentTimeMillis()}.jpg")
+        cameraImageUri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", photoFile)
+        takePhoto.launch(cameraImageUri)
     }
 }

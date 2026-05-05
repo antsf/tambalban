@@ -46,6 +46,7 @@ class NearbyWorkshopAdapter(private val onItemClick: (Workshop) -> Unit) :
         fun bind(workshop: Workshop) {
             binding.apply {
                 tvWorkshopName.text = workshop.name
+                tvWorkshopAddress.text = workshop.address ?: workshop.city ?: "-"
                 
                 // Rating and Distance subtext
                 val ratingStr = if (workshop.totalReviews > 0) String.format("%.1f", workshop.rating) else "0.0"

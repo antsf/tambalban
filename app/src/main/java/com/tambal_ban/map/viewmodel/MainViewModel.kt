@@ -13,6 +13,9 @@ import com.tambal_ban.workshop.data.Workshop
 import com.tambal_ban.workshop.data.WorkshopRepository
 import com.tambal_ban.core.location.LocationService
 import com.tambal_ban.core.utils.Constants
+import com.tambal_ban.auth.data.Profile
+import com.tambal_ban.auth.data.ProfileRepository
+import com.tambal_ban.auth.data.AuthRepository
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
@@ -27,6 +30,11 @@ import kotlinx.coroutines.launch
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: WorkshopRepository = (application as TambalBanApp).workshopRepository
     private val locationService: LocationService = LocationService.getInstance(application)
+    private val profileRepository: ProfileRepository = (application as TambalBanApp).profileRepository
+    private val authRepository: AuthRepository = (application as TambalBanApp).authRepository
+
+    private val _userProfile = MutableLiveData<Profile?>()
+    val userProfile: LiveData<Profile?> = _userProfile
 
     private val _workshops = MutableLiveData<List<Workshop>>()
     val workshops: LiveData<List<Workshop>> = _workshops
@@ -61,6 +69,26 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 .collect { query ->
                     updateSearchSuggestions(query)
                 }
+        }
+        fetchUserProfile()
+    }
+
+    fun fetchUserProfile() {
+        if (!authRepository.isLoggedIn()) {
+            _userProfile.value = null
+            return
+        }
+        
+        val userId = authRepository.getUserId() ?: return
+        viewModelScope.launch {
+            try {
+                val result = profileRepository.getProfile(userId)
+                if (result.isSuccess) {
+                    _userProfile.value = result.getOrNull()
+                }
+            } catch (e: Exception) {
+                // Silently fail for profile in main screen
+            }
         }
     }
 

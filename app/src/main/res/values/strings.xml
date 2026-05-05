@@ -108,6 +108,6 @@
     <string name="btn_current_location">Lokasi Saat Ini</string>
     <string name="btn_submit">Kirim</string>
     <string name="btn_cancel">Batal</string>
-    <string name="hint_latitude">-6.2</string>
-    <string name="hint_longitude">106.8</string>
+    <string name="hint_latitude">Latitude</string>
+    <string name="hint_longitude">Longitude</string>
 </resources>
