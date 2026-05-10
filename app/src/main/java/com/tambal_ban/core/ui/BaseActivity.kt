@@ -3,9 +3,11 @@ package com.tambal_ban.core.ui
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import com.tambal_ban.TambalBanApp
 
 /**
  * Base activity to handle Edge-to-Edge and Safe Area (Window Insets).
@@ -13,8 +15,18 @@ import androidx.core.view.updatePadding
 abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyThemeFromPrefs()
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+    }
+
+    private fun applyThemeFromPrefs() {
+        val prefs = try {
+            (application as TambalBanApp).authPrefs
+        } catch (_: Exception) {
+            null
+        }
+        AppCompatDelegate.setDefaultNightMode(prefs?.getNightMode() ?: AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
     }
 
     /**

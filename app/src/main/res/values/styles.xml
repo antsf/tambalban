@@ -28,6 +28,11 @@
         <item name="iconSize">20dp</item>
     </style>
 
+    <!-- CollapsingToolbar: hide expanded title (only show collapsed) -->
+    <style name="TextAppearance.Guardian.ExpandedTitle" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textColor">@android:color/transparent</item>
+    </style>
+
     <!-- Shape Definitions -->
     <style name="ShapeAppearance.Guardian.Pill" parent="">
         <item name="cornerFamily">rounded</item>
@@ -90,14 +95,14 @@
         <item name="boxCornerRadiusTopEnd">10dp</item>
         <item name="boxCornerRadiusBottomStart">10dp</item>
         <item name="boxCornerRadiusBottomEnd">10dp</item>
-        <item name="boxBackgroundColor">#F5F5F5</item>
+        <item name="boxBackgroundColor">@color/login_field_bg</item>
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">1dp</item>
         <item name="boxStrokeColor">@color/divider</item>
-        <item name="hintTextColor">#757575</item>
-        <item name="android:textColorHint">#757575</item>
-        <item name="startIconTint">#757575</item>
-        <item name="endIconTint">#757575</item>
+        <item name="hintTextColor">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_secondary</item>
+        <item name="startIconTint">@color/text_secondary</item>
+        <item name="endIconTint">@color/text_secondary</item>
     </style>
 
     <!-- Home Screen Refresh Styles -->

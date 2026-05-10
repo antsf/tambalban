@@ -1,17 +1,21 @@
 package com.tambal_ban.auth.ui
-import com.tambal_ban.auth.ui.* 
-import com.tambal_ban.auth.viewmodel.* 
-import com.tambal_ban.auth.data.* 
+
+import com.tambal_ban.auth.ui.*
+import com.tambal_ban.auth.viewmodel.*
+import com.tambal_ban.auth.data.*
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import coil.load
 import com.tambal_ban.R
+import com.tambal_ban.TambalBanApp
 import com.tambal_ban.databinding.ActivityProfileBinding
 import com.tambal_ban.auth.viewmodel.ProfileViewModel
 import androidx.core.net.toUri
@@ -33,7 +37,9 @@ class ProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
 
         setupObservers()
         setupListeners()
-        
+
+        updateThemeToggleUi()
+
         // Pre-fill email from local storage immediately
         viewModel.userEmail?.let {
             binding.tvProfileEmail.text = it
@@ -51,10 +57,10 @@ class ProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
             if (profile != null) {
                 binding.tvProfileName.text = if (profile.fullName.isNullOrEmpty()) "-" else profile.fullName
                 binding.tvProfileEmail.text = if (profile.email.isNullOrEmpty()) "-" else profile.email
-                
+
                 val formattedPhone = formatPhoneNumber(profile.phone)
                 binding.chipPhone.text = if (formattedPhone.isNullOrEmpty()) "-" else formattedPhone
-                
+
                 if (!profile.avatarUrl.isNullOrEmpty()) {
                     binding.avatarView.loadAvatar(profile.avatarUrl)
                 }
@@ -112,6 +118,29 @@ class ProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
         binding.btnLogout.setOnClickListener {
             viewModel.logout()
         }
+
+        binding.btnThemeToggle.setOnClickListener {
+            val prefs = (application as TambalBanApp).authPrefs
+            val isDark = isDarkModeActive()
+            val newMode = if (isDark) AppCompatDelegate.MODE_NIGHT_NO else AppCompatDelegate.MODE_NIGHT_YES
+            prefs.setNightMode(newMode)
+            AppCompatDelegate.setDefaultNightMode(newMode)
+            updateThemeToggleUi()
+        }
+    }
+
+    private fun isDarkModeActive(): Boolean {
+        val nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return nightMode == Configuration.UI_MODE_NIGHT_YES
+    }
+
+    private fun updateThemeToggleUi() {
+        val isDark = isDarkModeActive()
+        binding.ivThemeIcon.setImageResource(
+            if (!isDark) R.drawable.ic_light_mode else R.drawable.ic_dark_mode
+        )
+        binding.tvThemeLabel.text = if (!isDark) "Tema Terang" else "Tema Gelap"
+        binding.switchTheme.isChecked = !isDark
     }
 
     private fun openPlayStore() {
@@ -120,8 +149,12 @@ class ProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
 //        try {
 //            startActivity(intent)
 //        } catch (e: Exception) {
-            startActivity(Intent(Intent.ACTION_VIEW,
-                "https://play.google.com/store/apps/details?id=$appId".toUri()))
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                "https://play.google.com/store/apps/details?id=$appId".toUri()
+            )
+        )
 //        }
     }
 
@@ -129,7 +162,10 @@ class ProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = "text/plain"
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Tambal Ban")
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "Temukan tambal ban terdekat dengan mudah menggunakan Tambal Ban: https://play.google.com/store/apps/details?id=com.tambal_ban")
+        shareIntent.putExtra(
+            Intent.EXTRA_TEXT,
+            "Temukan tambal ban terdekat dengan mudah menggunakan Tambal Ban: https://play.google.com/store/apps/details?id=com.tambal_ban"
+        )
         startActivity(Intent.createChooser(shareIntent, "Bagikan melalui"))
     }
 

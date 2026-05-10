@@ -56,9 +56,7 @@ class WorkshopDetailViewModel(application: Application) : AndroidViewModel(appli
                 workshopResult?.let { mapToUIState(it) }
 
                 val reviewsResult = reviewRepository.getReviews(workshopId)
-                if (reviewsResult.isSuccess) {
-                    _reviews.value = reviewsResult.getOrDefault(emptyList())
-                }
+                _reviews.value = reviewsResult.getOrDefault(emptyList())
             } catch (e: Exception) {
                 _error.value = e.message
             } finally {

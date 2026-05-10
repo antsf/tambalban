@@ -2,6 +2,7 @@ package com.tambal_ban.core.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
@@ -62,10 +63,17 @@ class AuthPrefs(context: Context) {
         return getAccessToken() != null
     }
 
+    fun getNightMode(): Int = sharedPreferences.getInt(KEY_NIGHT_MODE, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+
+    fun setNightMode(mode: Int) {
+        sharedPreferences.edit().putInt(KEY_NIGHT_MODE, mode).apply()
+    }
+
     companion object {
         private const val KEY_ACCESS_TOKEN = "access_token"
         private const val KEY_REFRESH_TOKEN = "refresh_token"
         private const val KEY_USER_ID = "user_id"
         private const val KEY_EMAIL = "user_email"
+        private const val KEY_NIGHT_MODE = "night_mode"
     }
 }

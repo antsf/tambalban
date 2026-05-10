@@ -227,14 +227,20 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
 
         viewModel.userProfile.observe(this) { profile ->
             if (profile?.avatarUrl != null) {
+                binding.searchOverlay.progressSearchAvatar.visibility = View.VISIBLE
                 binding.searchOverlay.ivUserAvatar.load(profile.avatarUrl) {
                     crossfade(true)
                     placeholder(R.drawable.ic_avatar)
                     error(R.drawable.ic_avatar)
                     transformations(CircleCropTransformation())
+                    listener(
+                        onSuccess = { _, _ -> binding.searchOverlay.progressSearchAvatar.visibility = View.GONE },
+                        onError = { _, _ -> binding.searchOverlay.progressSearchAvatar.visibility = View.GONE }
+                    )
                 }
             } else {
                 binding.searchOverlay.ivUserAvatar.setImageResource(R.drawable.ic_avatar)
+                binding.searchOverlay.progressSearchAvatar.visibility = View.GONE
             }
         }
     }
