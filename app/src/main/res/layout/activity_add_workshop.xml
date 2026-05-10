@@ -1,15 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" ?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".workshop.ui.AddWorkshopActivity">
+    tools:context=".workshop.ui.AddWorkshopActivity"
+>
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+    >
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -21,20 +24,23 @@
             app:title="Tambah Tambal Ban"
             app:titleCentered="true"
             app:titleTextColor="@color/on_surface"
-            app:titleTextAppearance="@style/TextAppearance.Guardian.TitleMedium" />
+            app:titleTextAppearance="@style/TextAppearance.Guardian.TitleMedium"
+        />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+        >
 
             <!-- Name (required) -->
             <com.google.android.material.textfield.TextInputLayout
@@ -42,13 +48,15 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/label_name">
+                android:hint="@string/label_name"
+            >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapWords" />
+                    android:inputType="textCapWords"
+                />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,14 +67,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/label_address">
+                android:hint="@string/label_address"
+            >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPostalAddress"
-                    android:minLines="2" />
+                    android:minLines="2"
+                />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -77,13 +87,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/label_city">
+                android:hint="@string/label_city"
+            >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text" />
+                    android:inputType="text"
+                />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -94,13 +106,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/label_phone">
+                android:hint="@string/label_phone"
+            >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="phone" />
+                    android:inputType="phone"
+                />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -111,13 +125,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/label_province">
+                android:hint="@string/label_province"
+            >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etProvince"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text" />
+                    android:inputType="text"
+                />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -128,7 +144,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/label_opening_hours">
+                android:hint="@string/label_opening_hours"
+            >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etOpeningHours"
@@ -136,7 +153,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:hint="@string/hint_opening_hours"
-                    android:text="08:00-17:00"/>
+                    android:text="08:00-17:00"
+                />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -144,12 +162,14 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+            >
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                >
 
                     <!-- Latitude -->
                     <com.google.android.material.textfield.TextInputLayout
@@ -157,14 +177,16 @@
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/hint_latitude">
+                        android:hint="@string/hint_latitude"
+                    >
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etLat"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
-                            android:text="-6.2" />
+                            android:text="-6.2"
+                        />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -175,14 +197,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:hint="@string/hint_longitude">
+                        android:hint="@string/hint_longitude"
+                    >
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etLon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
-                            android:text="106.8" />
+                            android:text="106.8"
+                        />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -197,7 +221,8 @@
                     android:layout_gravity="top|end"
                     android:layout_marginTop="8dp"
                     android:contentDescription="@string/btn_current_location"
-                    app:icon="@android:drawable/ic_dialog_map" />
+                    app:icon="@android:drawable/ic_dialog_map"
+                />
 
             </FrameLayout>
 
@@ -209,7 +234,8 @@
                 android:text="@string/label_photo_optional"
                 android:textColor="@color/on_surface_variant"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+            />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAddPhoto"
@@ -221,11 +247,13 @@
                 app:strokeColor="@color/outline_variant_ghost"
                 app:strokeWidth="1dp"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+            >
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                >
 
                     <LinearLayout
                         android:id="@+id/placeholderPhoto"
@@ -233,20 +261,23 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                    >
 
                         <ImageView
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:src="@drawable/ic_camera"
-                            app:tint="@color/primary" />
+                            app:tint="@color/primary"
+                        />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="Pilih Foto Bengkel"
-                            android:textColor="@color/primary" />
+                            android:text="Pilih Foto Tambal Ban"
+                            android:textColor="@color/primary"
+                        />
                     </LinearLayout>
 
                     <ImageView
@@ -254,7 +285,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                    />
 
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -266,7 +298,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp"
-                app:btnText="@string/btn_submit" />
+                app:btnText="@string/btn_submit"
+            />
 
         </LinearLayout>
 
