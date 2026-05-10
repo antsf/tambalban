@@ -37,6 +37,10 @@ class WorkshopListActivity : BaseActivity() {
 
         // Default: fetch all workshops
         viewModel.fetchAllWorkshops()
+
+        // Load banner ad
+        val adMobManager = (application as com.tambal_ban.TambalBanApp).adMobManager
+        adMobManager.loadBannerAd(binding.adContainer)
     }
 
     private fun setupToolbar() {
@@ -127,5 +131,20 @@ class WorkshopListActivity : BaseActivity() {
                 Toast.makeText(this, it, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (application as com.tambal_ban.TambalBanApp).adMobManager.resumeBannerAd()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (application as com.tambal_ban.TambalBanApp).adMobManager.pauseBannerAd()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (application as com.tambal_ban.TambalBanApp).adMobManager.destroyBannerAd()
     }
 }
