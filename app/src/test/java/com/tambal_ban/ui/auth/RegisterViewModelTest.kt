@@ -2,15 +2,18 @@ package com.tambal_ban.ui.auth
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.tambal_ban.TambalBanApp
-import com.tambal_ban.data.model.AuthResponse
-import com.tambal_ban.data.model.User
-import com.tambal_ban.data.repository.AuthRepository
+import com.tambal_ban.auth.data.AuthRepository
+import com.tambal_ban.auth.data.AuthResponse
+import com.tambal_ban.auth.data.User
+import com.tambal_ban.auth.viewmodel.RegisterViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -31,6 +34,11 @@ class RegisterViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         coEvery { application.authRepository } returns authRepository
         viewModel = RegisterViewModel(application)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test
