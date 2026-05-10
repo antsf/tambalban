@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <string name="app_name">TambalBan</string>
 
@@ -15,7 +15,7 @@
     <string name="radius_5km">5 km</string>
 
     <!-- Workshop Detail -->
-    <string name="workshop_detail">Detail Bengkel</string>
+    <string name="workshop_detail">Detail Tambal Ban</string>
     <string name="call">Telepon</string>
     <string name="navigate">Navigasi</string>
     <string name="report">Laporkan</string>
@@ -44,10 +44,14 @@
     <string name="address">Address</string>
     <string name="label_city">Kota *</string>
     <string name="label_province">Provinsi (opsional)</string>
-    <string name="hint_opening_hours">Contoh: Mo-Fr 08:00-17:00 atau 24/7</string>
+    <string
+        name="hint_opening_hours"
+    >Contoh: Mo-Fr 08:00-17:00 atau 24/7</string>
     <string name="btn_add_photo">Tambah Foto</string>
     <string name="label_photo_optional">Foto (opsional)</string>
-    <string name="msg_submission_pending">Terkirim, sedang ditinjau admin</string>
+    <string
+        name="msg_submission_pending"
+    >Terkirim, sedang ditinjau admin</string>
     <string name="select_location">Select Location on Map</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
@@ -55,17 +59,25 @@
     <string name="cancel">Cancel</string>
     <string name="submission_success">Workshop submitted successfully!</string>
     <string name="submission_failed">Failed to submit workshop</string>
-    <string name="fill_required_fields">Please fill in all required fields</string>
+    <string
+        name="fill_required_fields"
+    >Please fill in all required fields</string>
 
     <!-- Location -->
-    <string name="location_permission_required">Location permission is required to find nearby workshops</string>
-    <string name="location_permission_denied">Location permission denied. Please enable it in settings.</string>
+    <string
+        name="location_permission_required"
+    >Location permission is required to find nearby workshops</string>
+    <string
+        name="location_permission_denied"
+    >Location permission denied. Please enable it in settings.</string>
     <string name="enable_location">Enable Location</string>
     <string name="getting_location">Getting your location...</string>
     <string name="location_unavailable">Unable to get your location</string>
 
     <!-- Network -->
-    <string name="network_error">Network error. Please check your connection.</string>
+    <string
+        name="network_error"
+    >Network error. Please check your connection.</string>
     <string name="offline_mode">You are offline. Showing cached data.</string>
     <string name="retry">Retry</string>
 
@@ -86,23 +98,33 @@
 
     <!-- Registration -->
     <string name="register_title">Daftar Akun</string>
-    <string name="register_subtitle">Bergabung dengan komunitas Tambal Ban</string>
+    <string
+        name="register_subtitle"
+    >Bergabung dengan komunitas Tambal Ban</string>
     <string name="register_name_hint">Nama Lengkap</string>
     <string name="register_email_hint">Email</string>
     <string name="register_password_hint">Kata Sandi</string>
     <string name="register_button">Daftar Sekarang</string>
     <string name="register_already_have_account">Sudah punya akun? </string>
     <string name="register_login_link"> Masuk di sini</string>
-    <string name="register_success">Pendaftaran berhasil! Selamat bergabung.</string>
+    <string
+        name="register_success"
+    >Pendaftaran berhasil! Selamat bergabung.</string>
     <string name="register_error_name_required">Nama wajib diisi</string>
     <string name="register_error_email_required">Email wajib diisi</string>
-    <string name="register_error_email_invalid">Format email tidak valid</string>
-    <string name="register_error_password_required">Kata sandi wajib diisi</string>
-    <string name="register_error_password_short">Kata sandi minimal 8 karakter</string>
+    <string
+        name="register_error_email_invalid"
+    >Format email tidak valid</string>
+    <string
+        name="register_error_password_required"
+    >Kata sandi wajib diisi</string>
+    <string
+        name="register_error_password_short"
+    >Kata sandi minimal 8 karakter</string>
 
     <!-- Spec 018: Add Workshop -->
     <string name="screen_add_workshop">Tambah Tambal Ban</string>
-    <string name="label_name">Nama Bengkel</string>
+    <string name="label_name">Nama Tambal Ban</string>
     <string name="label_address">Alamat Lengkap</string>
     <string name="label_phone">Nomor Telepon</string>
     <string name="btn_current_location">Lokasi Saat Ini</string>
