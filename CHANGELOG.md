@@ -25,6 +25,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - `workshop_submissions` endpoint usage
 
 ### Added
+- AdMob banner ads on MainActivity (home screen) and WorkshopListActivity
 - `CLAUDE.md`: Complete Android agent setup with tech stack, custom components, code style, and do-not rules
 - `.specify/memory/constitution.md`: Rewritten v2.0.0 with package-by-feature rule, XML-first, MVVM chain, build verification
 - `.claude/agents/brief.md`: Design agent — produces spec.md, contracts, tasks.md
