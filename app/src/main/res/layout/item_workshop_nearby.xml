@@ -1,98 +1,141 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" ?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginVertical="6dp"
+    app:cardBackgroundColor="@color/surface_container_lowest"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
-    app:cardBackgroundColor="@color/white"
+    app:strokeColor="@color/outline_variant_ghost"
     app:strokeWidth="1dp"
-    app:strokeColor="@color/divider">
+>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="12dp">
+        android:padding="12dp"
+    >
 
-        <!-- T010: Rounded Circular Image Component -->
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivWorkshopImage"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:id="@+id/ivWorkshop"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
-            tools:src="@tools:sample/backgrounds/scenic" />
+            tools:src="@tools:sample/backgrounds/scenic"
+        />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_marginStart="12dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Guardian.TitleMedium"
+            android:textColor="@color/on_surface"
+            app:layout_constraintEnd_toStartOf="@id/tvDistance"
+            app:layout_constraintStart_toEndOf="@id/ivWorkshop"
+            app:layout_constraintTop_toTopOf="@id/ivWorkshop"
+            tools:text="Workshop Name"
+        />
+
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="@style/TextAppearance.Guardian.BodySmall"
+            android:textColor="@color/on_surface_variant"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvName"
+            app:layout_constraintTop_toBottomOf="@id/tvName"
+            tools:text="123 Street Name, City"
+        />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="@id/tvName"
+            app:layout_constraintTop_toBottomOf="@id/tvAddress"
+        >
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_star"
+                app:tint="@color/rating_star"
+            />
 
             <TextView
-                android:id="@+id/tvWorkshopName"
-                android:layout_width="match_parent"
+                android:id="@+id/tvRating"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:ellipsize="end"
-                android:maxLines="1"
+                android:layout_marginStart="4dp"
+                android:textAppearance="@style/TextAppearance.Guardian.LabelMedium"
                 android:textColor="@color/on_surface"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                tools:text="Tambal Ban Maju Jaya" />
+                tools:text="4.5"
+            />
 
             <TextView
-                android:id="@+id/tvWorkshopAddress"
-                android:layout_width="match_parent"
+                android:id="@+id/tvRatingCount"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:ellipsize="end"
-                android:maxLines="2"
+                android:layout_marginStart="4dp"
+                android:textAppearance="@style/TextAppearance.Guardian.LabelSmall"
                 android:textColor="@color/on_surface_variant"
-                android:textSize="12sp"
-                tools:text="Jalan Nginden Jaya, Surabaya" />
+                tools:text="(120)"
+            />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <View
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="@drawable/bg_marker_label"
+                android:backgroundTint="@color/on_surface_variant"
+            />
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="4dp">
+                android:text="Open"
+                android:textAppearance="@style/TextAppearance.Guardian.LabelMedium"
+                android:textColor="@color/success"
+            />
 
-                <TextView
-                    android:id="@+id/tvWorkshopSubtext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/on_surface_variant"
-                    android:textSize="12sp"
-                    tools:text="4.5 · 0.8 km" />
+          <View
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="@drawable/bg_marker_label"
+                android:backgroundTint="@color/on_surface_variant"
+            />
 
-                <!-- T010: Status Badge -->
-                <TextView
-                    android:id="@+id/tvWorkshopStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_status_open"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp"
-                    android:layout_marginLeft="16dp"
-                    android:text="BUKA"
-                    android:textColor="@color/white"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-
+            <TextView
+                android:id="@+id/tvDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Guardian.LabelMedium"
+                android:textColor="@color/on_surface"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvStatus"
+                tools:text="1.2 km"
+            />
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

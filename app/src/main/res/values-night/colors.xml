@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Colors (Blue Violet Palette - Dark) -->
+    <color name="primary">#8A2BE2</color>
+    <color name="primary_container">#5C1A96</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_primary_container">#EDDBFF</color>
+
+    <!-- Modern Login Refresh Palette (Dark) -->
+    <color name="colorPrimaryLogin">#8A2BE2</color>
+    <color name="login_bg_start">#2A1A3A</color>
+    <color name="login_bg_end">#1A1C1E</color>
+    <color name="login_field_bg">#2C2E30</color>
+    <color name="login_text_secondary">#9A9A9E</color>
+
+    <!-- Map Refresh Palette (Dark) -->
+    <color name="map_teal_light">#1A3A38</color>
+    <color name="map_teal_dark">#B2DFDB</color>
+    <color name="marker_orchid">#8A2BE2</color>
+    <color name="marker_label_bg">#2C2E30</color>
+
+    <!-- Surface Hierarchy -->
+    <color name="surface">#1A1C1E</color>
+    <color name="surface_container_low">#222426</color>
+    <color name="surface_container_lowest">#2C2E30</color>
+    <color name="glass_overlay">#CC1A1C1E</color>
+
+    <!-- Text Colors -->
+    <color name="on_surface">#E3E2E6</color>
+    <color name="on_surface_variant">#B8B9BE</color>
+
+    <!-- Functional -->
+    <color name="tertiary_container">#1A4A1A</color>
+    <color name="on_tertiary_container">#C8E6C8</color>
+
+    <!-- State Fallbacks -->
+    <color name="primary_fixed_dim">#3A1050</color>
+    <color name="outline_variant_ghost">#26FFFFFF</color>
+
+    <!-- Core / Existing -->
+    <color name="white">#E3E2E6</color>
+    <color name="success">#4CAF50</color>
+    <color name="secondary">#8A2BE2</color>
+    <color name="rating_star">#FFD54F</color>
+    <color name="divider">#3C3E40</color>
+    <color name="text_secondary">#9A9A9E</color>
+    <color name="primary_light">#5C1A96</color>
+
+    <color name="background">@color/surface</color>
+    <color name="card">@color/surface_container_lowest</color>
+    <color name="error">#B3261E</color>
+    <color name="on_error">#FFFFFF</color>
+</resources>

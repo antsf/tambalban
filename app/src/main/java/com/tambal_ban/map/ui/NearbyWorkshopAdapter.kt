@@ -1,6 +1,4 @@
 package com.tambal_ban.map.ui
-import com.tambal_ban.map.ui.* 
-import com.tambal_ban.map.viewmodel.* 
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,9 +12,6 @@ import com.tambal_ban.databinding.ItemWorkshopNearbyBinding
 import com.tambal_ban.core.utils.GeoUtils
 import com.tambal_ban.R
 
-/**
- * T011: Specialized adapter for the nearby workshops list in the Home Bottom Sheet.
- */
 class NearbyWorkshopAdapter(private val onItemClick: (Workshop) -> Unit) :
     ListAdapter<Workshop, NearbyWorkshopAdapter.ViewHolder>(WorkshopDiffCallback()) {
 
@@ -45,21 +40,18 @@ class NearbyWorkshopAdapter(private val onItemClick: (Workshop) -> Unit) :
 
         fun bind(workshop: Workshop) {
             binding.apply {
-                tvWorkshopName.text = workshop.name
-                tvWorkshopAddress.text = workshop.address ?: workshop.city ?: "-"
-                
-                // Rating and Distance subtext
-                val ratingStr = if (workshop.totalReviews > 0) String.format("%.1f", workshop.rating) else "0.0"
-                val distanceStr = workshop.distance?.let { GeoUtils.formatDistance(it) } ?: "?? km"
-                tvWorkshopSubtext.text = "$ratingStr • $distanceStr"
+                tvName.text = workshop.name
+                tvAddress.text = workshop.address ?: workshop.city ?: "-"
+                tvDistance.text = workshop.distance?.let { GeoUtils.formatDistance(it) } ?: "?? km"
+                tvRating.text = String.format("%.1f", workshop.rating)
+                tvRatingCount.text = "(${workshop.totalReviews})"
+                tvStatus.text = "Buka"
 
-                tvWorkshopStatus.text = "BUKA"
-                
-                // T010: Workshop images loaded via Coil
-                ivWorkshopImage.load(workshop.imageUrl) {
+                ivWorkshop.load(workshop.imageUrl) {
                     crossfade(true)
-                    placeholder(R.color.divider)
-                    error(R.color.divider)
+                    placeholder(R.drawable.bg_ambient_shadow)
+                    error(R.drawable.bg_ambient_shadow)
+                    transformations(RoundedCornersTransformation(16f))
                 }
             }
         }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.TambalBan" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">@color/primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
+
+        <item name="android:colorBackground">@color/surface</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorSurfaceVariant">@color/surface_container_low</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.Guardian.DisplayLarge</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.Guardian.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Guardian.HeadlineLarge</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.Guardian.TitleLarge</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.Guardian.BodyLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.Guardian.LabelMedium</item>
+
+        <item name="cornerRadius">@dimen/radius_xl</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+
+    <style name="Theme.Guardian.BottomSheet" parent="Theme.Material3.Dark.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.Guardian.BottomSheet</item>
+    </style>
+</resources>

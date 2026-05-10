@@ -45,8 +45,8 @@
         android:layout_gravity="center"
         android:indeterminate="true"
         android:visibility="gone"
-        app:indicatorColor="@color/white"
+        app:indicatorColor="@color/primary"
         app:indicatorSize="24dp"
-        app:trackThickness="2dp" />
+        app:trackThickness="1dp" />
 
 </merge>
