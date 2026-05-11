@@ -1,16 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" ?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/searchCard"
         style="@style/Home.SearchCard"
         android:layout_width="match_parent"
-        android:layout_height="56dp">
+        android:layout_height="56dp"
+    >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,13 +21,15 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp">
+            android:paddingVertical="8dp"
+        >
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_search"
-                app:tint="@color/on_surface_variant" />
+                app:tint="@color/on_surface_variant"
+            />
 
             <EditText
                 android:id="@+id/etSearch"
@@ -37,14 +42,16 @@
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:singleLine="true"
-                android:textColor="@color/on_surface"
+                android:textColor="@color/on_surface_variant"
                 android:textColorHint="@color/on_surface_variant"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+            />
 
             <FrameLayout
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:layout_marginStart="12dp">
+                android:layout_marginStart="12dp"
+            >
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/ivUserAvatar"
@@ -56,7 +63,8 @@
                     android:src="@drawable/ic_avatar"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
                     app:strokeColor="@color/divider"
-                    app:strokeWidth="1dp" />
+                    app:strokeWidth="1dp"
+                />
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/progressSearchAvatar"
@@ -67,7 +75,8 @@
                     android:visibility="gone"
                     app:indicatorColor="@color/primary"
                     app:indicatorSize="16dp"
-                    app:trackThickness="1dp" />
+                    app:trackThickness="1dp"
+                />
 
             </FrameLayout>
 
@@ -84,7 +93,8 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
         app:strokeWidth="0dp"
-        tools:visibility="visible">
+        tools:visibility="visible"
+    >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvSuggestions"
@@ -93,7 +103,8 @@
             android:maxHeight="300dp"
             android:paddingVertical="8dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_search_suggestion" />
+            tools:listitem="@layout/item_search_suggestion"
+        />
 
     </com.google.android.material.card.MaterialCardView>
 

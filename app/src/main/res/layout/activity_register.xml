@@ -1,10 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" ?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_login_gradient">
+    android:fitsSystemWindows="true"
+    android:background="@drawable/bg_login_gradient"
+>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,83 +17,121 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+    >
 
         <TextView
             android:id="@+id/tvTitle"
-            style="@style/TextAppearance.Guardian.HeadlineMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="@string/register_title"
             android:textColor="@color/on_surface"
             android:textSize="28sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+        />
 
         <TextView
             android:id="@+id/tvSubtitle"
-            style="@style/TextAppearance.Guardian.BodyLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/register_subtitle"
-            android:textColor="@color/login_text_secondary"
-            android:textSize="14sp" />
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+        />
+
+        <!-- Name Field -->
+        <TextView
+            android:id="@+id/tvNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="@string/register_name_label"
+            android:textColor="@color/on_surface"
+            android:textSize="14sp"
+        />
 
         <com.tambal_ban.core.ui.TambalTextField
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="8dp"
             app:fieldHint="@string/register_name_hint"
-            app:fieldIcon="@drawable/ic_person" />
+            app:fieldIcon="@drawable/ic_person"
+        />
+
+        <!-- Email Field -->
+        <TextView
+            android:id="@+id/tvEmailLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/register_email_label"
+            android:textColor="@color/on_surface"
+            android:textSize="14sp"
+        />
 
         <com.tambal_ban.core.ui.TambalTextField
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             app:fieldHint="@string/register_email_hint"
             app:fieldIcon="@drawable/ic_mail"
-            app:fieldVariant="email" />
+            app:fieldVariant="email"
+        />
+
+        <!-- Password Field -->
+        <TextView
+            android:id="@+id/tvPasswordLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/register_password_label"
+            android:textColor="@color/on_surface"
+            android:textSize="14sp"
+        />
 
         <com.tambal_ban.core.ui.TambalTextField
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             app:fieldHint="@string/register_password_hint"
             app:fieldIcon="@drawable/ic_lock"
-            app:fieldVariant="password" />
+            app:fieldVariant="password"
+        />
 
         <com.tambal_ban.core.ui.TambalButton
             android:id="@+id/btnRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            app:btnText="@string/register_button" />
+            app:btnText="@string/register_button"
+        />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
+            android:layout_gravity="center_horizontal"
+        >
 
             <TextView
-                style="@style/TextAppearance.Guardian.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/register_already_have_account"
-                android:textColor="@color/on_surface_variant" />
+                android:text="Sudah punya akun? "
+                android:textColor="@color/on_surface_variant"
+            />
 
             <TextView
                 android:id="@+id/tvLogin"
-                style="@style/TextAppearance.Guardian.LabelLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/register_login_link"
-                android:textColor="@color/primary" />
+                android:text="Masuk di sini"
+                android:textColor="@color/primary"
+            />
         </LinearLayout>
 
     </LinearLayout>

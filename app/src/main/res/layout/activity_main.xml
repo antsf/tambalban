@@ -1,17 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" ?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".map.ui.MainActivity">
+    tools:context=".map.ui.MainActivity"
+>
 
     <!-- T007: Map View Base Layer -->
     <org.osmdroid.views.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+    />
 
     <!-- T015: Search Overlay -->
     <include
@@ -19,7 +22,8 @@
         layout="@layout/view_search_overlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"
+    />
 
     <!-- T012: Interactive Bottom Sheet -->
     <com.google.android.material.card.MaterialCardView
@@ -33,20 +37,23 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:behavior_fitToContents="true"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+        >
 
             <!-- Sticky Header Part -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:background="@color/surface_container_lowest">
+                android:padding="8dp"
+                android:background="@color/surface_container_lowest"
+            >
 
                 <!-- Drag Handle -->
                 <View
@@ -54,11 +61,13 @@
                     android:layout_height="4dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="16dp"
-                    android:background="@color/divider" />
+                    android:background="@color/divider"
+                />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                >
 
                     <TextView
                         android:id="@+id/tvSheetTitle"
@@ -67,7 +76,8 @@
                         android:text="Tambal Ban Terdekat"
                         android:textColor="@color/on_surface"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                    />
 
                     <TextView
                         android:id="@+id/btnViewAll"
@@ -77,7 +87,8 @@
                         android:layout_centerVertical="true"
                         android:text="Lihat Semua"
                         android:textSize="14sp"
-                        android:textColor="@color/primary"/>
+                        android:textColor="@color/primary"
+                    />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -86,7 +97,8 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+            >
 
                 <!-- Skeleton Loading -->
                 <com.facebook.shimmer.ShimmerFrameLayout
@@ -96,12 +108,14 @@
                     android:visibility="gone"
                     android:paddingHorizontal="16dp"
                     app:shimmer_auto_start="true"
-                    tools:visibility="visible">
+                    tools:visibility="visible"
+                >
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                    >
                         <include layout="@layout/item_workshop_skeleton" />
                         <include layout="@layout/item_workshop_skeleton" />
                         <include layout="@layout/item_workshop_skeleton" />
@@ -116,22 +130,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
-                    android:paddingHorizontal="16dp"
                     android:paddingBottom="24dp"
                     android:nestedScrollingEnabled="true"
-                    tools:listitem="@layout/item_workshop_nearby" />
+                    tools:listitem="@layout/item_workshop_nearby"
+                />
 
                 <!-- Empty State -->
                 <include
                     android:id="@+id/viewEmptyState"
                     layout="@layout/view_empty_state"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                />
 
                 <!-- Error State -->
                 <include
                     android:id="@+id/viewErrorState"
                     layout="@layout/view_error_state"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                />
 
             </FrameLayout>
 
@@ -140,7 +156,8 @@
                 android:id="@+id/adContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone" />
+                android:visibility="gone"
+            />
 
         </LinearLayout>
 
@@ -163,7 +180,8 @@
         app:borderWidth="0dp"
         app:elevation="6dp"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+    />
 
     <!-- Global Loading Progress -->
     <ProgressBar
@@ -171,6 +189,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone" />
+        android:visibility="gone"
+    />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

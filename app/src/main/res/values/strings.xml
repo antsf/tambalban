@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
-    <string name="app_name">TambalBan</string>
+    <string name="app_name">Tambal Ban</string>
 
     <!-- Map Screen -->
     <string name="title_map">Map</string>
@@ -42,7 +42,7 @@
     <string name="workshop_name">Workshop Name</string>
     <string name="phone_number">Phone Number</string>
     <string name="address">Address</string>
-    <string name="label_city">Kota *</string>
+    <string name="label_city">Kota</string>
     <string name="label_province">Provinsi (opsional)</string>
     <string
         name="hint_opening_hours"
@@ -101,12 +101,10 @@
     <string
         name="register_subtitle"
     >Bergabung dengan komunitas Tambal Ban</string>
-    <string name="register_name_hint">Nama Lengkap</string>
-    <string name="register_email_hint">Email</string>
-    <string name="register_password_hint">Kata Sandi</string>
+    <string name="register_name_hint">John No</string>
+    <string name="register_email_hint">name@example.com</string>
+    <string name="register_password_hint">*************</string>
     <string name="register_button">Daftar Sekarang</string>
-    <string name="register_already_have_account">Sudah punya akun? </string>
-    <string name="register_login_link"> Masuk di sini</string>
     <string
         name="register_success"
     >Pendaftaran berhasil! Selamat bergabung.</string>
@@ -121,6 +119,9 @@
     <string
         name="register_error_password_short"
     >Kata sandi minimal 8 karakter</string>
+    <string name="register_name_label">Nama Lengkap</string>
+    <string name="register_email_label">Alamat Email</string>
+    <string name="register_password_label">Kata Sandi</string>
 
     <!-- Spec 018: Add Workshop -->
     <string name="screen_add_workshop">Tambah Tambal Ban</string>

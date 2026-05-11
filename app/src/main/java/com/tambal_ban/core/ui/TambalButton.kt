@@ -18,7 +18,7 @@ class TambalButton @JvmOverloads constructor(
 
     private val button: MaterialButton
     private val progressBar: CircularProgressIndicator
-    
+
     private var originalText: String? = null
     private var originalIcon: Int = -1
 
@@ -30,7 +30,8 @@ class TambalButton @JvmOverloads constructor(
         context.obtainStyledAttributes(attrs, R.styleable.TambalButton).apply {
             try {
                 // Text
-                originalText = getString(R.styleable.TambalButton_btnText) ?: getString(R.styleable.TambalButton_android_text)
+                originalText =
+                    getString(R.styleable.TambalButton_btnText) ?: getString(R.styleable.TambalButton_android_text)
                 button.text = originalText
 
                 // Icon
@@ -79,6 +80,7 @@ class TambalButton @JvmOverloads constructor(
                 button.setTextColor(context.getColor(R.color.white))
                 progressBar.setIndicatorColor(context.getColor(R.color.white))
             }
+
             2 -> { // Outlined
                 button.backgroundTintList = ColorStateList.valueOf(android.graphics.Color.TRANSPARENT)
                 button.setStrokeColorResource(R.color.primary)
@@ -86,8 +88,9 @@ class TambalButton @JvmOverloads constructor(
                 button.setTextColor(context.getColor(R.color.primary))
                 progressBar.setIndicatorColor(context.getColor(R.color.primary))
             }
+
             else -> { // Primary
-                button.backgroundTintList = ColorStateList.valueOf(context.getColor(R.color.colorPrimaryLogin))
+                button.backgroundTintList = ColorStateList.valueOf(context.getColor(R.color.primary))
                 button.setTextColor(context.getColor(R.color.white))
                 progressBar.setIndicatorColor(context.getColor(R.color.white))
             }
@@ -114,11 +117,11 @@ class TambalButton @JvmOverloads constructor(
         button.isEnabled = enabled
         this.alpha = if (enabled) 1.0f else 0.5f
     }
-    
+
     override fun setOnClickListener(l: OnClickListener?) {
         button.setOnClickListener(l)
     }
-    
+
     fun setText(text: String) {
         originalText = text
         button.text = text

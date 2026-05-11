@@ -71,14 +71,14 @@ class AddWorkshopActivity : BaseActivity() {
     }
 
     private fun setupFormWiring() {
-        binding.tilName.editText?.addTextChangedListener(createFieldWatcher("name"))
-        binding.tilAddress.editText?.addTextChangedListener(createFieldWatcher("address"))
-        binding.tilCity.editText?.addTextChangedListener(createFieldWatcher("city"))
-        binding.tilPhone.editText?.addTextChangedListener(createFieldWatcher("phone"))
-        binding.tilProvince.editText?.addTextChangedListener(createFieldWatcher("province"))
-        binding.tilOpeningHours.editText?.addTextChangedListener(createFieldWatcher("openingHours"))
-        binding.tilLat.editText?.addTextChangedListener(createFieldWatcher("lat"))
-        binding.tilLon.editText?.addTextChangedListener(createFieldWatcher("lon"))
+        binding.etName.addTextChangedListener(createFieldWatcher("name"))
+        binding.etAddress.addTextChangedListener(createFieldWatcher("address"))
+        binding.etCity.addTextChangedListener(createFieldWatcher("city"))
+        binding.etPhone.addTextChangedListener(createFieldWatcher("phone"))
+        binding.etProvince.addTextChangedListener(createFieldWatcher("province"))
+        binding.etOpeningHours.addTextChangedListener(createFieldWatcher("openingHours"))
+        binding.etLat.addTextChangedListener(createFieldWatcher("lat"))
+        binding.etLon.addTextChangedListener(createFieldWatcher("lon"))
     }
 
     private fun createFieldWatcher(fieldName: String): TextWatcher {
@@ -93,24 +93,23 @@ class AddWorkshopActivity : BaseActivity() {
 
     private fun observeViewModel() {
         viewModel.formState.observe(this) { formState ->
-            // Only update if value is different to avoid infinite loops with TextWatcher
-            val currentLat = binding.tilLat.editText?.text.toString()
+            val currentLat = binding.etLat.text
             val newLat = formState.lat.toString()
             if (currentLat != newLat) {
-                binding.tilLat.editText?.setText(newLat)
+                binding.etLat.setText(newLat)
             }
 
-            val currentLon = binding.tilLon.editText?.text.toString()
+            val currentLon = binding.etLon.text
             val newLon = formState.lon.toString()
             if (currentLon != newLon) {
-                binding.tilLon.editText?.setText(newLon)
+                binding.etLon.setText(newLon)
             }
 
-            binding.btnCurrentLocation.isEnabled = !formState.isLoadingLocation
+            binding.btnCurrentLocation.isEnabled(!formState.isLoadingLocation)
             if (formState.isLoadingLocation) {
-                binding.btnCurrentLocation.text = getString(R.string.getting_location)
+                binding.btnCurrentLocation.setText(getString(R.string.getting_location))
             } else {
-                binding.btnCurrentLocation.text = getString(R.string.btn_current_location)
+                binding.btnCurrentLocation.setText(getString(R.string.btn_current_location))
             }
 
             formState.locationError?.let { error ->
@@ -135,12 +134,12 @@ class AddWorkshopActivity : BaseActivity() {
         viewModel.formErrors.observe(this) { errors ->
             errors.forEach { (field, message) ->
                 when (field) {
-                    "name" -> binding.tilName.error = message
-                    "address" -> binding.tilAddress.error = message
-                    "city" -> binding.tilCity.error = message
-                    "phone" -> binding.tilPhone.error = message
-                    "lat" -> binding.tilLat.error = message
-                    "lon" -> binding.tilLon.error = message
+                    "name" -> binding.etName.setError(message)
+                    "address" -> binding.etAddress.setError(message)
+                    "city" -> binding.etCity.setError(message)
+                    "phone" -> binding.etPhone.setError(message)
+                    "lat" -> binding.etLat.setError(message)
+                    "lon" -> binding.etLon.setError(message)
                 }
             }
         }

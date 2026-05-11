@@ -14,7 +14,10 @@ captures/
 *.apk
 *.aar
 *.keystore
+*.jks
+*.pem
 !debug.keystore
+keystore.properties
 
 # Kotlin
 bin/

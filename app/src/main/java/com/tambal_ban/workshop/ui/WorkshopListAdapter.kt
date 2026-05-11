@@ -41,7 +41,7 @@ class WorkshopListAdapter(
         fun bind(workshop: Workshop) {
             binding.apply {
                 tvName.text = workshop.name
-                tvAddress.text = workshop.address ?: "Alamat tidak tersedia"
+                tvAddress.text = workshop.address ?: "-"
                 tvDistance.text = workshop.distance?.let { String.format("%.1f km", it) } ?: ""
                 tvRating.text = String.format("%.1f", workshop.rating)
                 tvRatingCount.text = "(${workshop.totalReviews})"

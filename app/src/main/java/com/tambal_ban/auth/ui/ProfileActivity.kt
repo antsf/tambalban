@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import coil.load
 import com.tambal_ban.R
 import com.tambal_ban.TambalBanApp
@@ -116,7 +117,14 @@ class ProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
         }
 
         binding.btnLogout.setOnClickListener {
-            viewModel.logout()
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Keluar")
+                .setMessage("Apakah Anda yakin ingin keluar?")
+                .setPositiveButton("Ya") { _, _ ->
+                    viewModel.logout()
+                }
+                .setNegativeButton("Batal", null)
+                .show()
         }
 
         binding.btnThemeToggle.setOnClickListener {

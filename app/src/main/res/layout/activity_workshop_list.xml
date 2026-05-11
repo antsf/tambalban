@@ -46,7 +46,7 @@
                 android:id="@+id/etSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Cari Tambal Ban..."
+                android:hint="Cari tambal ban..."
                 android:inputType="text"
                 android:imeOptions="actionSearch"
                 android:paddingVertical="12dp"
