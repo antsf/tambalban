@@ -1,17 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <!-- Brand Colors (Blue Violet Palette) -->
     <color name="primary">#8A2BE2</color>
     <color name="primary_container">#DDB8F5</color>
     <color name="on_primary">#FFFFFF</color>
     <color name="on_primary_container">#1A0A2E</color>
-    
-    <!-- Modern Login Refresh Palette -->
-    <color name="colorPrimaryLogin">#8A2BE2</color>
-    <color name="login_bg_start">#F3E8FF</color>
-    <color name="login_bg_end">#EDDBFF</color>
-    <color name="login_field_bg">#F5F5F5</color>
-    <color name="login_text_secondary">#757575</color>
+
+    <!-- Gradient & Field Backgrounds -->
+    <color name="gradient_start">#F3E8FF</color>
+    <color name="gradient_end">#EDDBFF</color>
+    <color name="field_bg">#F5F5F5</color>
 
     <!-- Map Refresh Palette -->
     <color name="map_teal_light">#E0F2F1</color>
@@ -24,15 +22,15 @@
     <color name="surface_container_low">#F3F4F5</color>
     <color name="surface_container_lowest">#FFFFFF</color>
     <color name="glass_overlay">#D9FFFFFF</color>
-    
+
     <!-- Text Colors (No Pure Black) -->
     <color name="on_surface">#191C1D</color>
     <color name="on_surface_variant">#454748</color>
-    
+
     <!-- Functional / tertiary -->
     <color name="tertiary_container">#D1E8D1</color>
     <color name="on_tertiary_container">#1A3E1A</color>
-    
+
     <!-- State Fallbacks -->
     <color name="primary_fixed_dim">#C2A0D8</color>
     <color name="outline_variant_ghost">#26000000</color>
@@ -45,7 +43,7 @@
     <color name="divider">#E0E0E0</color>
     <color name="text_secondary">#757575</color>
     <color name="primary_light">#E8CCF5</color>
-    
+
     <color name="background">@color/surface</color>
     <color name="card">@color/white</color>
     <color name="error">#B3261E</color>

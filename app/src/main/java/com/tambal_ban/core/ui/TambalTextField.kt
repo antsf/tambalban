@@ -2,6 +2,7 @@ package com.tambal_ban.core.ui
 
 import android.content.Context
 import android.text.InputType
+import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
@@ -61,6 +62,9 @@ class TambalTextField @JvmOverloads constructor(
                 textInputLayout.endIconMode = TextInputLayout.END_ICON_PASSWORD_TOGGLE
                 textInputLayout.setEndIconDrawable(R.drawable.selector_password_toggle)
             }
+            3 -> { // Phone
+                editText.inputType = InputType.TYPE_CLASS_PHONE
+            }
             else -> { // Text
                 editText.inputType = InputType.TYPE_CLASS_TEXT
             }
@@ -74,7 +78,11 @@ class TambalTextField @JvmOverloads constructor(
     fun setError(error: String?) {
         textInputLayout.error = error
     }
-    
+
+    fun addTextChangedListener(watcher: TextWatcher) {
+        editText.addTextChangedListener(watcher)
+    }
+
     val text: String get() = editText.text.toString()
 
     override fun setEnabled(enabled: Boolean) {
