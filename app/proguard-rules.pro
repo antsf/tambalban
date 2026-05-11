@@ -20,29 +20,27 @@
 -dontwarn javax.annotation.**
 -keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
 
-# Gson
--keepattributes Signature
--keepattributes *Annotation*
--dontwarn sun.misc.**
--keep class com.google.gson.examples.android.model.** { <fields>; }
--keep class * extends com.google.gson.TypeAdapter
--keep class * implements com.google.gson.TypeAdapterFactory
--keep class * implements com.google.gson.JsonSerializer
--keep class * implements com.google.gson.JsonDeserializer
--keepclassmembers,allowobfuscation class * {
-  @com.google.gson.annotations.SerializedName <fields>;
+# kotlinx-serialization
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.AnnotationsKt
+-keepclassmembers class kotlinx.serialization.json.** {
+    *** Companion;
 }
-
-# Room
--keep class * extends androidx.room.RoomDatabase
--keep @androidx.room.Entity class *
--dontwarn androidx.room.paging.**
+-keepclasseswithmembers class kotlinx.serialization.json.** {
+    kotlinx.serialization.KSerializer serializer(...);
+}
+-keep,includedescriptorclasses class com.tambal_ban.**$$serializer { *; }
+-keepclassmembers class com.tambal_ban.** {
+    *** Companion;
+}
+-keepclasseswithmembers class com.tambal_ban.** {
+    kotlinx.serialization.KSerializer serializer(...);
+}
 
 # OSMDroid
 -dontwarn org.osmdroid.**
 
 # Data classes
--keep class com.tambal_ban.data.model.** { *; }
--keep class com.tambal_ban.data.api.** { *; }
--keep class com.tambal_ban.database.entity.** { *; }
+-keep class com.tambal_ban.auth.data.** { *; }
+-keep class com.tambal_ban.workshop.data.** { *; }
 

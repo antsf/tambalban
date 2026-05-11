@@ -32,14 +32,20 @@
 
         <!-- Main Activity -->
         <activity
-            android:name=".map.ui.MainActivity"
+            android:name=".auth.ui.SplashActivity"
             android:exported="true"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.TambalBan">
+            android:theme="@style/Theme.TambalBan.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".map.ui.MainActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.TambalBan">
         </activity>
 
         <!-- Workshop Detail Activity -->

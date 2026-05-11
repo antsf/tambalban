@@ -53,7 +53,7 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
             ) {
                 enableMyLocation()
             } else {
-                Toast.makeText(this, "Izin lokasi diperlukan untuk mencari tambal ban terdekat", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.error_location_needed), Toast.LENGTH_SHORT).show()
             }
         }
 

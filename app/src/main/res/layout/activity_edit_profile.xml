@@ -1,11 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" ?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/surface">
+    android:background="@color/surface"
+>
 
 
     <com.google.android.material.appbar.AppBarLayout
@@ -14,7 +16,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+    >
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -23,10 +26,11 @@
             android:background="@color/surface"
             app:navigationIcon="@drawable/ic_arrow_back"
             app:navigationIconTint="@color/on_surface"
-            app:title="Edit Profil"
+            app:title="@string/action_edit_profile"
             app:titleCentered="true"
             app:titleTextColor="@color/on_surface"
-            app:titleTextAppearance="@style/TextAppearance.Guardian.TitleMedium"/>
+            app:titleTextAppearance="@style/TextAppearance.Guardian.TitleMedium"
+        />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -35,13 +39,15 @@
         android:layout_height="0dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-        app:layout_constraintBottom_toTopOf="@id/btnSave">
+        app:layout_constraintBottom_toTopOf="@id/btnSave"
+    >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="24dp"
+        >
 
 
             <com.tambal_ban.core.ui.AvatarView
@@ -51,60 +57,67 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="32dp"
                 app:avatarSize="80dp"
-                app:showEditButton="true" />
+                app:showEditButton="true"
+            />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="Nama Lengkap"
+                android:text="@string/name_label"
                 android:textColor="@color/on_surface_variant"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+            />
 
             <com.tambal_ban.core.ui.TambalTextField
                 android:id="@+id/etFullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:fieldHint="Masukkan nama lengkap"
-                app:fieldIcon="@drawable/ic_person" />
+                app:fieldHint="@string/hint_full_name"
+                app:fieldIcon="@drawable/ic_person"
+            />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Alamat Email"
+                android:text="@string/email_label"
                 android:textColor="@color/on_surface_variant"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+            />
 
             <com.tambal_ban.core.ui.TambalTextField
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:fieldHint="email@example.com"
+                app:fieldHint="@string/hint_email_example"
                 app:fieldIcon="@drawable/ic_mail"
-                app:fieldVariant="email" />
+                app:fieldVariant="email"
+            />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Nomor Telepon"
+                android:text="@string/label_phone"
                 android:textColor="@color/on_surface_variant"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+            />
 
             <com.tambal_ban.core.ui.TambalTextField
                 android:id="@+id/etPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:fieldHint="08123456789"
+                app:fieldHint="@string/hint_phone_example"
                 app:fieldIcon="@drawable/ic_phone"
-                android:inputType="phone" />
+                android:inputType="phone"
+            />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -114,10 +127,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
-        app:btnText="Simpan"
+        app:btnText="@string/action_save"
         app:btnVariant="primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

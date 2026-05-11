@@ -1,31 +1,14 @@
-<?xml version="1.0" encoding="utf-8" ?>
+`<?xml version="1.0" encoding="utf-8" ?>
 <resources>
-    <string name="app_name">TambalBan</string>
-
-    <!-- Map Screen -->
-    <string name="title_map">Map</string>
-    <string name="find_nearest">Find Nearest Tambal Ban</string>
-    <string name="emergency_mode">EMERGENCY</string>
-    <string name="loading_workshops">Loading workshops...</string>
-    <string name="no_workshops_found">No workshops found nearby</string>
-    <string name="my_location">My Location</string>
-    <string name="filter_radius">Filter by Radius</string>
-    <string name="radius_1km">1 km</string>
-    <string name="radius_3km">3 km</string>
-    <string name="radius_5km">5 km</string>
+    <string name="app_name">Tambal Ban</string>
 
     <!-- Workshop Detail -->
-    <string name="workshop_detail">Detail Tambal Ban</string>
     <string name="call">Telepon</string>
     <string name="navigate">Navigasi</string>
-    <string name="report">Laporkan</string>
-    <string name="distance">Jarak</string>
-    <string name="rating">Rating</string>
     <string name="reviews">ulasan</string>
     <string name="open_24h">Buka 24 Jam</string>
-    <string name="open_time">Buka: %s</string>
-    <string name="close_time">Tutup: %s</string>
-    <string name="no_rating">Belum ada rating</string>
+    <string name="address">Address</string>
+    <string name="phone_number">Phone Number</string>
 
     <!-- Workshop Detail Refresh -->
     <string name="label_full_address">ALAMAT LENGKAP</string>
@@ -33,80 +16,35 @@
     <string name="label_phone_number">NOMOR TELEPON</string>
     <string name="label_business_hours">JAM OPERASIONAL</string>
     <string name="label_opening_hours">Jam Buka</string>
-    <string name="label_total_reviews">ulasan</string>
     <string name="status_open_now">BUKA SEKARANG</string>
-    <string name="status_closed">TUTUP</string>
 
     <!-- Add Workshop -->
-    <string name="add_workshop">Add Workshop</string>
-    <string name="workshop_name">Workshop Name</string>
-    <string name="phone_number">Phone Number</string>
-    <string name="address">Address</string>
-    <string name="label_city">Kota *</string>
+    <string name="label_city">Kota</string>
     <string name="label_province">Provinsi (opsional)</string>
-    <string
-        name="hint_opening_hours"
-    >Contoh: Mo-Fr 08:00-17:00 atau 24/7</string>
+    <string name="hint_opening_hours">Contoh: 08:00-17:00 atau 24/7</string>
     <string name="btn_add_photo">Tambah Foto</string>
     <string name="label_photo_optional">Foto (opsional)</string>
     <string
         name="msg_submission_pending"
     >Terkirim, sedang ditinjau admin</string>
-    <string name="select_location">Select Location on Map</string>
-    <string name="latitude">Latitude</string>
-    <string name="longitude">Longitude</string>
-    <string name="submit">Submit</string>
-    <string name="cancel">Cancel</string>
-    <string name="submission_success">Workshop submitted successfully!</string>
     <string name="submission_failed">Failed to submit workshop</string>
-    <string
-        name="fill_required_fields"
-    >Please fill in all required fields</string>
+    <string name="success_workshop_submitted">Tambal Ban berhasil ditambahkan!</string>
 
     <!-- Location -->
-    <string
-        name="location_permission_required"
-    >Location permission is required to find nearby workshops</string>
-    <string
-        name="location_permission_denied"
-    >Location permission denied. Please enable it in settings.</string>
-    <string name="enable_location">Enable Location</string>
     <string name="getting_location">Getting your location...</string>
-    <string name="location_unavailable">Unable to get your location</string>
-
-    <!-- Network -->
-    <string
-        name="network_error"
-    >Network error. Please check your connection.</string>
-    <string name="offline_mode">You are offline. Showing cached data.</string>
-    <string name="retry">Retry</string>
-
-    <!-- Emergency Mode -->
-    <string name="emergency_closest">Closest Workshop</string>
-    <string name="emergency_no_workshop">No workshop found within 3km</string>
-    <string name="calling">Calling...</string>
-    <string name="opening_navigation">Opening navigation...</string>
-
-    <!-- Ads -->
-    <string name="advertisement">Advertisement</string>
 
     <!-- General -->
-    <string name="ok">OK</string>
-    <string name="error">Error</string>
     <string name="km">km</string>
-    <string name="m">m</string>
 
     <!-- Registration -->
     <string name="register_title">Daftar Akun</string>
     <string
         name="register_subtitle"
     >Bergabung dengan komunitas Tambal Ban</string>
-    <string name="register_name_hint">Nama Lengkap</string>
-    <string name="register_email_hint">Email</string>
-    <string name="register_password_hint">Kata Sandi</string>
+    <string name="register_name_hint">John No</string>
+    <string name="register_email_hint">name@example.com</string>
+    <string name="register_password_hint">*************</string>
     <string name="register_button">Daftar Sekarang</string>
-    <string name="register_already_have_account">Sudah punya akun? </string>
-    <string name="register_login_link"> Masuk di sini</string>
     <string
         name="register_success"
     >Pendaftaran berhasil! Selamat bergabung.</string>
@@ -118,9 +56,9 @@
     <string
         name="register_error_password_required"
     >Kata sandi wajib diisi</string>
-    <string
-        name="register_error_password_short"
-    >Kata sandi minimal 8 karakter</string>
+    <string name="name_label">Nama Lengkap</string>
+    <string name="email_label">Alamat Email</string>
+    <string name="password_label">Kata Sandi</string>
 
     <!-- Spec 018: Add Workshop -->
     <string name="screen_add_workshop">Tambah Tambal Ban</string>
@@ -132,4 +70,106 @@
     <string name="btn_cancel">Batal</string>
     <string name="hint_latitude">Latitude</string>
     <string name="hint_longitude">Longitude</string>
+
+    <!-- Login Screen -->
+    <string name="title_login">Masuk ke Akun Anda</string>
+    <string
+        name="login_subtitle"
+    >Silakan masukkan detail Anda untuk masuk</string>
+    <string
+        name="info_forgot_password"
+    >Fitur lupa kata sandi akan segera hadir</string>
+    <string name="welcome_back">Selamat datang kembali!</string>
+    <string name="error_auth_failed">Autentikasi gagal</string>
+    <string
+        name="login_error_password_short"
+    >Kata sandi minimal 6 karakter</string>
+
+    <!-- Register Screen -->
+    <string name="register_error_general">Pendaftaran gagal</string>
+    <string name="action_register">Daftar</string>
+    <string name="label_login_prompt">Masuk di sini</string>
+
+    <!-- Profile Screen -->
+    <string name="section_account_settings">PENGATURAN AKUN</string>
+    <string name="action_edit_profile">Edit Profil</string>
+    <string name="section_display">TAMPILAN</string>
+    <string name="setting_dark_mode">Tema Gelap</string>
+    <string name="section_feedback">UMPAN BALIK</string>
+    <string name="action_rate_app">Beri Rating</string>
+    <string name="action_share_app">Bagikan Aplikasi</string>
+    <string name="dialog_logout_title">Keluar</string>
+    <string
+        name="dialog_logout_message"
+    >Apakah Anda yakin ingin keluar?</string>
+    <string name="dialog_confirm">Ya</string>
+    <string name="dialog_cancel">Batal</string>
+
+    <!-- Edit Profile Screen -->
+    <string name="error_name_required">Nama tidak boleh kosong</string>
+    <string name="error_email_invalid">Masukkan email yang valid</string>
+    <string name="success_profile_updated">Profil berhasil diperbarui</string>
+
+    <!-- Camera / Image Picker -->
+    <string name="dialog_choose_image_title">Pilih Sumber Gambar</string>
+    <string name="option_camera">Kamera</string>
+    <string name="option_gallery">Galeri</string>
+    <string name="error_camera_required">Izin kamera diperlukan</string>
+
+    <!-- Main Map Screen -->
+    <string name="title_nearby_workshops">Tambal Ban Terdekat</string>
+    <string name="action_see_all">Lihat Semua</string>
+    <string
+        name="error_location_needed"
+    >Izin lokasi diperlukan untuk mencari tambal ban terdekat</string>
+
+    <!-- Workshop List -->
+    <string
+        name="empty_no_workshop_around"
+    >Tidak ada Tambal Ban ditemukan di sekitar</string>
+
+    <!-- Workshop Detail -->
+    <string name="error_phone_unavailable">Nomor telepon tidak tersedia</string>
+    <string name="success_review_sent">Ulasan terkirim!</string>
+    <string name="error_review_failed">Gagal mengirim ulasan</string>
+
+    <!-- Workshop Card / List Item -->
+    <string name="status_open">Open</string>
+    <string name="status_open_now_uppercase">OPEN NOW</string>
+    <string name="label_mobile_repair">MOBILE REPAIR</string>
+    <string name="label_km">km</string>
+
+    <!-- Error / Empty States -->
+    <string name="error_connection_lost">Connection Lost</string>
+    <string name="action_retry_uppercase">RETRY</string>
+    <string name="empty_no_workshop">Tidak ada tambal ban ditemukan</string>
+    <string name="error_load_failed">Gagal memuat data</string>
+    <string name="action_try_again">Coba Lagi</string>
+    <string name="empty_no_help">No help found</string>
+    <string name="action_track_progress">TRACK PROGRESS</string>
+
+    <!-- Toolbar / Screen Titles -->
+    <string name="title_profile">Profil</string>
+
+    <!-- Form Hints -->
+    <string name="hint_full_name">Masukkan nama lengkap</string>
+    <string name="hint_email_example">email@example.com</string>
+    <string name="hint_phone_example">08123456789</string>
+
+    <!-- Buttons -->
+    <string name="action_save">Simpan</string>
+
+    <!-- Subtitle / Helper Text -->
+    <string
+        name="error_connection_subtitle"
+    >We couldn\'t reach the concierge. Please check your signal.</string>
+    <string
+        name="empty_search_subtitle"
+    >Coba gunakan kata kunci lain atau cari di area yang berbeda.</string>
+    <string
+        name="error_load_subtitle"
+    >Periksa koneksi internet Anda dan coba lagi.</string>
+    <string
+        name="empty_help_subtitle"
+    >Try expanding your search radius.</string>
 </resources>
