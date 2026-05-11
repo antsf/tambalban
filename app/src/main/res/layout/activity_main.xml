@@ -73,7 +73,7 @@
                         android:id="@+id/tvSheetTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tambal Ban Terdekat"
+                        android:text="@string/title_nearby_workshops"
                         android:textColor="@color/on_surface"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -85,7 +85,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:text="Lihat Semua"
+                        android:text="@string/action_see_all"
                         android:textSize="14sp"
                         android:textColor="@color/primary"
                     />

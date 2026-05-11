@@ -67,7 +67,7 @@ class RegisterActivity : com.tambal_ban.core.ui.BaseActivity() {
                 startActivity(intent)
             } else {
                 val error = result.exceptionOrNull()
-                val message = error?.let { AuthErrorMapper.map(it) } ?: "Pendaftaran gagal"
+                val message = error?.let { AuthErrorMapper.map(it) } ?: getString(com.tambal_ban.R.string.register_error_general)
                 
                 // Show error message
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()

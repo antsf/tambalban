@@ -49,7 +49,7 @@ class WorkshopDetailActivity : BaseActivity() {
             viewModel.uiState.value?.phoneNumber?.let { phone ->
                 IntentUtils.dialPhoneNumber(this, phone)
             } ?: run {
-                Toast.makeText(this, "Nomor telepon tidak tersedia", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.error_phone_unavailable), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -94,9 +94,9 @@ class WorkshopDetailActivity : BaseActivity() {
 
         viewModel.reviewSubmissionResult.observe(this) { result ->
             if (result.isSuccess) {
-                Toast.makeText(this, "Ulasan terkirim!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.success_review_sent), Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Gagal mengirim ulasan", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.error_review_failed), Toast.LENGTH_SHORT).show()
             }
         }
     }

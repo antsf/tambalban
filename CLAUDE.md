@@ -121,3 +121,16 @@ Next: BUILD tasks.md phase by phase
 
 Tech stack, structure, patterns: `.specify/context/stack.md`
 <!-- SPECKIT END -->
+
+## Pre-Flight Checklist (sebelum mulai task apa pun)
+
+1. **Branch check** — sudah di branch yang benar? (`git branch`)
+2. **Baca spec** — sudah baca `specs/<feature>/spec.md` dan `tasks.md`?
+3. **Scope declaration** — tulis: `SCOPE: Will touch: ... Won't touch: ... Reason: ...`
+4. **Compile check baseline** — `./gradlew compileDebugKotlin` passing sebelum mulai?
+5. **Cari existing code** — udah cek file serupa untuk ikutin pola yang ada?
+6. **Library check** — yakin method/API yang mau dipakai tersedia di versi library yg digunakan?
+7. **Strings** — semua teks user-visible sudah masuk `strings.xml` dulu?
+8. **Abstraction boundary** — data cuma dari Repository, bukan langsung SupabaseService/Activity
+9. **No `!!`** — pakai `?.` atau `?:`
+10. **Build verify** — `./gradlew compileDebugKotlin` passing setelah selesai

@@ -176,7 +176,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:inputType="numberDecimal"
+                android:inputType="numberSigned|numberDecimal"
                 app:fieldHint="@string/hint_latitude"
             />
 
@@ -196,7 +196,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:inputType="numberDecimal"
+                android:inputType="numberSigned|numberDecimal"
                 app:fieldHint="@string/hint_longitude"
             />
 

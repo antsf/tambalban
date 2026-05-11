@@ -118,12 +118,12 @@ class ProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
 
         binding.btnLogout.setOnClickListener {
             MaterialAlertDialogBuilder(this)
-                .setTitle("Keluar")
-                .setMessage("Apakah Anda yakin ingin keluar?")
-                .setPositiveButton("Ya") { _, _ ->
+                .setTitle(getString(R.string.dialog_logout_title))
+                .setMessage(getString(R.string.dialog_logout_message))
+                .setPositiveButton(getString(R.string.dialog_confirm)) { _, _ ->
                     viewModel.logout()
                 }
-                .setNegativeButton("Batal", null)
+                .setNegativeButton(getString(R.string.dialog_cancel), null)
                 .show()
         }
 

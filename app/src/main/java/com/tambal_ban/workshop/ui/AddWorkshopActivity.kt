@@ -41,7 +41,7 @@ class AddWorkshopActivity : BaseActivity() {
         if (granted) {
             launchCamera()
         } else {
-            Toast.makeText(this, "Izin kamera diperlukan", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.error_camera_required), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -91,18 +91,16 @@ class AddWorkshopActivity : BaseActivity() {
         }
     }
 
+    private var wasLoadingLocation = false
+
     private fun observeViewModel() {
         viewModel.formState.observe(this) { formState ->
-            val currentLat = binding.etLat.text
-            val newLat = formState.lat.toString()
-            if (currentLat != newLat) {
-                binding.etLat.setText(newLat)
-            }
+            val isLocationUpdate = wasLoadingLocation && !formState.isLoadingLocation
+            wasLoadingLocation = formState.isLoadingLocation
 
-            val currentLon = binding.etLon.text
-            val newLon = formState.lon.toString()
-            if (currentLon != newLon) {
-                binding.etLon.setText(newLon)
+            if (isLocationUpdate && formState.lat != 0.0 && formState.lon != 0.0) {
+                binding.etLat.setText(formState.lat.toString())
+                binding.etLon.setText(formState.lon.toString())
             }
 
             binding.btnCurrentLocation.isEnabled(!formState.isLoadingLocation)
@@ -123,7 +121,7 @@ class AddWorkshopActivity : BaseActivity() {
 
         viewModel.submissionResult.observe(this) { result ->
             result.onSuccess {
-                Snackbar.make(binding.root, R.string.msg_submission_pending, Snackbar.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.success_workshop_submitted), Toast.LENGTH_SHORT).show()
                 finish()
             }
             result.onFailure { error ->

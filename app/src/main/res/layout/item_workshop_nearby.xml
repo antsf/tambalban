@@ -111,7 +111,7 @@
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Open"
+                android:text="@string/status_open"
                 android:textAppearance="@style/TextAppearance.Guardian.LabelMedium"
                 android:textColor="@color/success"
             />

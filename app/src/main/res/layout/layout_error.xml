@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Connection Lost"
+        android:text="@string/error_connection_lost"
         android:textAppearance="?attr/textAppearanceHeadlineLarge"
         android:textColor="@color/on_surface"
         android:gravity="center"/>
@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="We couldn't reach the concierge. Please check your signal."
+        android:text="@string/error_connection_subtitle"
         android:textAppearance="?attr/textAppearanceBodyLarge"
         android:textColor="@color/on_surface_variant"
         android:gravity="center"/>
@@ -38,6 +38,6 @@
         android:layout_width="wrap_content"
         android:layout_height="56dp"
         android:layout_marginTop="32dp"
-        android:text="RETRY" />
+        android:text="@string/action_retry_uppercase" />
 
 </LinearLayout>

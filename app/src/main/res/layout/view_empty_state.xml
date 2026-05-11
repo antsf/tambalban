@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Tidak ada tambal ban ditemukan"
+        android:text="@string/empty_no_workshop"
         android:textColor="@color/on_surface_variant"
         android:textSize="14sp"
         android:gravity="center" />
@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Coba gunakan kata kunci lain atau cari di area yang berbeda."
+        android:text="@string/empty_search_subtitle"
         android:textColor="@color/on_surface_variant"
         android:textSize="12sp"
         android:alpha="0.7"

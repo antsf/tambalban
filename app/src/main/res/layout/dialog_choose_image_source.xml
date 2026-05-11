@@ -19,7 +19,7 @@
         style="@style/TextAppearance.Guardian.TitleMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pilih Sumber Gambar"
+        android:text="@string/dialog_choose_image_title"
         android:textColor="@color/on_surface" />
 
     <LinearLayout
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Kamera" />
+            android:text="@string/option_camera" />
     </LinearLayout>
 
     <LinearLayout
@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Galeri" />
+            android:text="@string/option_gallery" />
     </LinearLayout>
 
 </LinearLayout>

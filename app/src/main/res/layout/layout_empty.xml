@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No help found"
+        android:text="@string/empty_no_help"
         android:textAppearance="?attr/textAppearanceDisplayLarge"
         android:textColor="@color/primary"
         android:alpha="0.3"
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Try expanding your search radius."
+        android:text="@string/empty_help_subtitle"
         android:textAppearance="?attr/textAppearanceBodyLarge"
         android:textColor="@color/on_surface_variant"
         android:gravity="center"/>
