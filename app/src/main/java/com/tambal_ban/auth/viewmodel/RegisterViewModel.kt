@@ -53,7 +53,7 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun isEmailValid(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        return Regex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$").matches(email)
     }
 
     fun register(name: String, email: String, password: String) {

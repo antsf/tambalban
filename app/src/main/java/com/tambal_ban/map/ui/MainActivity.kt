@@ -87,6 +87,10 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
                 }
             }
         }
+
+        // Load banner ad
+        val adMobManager = (application as com.tambal_ban.TambalBanApp).adMobManager
+        adMobManager.loadBannerAd(binding.adContainer)
     }
 
     private fun setupSearch() {
@@ -223,14 +227,20 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
 
         viewModel.userProfile.observe(this) { profile ->
             if (profile?.avatarUrl != null) {
+                binding.searchOverlay.progressSearchAvatar.visibility = View.VISIBLE
                 binding.searchOverlay.ivUserAvatar.load(profile.avatarUrl) {
                     crossfade(true)
                     placeholder(R.drawable.ic_avatar)
                     error(R.drawable.ic_avatar)
                     transformations(CircleCropTransformation())
+                    listener(
+                        onSuccess = { _, _ -> binding.searchOverlay.progressSearchAvatar.visibility = View.GONE },
+                        onError = { _, _ -> binding.searchOverlay.progressSearchAvatar.visibility = View.GONE }
+                    )
                 }
             } else {
                 binding.searchOverlay.ivUserAvatar.setImageResource(R.drawable.ic_avatar)
+                binding.searchOverlay.progressSearchAvatar.visibility = View.GONE
             }
         }
     }
@@ -372,7 +382,9 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
         super.onResume()
         binding.mapView.onResume()
         viewModel.fetchUserProfile()
+        val adMobManager = (application as com.tambal_ban.TambalBanApp).adMobManager
+        adMobManager.resumeBannerAd()
     }
-    override fun onPause() { super.onPause(); binding.mapView.onPause() }
-    override fun onDestroy() { super.onDestroy(); viewModel.stopLocationUpdates() }
+    override fun onPause() { super.onPause(); binding.mapView.onPause(); (application as com.tambal_ban.TambalBanApp).adMobManager.pauseBannerAd() }
+    override fun onDestroy() { super.onDestroy(); viewModel.stopLocationUpdates(); (application as com.tambal_ban.TambalBanApp).adMobManager.destroyBannerAd() }
 }

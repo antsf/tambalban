@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:background="@color/white">
+                android:background="@color/surface_container_lowest">
 
                 <!-- Drag Handle -->
                 <View
@@ -135,6 +135,13 @@
 
             </FrameLayout>
 
+            <!-- Banner Ad Container -->
+            <FrameLayout
+                android:id="@+id/adContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
@@ -150,7 +157,7 @@
         app:layout_anchor="@id/bottomSheet"
         app:layout_anchorGravity="top|end"
         android:translationY="-40dp"
-        app:backgroundTint="@color/white"
+        app:backgroundTint="@color/surface_container_lowest"
         app:tint="@color/primary"
         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
         app:borderWidth="0dp"

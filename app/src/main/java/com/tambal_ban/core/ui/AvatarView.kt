@@ -46,9 +46,19 @@ class AvatarView @JvmOverloads constructor(
     }
 
     fun loadAvatar(url: String?) {
+        if (url.isNullOrEmpty()) {
+            ivAvatar.setImageResource(R.drawable.ic_person)
+            progressAvatar.visibility = View.GONE
+            return
+        }
+        progressAvatar.visibility = View.VISIBLE
         ivAvatar.load(url) {
             placeholder(R.drawable.ic_person)
             error(R.drawable.ic_person)
+            listener(
+                onSuccess = { _, _ -> progressAvatar.visibility = View.GONE },
+                onError = { _, _ -> progressAvatar.visibility = View.GONE }
+            )
         }
     }
 

@@ -41,18 +41,35 @@
                 android:textColorHint="@color/on_surface_variant"
                 android:textSize="16sp" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/ivUserAvatar"
+            <FrameLayout
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:layout_marginStart="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_avatar"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp" />
+                android:layout_marginStart="12dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ivUserAvatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_avatar"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                    app:strokeColor="@color/divider"
+                    app:strokeWidth="1dp" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/progressSearchAvatar"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:indeterminate="true"
+                    android:visibility="gone"
+                    app:indicatorColor="@color/primary"
+                    app:indicatorSize="16dp"
+                    app:trackThickness="1dp" />
+
+            </FrameLayout>
 
         </LinearLayout>
 

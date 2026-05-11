@@ -26,6 +26,7 @@ class WorkshopDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityWorkshopDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        applySafeArea(binding.root)
 
         workshopId = intent.getStringExtra(Constants.EXTRA_WORKSHOP_ID)
 
@@ -78,7 +79,11 @@ class WorkshopDetailActivity : BaseActivity() {
         }
 
         viewModel.reviews.observe(this) { reviews ->
-            reviewAdapter.submitList(reviews)
+            val list = reviews ?: emptyList()
+            reviewAdapter.submitList(list)
+            val isEmpty = list.isEmpty()
+            binding.tvReviewsSection.visibility = if (isEmpty) View.GONE else View.VISIBLE
+            binding.rvReviews.visibility = if (isEmpty) View.GONE else View.VISIBLE
         }
 
         viewModel.error.observe(this) { error ->
@@ -98,7 +103,7 @@ class WorkshopDetailActivity : BaseActivity() {
 
     private fun bindUIState(uiState: WorkshopDetailUIState) {
         binding.apply {
-            collapsingToolbar.title = getString(R.string.workshop_detail)
+            collapsingToolbar.title = uiState.name
             tvWorkshopName.text = uiState.name
             tvFullAddress.text = uiState.fullAddress
 
