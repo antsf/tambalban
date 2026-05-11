@@ -13,8 +13,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - App launcher icons for all densities
 - AdMob banner ads on MainActivity (home screen) and WorkshopListActivity
 - `.opencode/commands/` with /brief, /build, /commit, /test commands
+- AdMob native ads in WorkshopListActivity: injected every 5 workshop items, memory-safe destroy in onDestroy
 
 ### Changed
+- `ad_native.xml`: restyled to match workshop card using MaterialCardView, theme colors, and "Iklan" label
+- `activity_workshop_list.xml`: RecyclerView constrained above adContainer to fix banner overlap
+- `WorkshopListAdapter`: refactored to multi-view-type adapter supporting workshop and native ad slots
+- `WorkshopListActivity`: wires native ad loading per slot on workshop list update, destroys ads on destroy
 - Primary color from orchid `#D672E1` to blue violet `#8A2BE2` with adjusted palette
 - Theme default from light-only to follow system (AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 - Dark mode resources: `values-night/colors.xml` and `values-night/themes.xml`

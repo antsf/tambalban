@@ -23,12 +23,15 @@ class WorkshopListActivity : BaseActivity() {
     private lateinit var binding: ActivityWorkshopListBinding
     private val viewModel: WorkshopListViewModel by viewModels()
     private lateinit var adapter: WorkshopListAdapter
+    private lateinit var adMobManager: com.tambal_ban.core.ads.AdMobManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWorkshopListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         applySafeArea(binding.root)
+
+        adMobManager = (application as com.tambal_ban.TambalBanApp).adMobManager
 
         setupToolbar()
         setupSearch()
@@ -39,7 +42,6 @@ class WorkshopListActivity : BaseActivity() {
         viewModel.fetchAllWorkshops()
 
         // Load banner ad
-        val adMobManager = (application as com.tambal_ban.TambalBanApp).adMobManager
         adMobManager.loadBannerAd(binding.adContainer)
     }
 
@@ -75,12 +77,15 @@ class WorkshopListActivity : BaseActivity() {
     }
 
     private fun setupRecyclerView() {
-        adapter = WorkshopListAdapter { workshop ->
-            val intent = Intent(this, WorkshopDetailActivity::class.java).apply {
-                putExtra(com.tambal_ban.core.utils.Constants.EXTRA_WORKSHOP_ID, workshop.id)
-            }
-            startActivity(intent)
-        }
+        adapter = WorkshopListAdapter(
+            onWorkshopClick = { workshop ->
+                val intent = Intent(this, WorkshopDetailActivity::class.java).apply {
+                    putExtra(com.tambal_ban.core.utils.Constants.EXTRA_WORKSHOP_ID, workshop.id)
+                }
+                startActivity(intent)
+            },
+            adMobManager = adMobManager
+        )
         binding.rvWorkshops.adapter = adapter
 
         binding.rvWorkshops.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -107,6 +112,12 @@ class WorkshopListActivity : BaseActivity() {
                 binding.rvWorkshops.visibility = View.VISIBLE
                 binding.emptyState.visibility = View.GONE
                 adapter.submitList(workshops)
+                val adSlotCount = workshops.size / 5
+                for (slotIndex in 0 until adSlotCount) {
+                    adMobManager.loadNativeAd { nativeAd ->
+                        adapter.updateNativeAd(slotIndex, nativeAd)
+                    }
+                }
             }
         }
 
@@ -135,16 +146,17 @@ class WorkshopListActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        (application as com.tambal_ban.TambalBanApp).adMobManager.resumeBannerAd()
+        adMobManager.resumeBannerAd()
     }
 
     override fun onPause() {
         super.onPause()
-        (application as com.tambal_ban.TambalBanApp).adMobManager.pauseBannerAd()
+        adMobManager.pauseBannerAd()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        (application as com.tambal_ban.TambalBanApp).adMobManager.destroyBannerAd()
+        adapter.destroyNativeAds()
+        adMobManager.destroyBannerAd()
     }
 }

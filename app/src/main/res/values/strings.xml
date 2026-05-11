@@ -89,6 +89,7 @@
 
     <!-- Ads -->
     <string name="advertisement">Advertisement</string>
+    <string name="ad_label">Iklan</string>
 
     <!-- General -->
     <string name="ok">OK</string>
