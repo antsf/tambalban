@@ -8,6 +8,7 @@ import android.util.Log
 import com.tambal_ban.core.ads.AdMobManager
 import com.tambal_ban.core.network.NetworkModule
 import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.update.InAppUpdateManager
 import com.tambal_ban.workshop.data.database.WorkshopDbHelper
 import com.tambal_ban.auth.data.AuthRepository
 import com.tambal_ban.auth.data.ProfileRepository
@@ -42,6 +43,9 @@ class TambalBanApp : Application() {
         private set
 
     lateinit var supabaseService: SupabaseService
+        private set
+
+    lateinit var inAppUpdateManager: InAppUpdateManager
         private set
 
     override fun onCreate() {
@@ -81,6 +85,9 @@ class TambalBanApp : Application() {
         // T031: Initialize AdMob but don't load ads immediately
         adMobManager = AdMobManager(this)
         adMobManager.initialize()
+
+        // 021: Initialize In-App Update Manager
+        inAppUpdateManager = InAppUpdateManager(authPrefs)
     }
 
     /** T029: Global low-memory handling for 2GB RAM devices */

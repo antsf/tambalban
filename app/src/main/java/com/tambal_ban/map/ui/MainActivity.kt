@@ -378,12 +378,13 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
         return super.dispatchTouchEvent(event)
     }
 
-    override fun onResume() { 
+    override fun onResume() {
         super.onResume()
         binding.mapView.onResume()
         viewModel.fetchUserProfile()
-        val adMobManager = (application as com.tambal_ban.TambalBanApp).adMobManager
-        adMobManager.resumeBannerAd()
+        val app = application as com.tambal_ban.TambalBanApp
+        app.adMobManager.resumeBannerAd()
+        app.inAppUpdateManager.checkForUpdate(this)
     }
     override fun onPause() { super.onPause(); binding.mapView.onPause(); (application as com.tambal_ban.TambalBanApp).adMobManager.pauseBannerAd() }
     override fun onDestroy() { super.onDestroy(); viewModel.stopLocationUpdates(); (application as com.tambal_ban.TambalBanApp).adMobManager.destroyBannerAd() }
