@@ -1,11 +1,11 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
 }
-
-import java.util.Properties
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 val keystoreProperties = Properties()
@@ -46,8 +46,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -99,6 +99,9 @@ dependencies {
     // Google Play Services - Location & Ads
     implementation("com.google.android.gms:play-services-location:21.1.0")
     implementation("com.google.android.gms:play-services-ads:23.0.0")
+
+    // Play In-App Update
+    implementation("com.google.android.play:app-update-ktx:2.1.0")
 
     // Coroutines (For async networking/db work)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
