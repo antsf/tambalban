@@ -21,6 +21,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.tambal_ban.R
+import com.tambal_ban.core.utils.AnalyticsHelper
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.tambal_ban.workshop.data.Workshop
@@ -127,7 +128,9 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
                 
                 binding.searchOverlay.etSearch.clearFocus()
                 binding.searchOverlay.suggestionsCard.visibility = View.GONE
-                viewModel.searchWorkshops(v.text.toString())
+                val query = v.text.toString()
+                AnalyticsHelper.logSearch(query)
+                viewModel.searchWorkshops(query)
                 true
             } else {
                 false

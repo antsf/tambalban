@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.tambal_ban.TambalBanApp
+import com.tambal_ban.core.utils.AnalyticsHelper
 import com.tambal_ban.workshop.data.Review
 import com.tambal_ban.workshop.data.Workshop
 import com.tambal_ban.auth.data.AuthRepository
@@ -109,6 +110,7 @@ class WorkshopDetailViewModel(application: Application) : AndroidViewModel(appli
             val result = reviewRepository.submitReview(review)
             _reviewSubmissionResult.value = result
             if (result.isSuccess) {
+                AnalyticsHelper.logEvent("review_submit")
                 loadWorkshop(workshopId)
             }
             _isLoading.value = false

@@ -9,6 +9,7 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.util.Log
 import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.utils.CrashlyticsHelper
 import com.tambal_ban.core.utils.GeoUtils
 import com.tambal_ban.core.utils.SupabaseConfig
 import com.tambal_ban.workshop.data.database.WorkshopDbHelper
@@ -48,6 +49,7 @@ class WorkshopRepository(
                         }
                     } catch (e: Exception) {
                         Log.e(TAG, "Error fetching workshops", e)
+                        CrashlyticsHelper.logNonFatal(e, "getWorkshopsInBounds failed")
                     }
                 }
 
@@ -97,6 +99,7 @@ class WorkshopRepository(
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error fetching nearby workshops", e)
+                    CrashlyticsHelper.logNonFatal(e, "getNearbyWorkshops failed")
                 }
             }
             return@withContext findNearestWorkshops(lat, lon, radiusKm.toInt())
@@ -148,6 +151,7 @@ class WorkshopRepository(
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error fetching all workshops", e)
+                    CrashlyticsHelper.logNonFatal(e, "getAllWorkshops failed")
                 }
             }
 
@@ -201,6 +205,7 @@ class WorkshopRepository(
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error searching workshops", e)
+                    CrashlyticsHelper.logNonFatal(e, "searchWorkshops failed")
                 }
             }
 
@@ -230,6 +235,7 @@ class WorkshopRepository(
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error fetching workshop by ID", e)
+                    CrashlyticsHelper.logNonFatal(e, "getWorkshopById failed")
                 }
 
                 val db = dbHelper.readableDatabase
@@ -271,6 +277,7 @@ class WorkshopRepository(
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error adding workshop", e)
+            CrashlyticsHelper.logNonFatal(e, "addWorkshop failed")
             Result.failure(e)
         }
     }
