@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.tambal_ban.R
 import com.tambal_ban.core.ui.BaseActivity
+import com.tambal_ban.core.utils.AnalyticsHelper
 import com.tambal_ban.core.utils.Constants
 import com.tambal_ban.core.utils.IntentUtils
 import com.tambal_ban.databinding.ActivityWorkshopDetailBinding
@@ -47,6 +48,7 @@ class WorkshopDetailActivity : BaseActivity() {
     private fun setupListeners() {
         binding.btnCall.setOnClickListener {
             viewModel.uiState.value?.phoneNumber?.let { phone ->
+                AnalyticsHelper.logEvent("call_workshop")
                 IntentUtils.dialPhoneNumber(this, phone)
             } ?: run {
                 Toast.makeText(this, getString(R.string.error_phone_unavailable), Toast.LENGTH_SHORT).show()
@@ -55,6 +57,7 @@ class WorkshopDetailActivity : BaseActivity() {
 
         binding.btnNavigate.setOnClickListener {
             viewModel.workshop.value?.let { workshop ->
+                AnalyticsHelper.logEvent("navigate_to_workshop")
                 IntentUtils.openNavigation(
                     this,
                     workshop.lat,

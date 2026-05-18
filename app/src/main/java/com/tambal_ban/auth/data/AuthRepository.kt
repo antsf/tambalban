@@ -4,6 +4,7 @@ import com.tambal_ban.auth.viewmodel.*
 import com.tambal_ban.auth.data.* 
 
 import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.utils.CrashlyticsHelper
 import com.tambal_ban.workshop.*
 import com.tambal_ban.core.utils.AuthPrefs
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +33,7 @@ class AuthRepository(
                     Result.failure(Exception("Login failed: ${response.message()}"))
                 }
             } catch (e: Exception) {
+                CrashlyticsHelper.logNonFatal(e, "login failed")
                 Result.failure(e)
             }
         }
@@ -52,6 +54,7 @@ class AuthRepository(
                     Result.failure(Exception("Registration failed: ${response.message()}"))
                 }
             } catch (e: Exception) {
+                CrashlyticsHelper.logNonFatal(e, "register failed")
                 Result.failure(e)
             }
         }

@@ -8,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.tambal_ban.TambalBanApp
+import com.tambal_ban.core.utils.AnalyticsHelper
 
 /**
  * Base activity to handle Edge-to-Edge and Safe Area (Window Insets).
@@ -18,7 +19,10 @@ abstract class BaseActivity : AppCompatActivity() {
         applyThemeFromPrefs()
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        AnalyticsHelper.logScreenView(this, getScreenName())
     }
+
+    protected open fun getScreenName(): String = javaClass.simpleName
 
     private fun applyThemeFromPrefs() {
         val prefs = try {

@@ -8,6 +8,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## [Unreleased]
 
 ### Added
+- Firebase Analytics: screen_view tracking on all activities (auto via BaseActivity)
+- Firebase Analytics: events for login, register, logout, search, share, theme toggle
+- Firebase Analytics: events for call workshop, navigate to workshop, review submit, workshop submit
+- Firebase Crashlytics: crash reporting with user ID (set on login, cleared on logout)
+- Firebase Crashlytics: non-fatal error logging in all repositories (network errors)
 - In-app update: flexible update prompt via Play Core when new version available (3-day cooldown)
 - Dark mode toggle in Profile settings with persistent preference (follows system by default)
 - Theme toggle label and icon change dynamically with active theme

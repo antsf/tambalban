@@ -5,10 +5,14 @@ import com.tambal_ban.workshop.data.*
 import android.app.Application
 import android.content.ComponentCallbacks2
 import android.util.Log
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.analytics.ktx.analytics
 import com.tambal_ban.core.ads.AdMobManager
 import com.tambal_ban.core.network.NetworkModule
 import com.tambal_ban.core.network.SupabaseService
 import com.tambal_ban.core.update.InAppUpdateManager
+import com.tambal_ban.core.utils.AnalyticsHelper
+import com.tambal_ban.core.utils.CrashlyticsHelper
 import com.tambal_ban.workshop.data.database.WorkshopDbHelper
 import com.tambal_ban.auth.data.AuthRepository
 import com.tambal_ban.auth.data.ProfileRepository
@@ -85,6 +89,18 @@ class TambalBanApp : Application() {
         // T031: Initialize AdMob but don't load ads immediately
         adMobManager = AdMobManager(this)
         adMobManager.initialize()
+
+        // 023: Initialize Firebase Analytics & Crashlytics
+        Firebase.analytics
+        AnalyticsHelper.initialize()
+        CrashlyticsHelper.initialize()
+
+        // 023: Set Crashlytics user ID if logged in
+        if (authPrefs.isLoggedIn()) {
+            authPrefs.getUserId()?.let { userId ->
+                CrashlyticsHelper.setUserId(userId)
+            }
+        }
 
         // 021: Initialize In-App Update Manager
         inAppUpdateManager = InAppUpdateManager(authPrefs)

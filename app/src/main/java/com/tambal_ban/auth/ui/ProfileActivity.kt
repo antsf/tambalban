@@ -17,6 +17,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import coil.load
 import com.tambal_ban.R
 import com.tambal_ban.TambalBanApp
+import com.tambal_ban.core.utils.AnalyticsHelper
 import com.tambal_ban.databinding.ActivityProfileBinding
 import com.tambal_ban.auth.viewmodel.ProfileViewModel
 import androidx.core.net.toUri
@@ -108,6 +109,7 @@ class ProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
         }
 
         binding.btnShareApp.setOnClickListener {
+            AnalyticsHelper.logShare()
             shareApp()
         }
 
@@ -121,6 +123,7 @@ class ProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
                 .setTitle(getString(R.string.dialog_logout_title))
                 .setMessage(getString(R.string.dialog_logout_message))
                 .setPositiveButton(getString(R.string.dialog_confirm)) { _, _ ->
+                    AnalyticsHelper.logEvent("logout")
                     viewModel.logout()
                 }
                 .setNegativeButton(getString(R.string.dialog_cancel), null)
@@ -134,6 +137,7 @@ class ProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
             prefs.setNightMode(newMode)
             AppCompatDelegate.setDefaultNightMode(newMode)
             updateThemeToggleUi()
+            AnalyticsHelper.logEvent("theme_toggle", mapOf("dark_mode" to (!isDark).toString()))
         }
     }
 

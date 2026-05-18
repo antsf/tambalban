@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.tambal_ban.R
+import com.tambal_ban.core.utils.AnalyticsHelper
 import com.tambal_ban.databinding.ActivityLoginBinding
 
 class LoginActivity : com.tambal_ban.core.ui.BaseActivity() {
@@ -74,6 +75,7 @@ class LoginActivity : com.tambal_ban.core.ui.BaseActivity() {
     private fun setupObservers() {
         viewModel.loginResult.observe(this) { result ->
             if (result.isSuccess) {
+                AnalyticsHelper.logLogin()
                 Toast.makeText(this, getString(R.string.welcome_back), Toast.LENGTH_SHORT).show()
                 finish()
             } else {
