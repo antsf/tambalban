@@ -107,7 +107,7 @@ Agents: `BRIEF:` → `BUILD:` → `TEST:`
 
 Amendments require ALL of:
 1. Update this constitution
-2. Update `.claude/agents/brief.md`, `build.md`, `test.md`
+2. Update `../.claude/agents/brief.md`, `build.md`, `test.md`
 3. Update `CLAUDE.md`
 4. Record change in `CHANGELOG.md`
 
