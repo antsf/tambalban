@@ -1,5 +1,8 @@
 # Feature Specification: Refresh Home Screen Design
 
+> **SUPERSEDED SCHEMA:** this spec references the retired `workshops` table. The live
+> shared table is `tambal_ban` — see [`017-workshop-schema-update`](../017-workshop-schema-update/spec.md).
+
 **Feature Branch**: `011-refresh-home-screen`  
 **Created**: 2026-04-18  
 **Status**: Draft  

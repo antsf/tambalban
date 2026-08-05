@@ -1,5 +1,10 @@
 # Feature Specification: Supabase Backend Integration
 
+> **SUPERSEDED SCHEMA:** this spec references the retired `workshops` /
+> `workshop_submissions` tables. The live shared table is `tambal_ban` — see
+> [`017-workshop-schema-update`](../017-workshop-schema-update/spec.md) and
+> [`../../supabase_schema.sql`](../../supabase_schema.sql).
+
 **Feature Branch**: `002-supabase-backend-integration`  
 **Created**: 2026-03-15  
 **Status**: Draft  

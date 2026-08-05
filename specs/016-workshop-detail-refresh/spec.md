@@ -1,5 +1,8 @@
 # Feature Specification: Workshop Detail UI Refresh
 
+> **SUPERSEDED SCHEMA:** this spec references the retired `workshops` table. The live
+> shared table is `tambal_ban` — see [`017-workshop-schema-update`](../017-workshop-schema-update/spec.md).
+
 **Feature Branch**: `016-workshop-detail-refresh`  
 **Created**: 2026-05-01  
 **Status**: Draft  

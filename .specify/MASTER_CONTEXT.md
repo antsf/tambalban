@@ -71,13 +71,12 @@
 
 | Method | Endpoint | Repository |
 |--------|----------|------------|
-| GET | /rest/v1/workshops?verified=eq.true&lat filters | WorkshopRepository |
-| GET | /rest/v1/workshops?id=eq.{id} | WorkshopRepository |
-| GET | /rest/v1/workshops?name=ilike.*{q}* | WorkshopRepository |
+| GET | /rest/v1/tambal_ban?verified=eq.true&lat filters | WorkshopRepository |
+| GET | /rest/v1/tambal_ban?id=eq.{id} | WorkshopRepository |
+| GET | /rest/v1/tambal_ban?or=(name.ilike.*{q}*,city.ilike.*{q}*) | WorkshopRepository |
+| POST | /rest/v1/tambal_ban (source=user, verified=false) | WorkshopRepository |
 | GET | /rest/v1/reviews?workshop_id=eq.{id} | ReviewRepository |
 | POST | /rest/v1/reviews | ReviewRepository |
-| POST | /rest/v1/workshop_submissions | SubmissionRepository |
-| GET | /rest/v1/workshop_submissions?user_id=eq.{id} | SubmissionRepository |
 | GET | /rest/v1/users_profile?id=eq.{id} | ProfileRepository |
 | PATCH | /rest/v1/users_profile?id=eq.{id} | ProfileRepository |
 | POST | /auth/v1/token?grant_type=password | AuthRepository |

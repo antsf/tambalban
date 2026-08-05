@@ -1,5 +1,10 @@
 # Feature Specification: TambalBan Finder
 
+> **SUPERSEDED SCHEMA:** this spec references the retired `workshops` /
+> `workshop_submissions` tables. The live shared table is `tambal_ban` — see
+> [`017-workshop-schema-update`](../017-workshop-schema-update/spec.md) and
+> [`../../supabase_schema.sql`](../../supabase_schema.sql).
+
 **Feature Branch**: `001-tambal_ban-finder`
 **Created**: 2026-03-12 (Updated: 2026-03-13)
 **Status**: Draft

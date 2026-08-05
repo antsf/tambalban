@@ -86,7 +86,7 @@ A mobile app that helps drivers quickly find the nearest tire repair shop (tamba
 5. **Add Workshop & Submissions**
    - Form to submit new workshop data
    - Location picker for precise lat/lng
-   - Review/Approval workflow via `workshop_submissions` table
+   - Submissions insert directly into `tambal_ban` with `source = 'user'` and `verified = false`; admin publishes by flipping `verified = true` in Supabase
 
 6. **Offline Support**
    - Cache workshop data in local SQLite database
@@ -97,49 +97,54 @@ A mobile app that helps drivers quickly find the nearest tire repair shop (tamba
 
 ## 4. Data Tables (Supabase)
 
-### 1. workshops
+> Reference schema: `supabase_schema.sql` in this repo. The single shared table is
+> `tambal_ban` (see `specs/017-workshop-schema-update/` — the `workshops` /
+> `workshop_submissions` tables are retired).
+
+### 1. tambal_ban  (the ONE workshop table, shared with the web app)
 - id (UUID, PK)
 - name (text)
-- latitude (double)
-- longitude (double)
-- phone (text, nullable)
+- lat (double)
+- lon (double)
 - address (text, nullable)
-- open_time (text, nullable)
-- close_time (text, nullable)
-- is_24h (boolean)
-- rating_avg (double)
-- rating_count (int)
+- city (text, nullable)
+- district (text, nullable)
+- province (text, nullable)
+- phone (text, nullable)
+- whatsapp (text, nullable)
+- website (text, nullable)
+- instagram (text, nullable)
+- opening_hours (text, nullable)
+- rating (double, default 0.0) — read-only, sourced from scraper data
+- total_reviews (int, default 0)
 - image_url (text, nullable)
-- verified (boolean, default false)
-- source (text)
-- created_at (timestamp)
+- source (text: 'osm' | 'user')
+- verified (boolean, default false) — map queries filter `verified = eq.true`
+- verified_at (timestamptz, nullable)
+- user_id (UUID, FK → auth.users) — stamped by trigger on insert
+- osm_id (bigint, nullable) + osm_tags (jsonb, nullable) — OSM provenance
+- service flags (boolean ×8): motorcycle_tyres, car_tyres, truck_tyres,
+  tubeless_repair, vulcanizer, balancing, spooring, roadside_service
+- created_at (timestamptz)
+- updated_at (timestamptz)
 
 ### 2. users_profile
 - id (UUID, PK, References Auth.Users)
+- username (text, nullable)
 - full_name (text, nullable)
 - email (text, nullable)
 - phone (text, nullable)
 - avatar_url (text, nullable)
-- updated_at (timestamp)
+- updated_at (timestamptz)
+- created_at (timestamptz)
 
 ### 3. reviews
 - id (UUID, PK)
-- workshop_id (UUID, FK)
-- user_id (UUID, FK)
-- rating (int)
+- workshop_id (UUID, FK → tambal_ban.id)
+- user_id (UUID, FK → auth.users)
+- rating (int, 1..5)
 - comment (text)
-- created_at (timestamp)
-
-### 4. workshop_submissions
-- id (UUID, PK)
-- name (text)
-- phone (text)
-- address (text)
-- latitude (double)
-- longitude (double)
-- user_id (UUID, FK)
-- status (text: pending/approved/rejected)
-- created_at (timestamp)
+- created_at (timestamptz)
 
 ---
 
