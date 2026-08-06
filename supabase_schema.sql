@@ -123,11 +123,8 @@ CREATE POLICY user_insert_review ON reviews
 CREATE POLICY user_update_own_review ON reviews
     FOR UPDATE USING (auth.role() = 'authenticated' AND user_id = auth.uid());
 
--- NOTE: live project has admin_delete_review (DELETE for any authenticated
--- user). Intent is admin-only; do NOT ship that as-is on a fresh setup without
--- a real admin gate (e.g. service_role key / app-layer check).
-CREATE POLICY admin_delete_review ON reviews
-    FOR DELETE USING (auth.role() = 'authenticated');
+-- No DELETE policy: review deletion is admin-only, done with the service_role
+-- key or SQL editor (bypasses RLS) — same pattern as tambal_ban publishing.
 
 -- ---- users_profile ----
 CREATE POLICY "Users can view their own profile" ON users_profile
