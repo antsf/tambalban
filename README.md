@@ -8,9 +8,13 @@ Android app to find nearby tire repair shops (tambal ban) in Indonesia.
 - Workshop detail: address, phone, hours, rating, reviews
 - Call or navigate to workshop in one tap
 - Search workshops by name or area
-- Submit new workshop for review
+- Submit new workshop for review (from map or profile)
 - Write reviews for visited workshops
 - User profile with avatar
+- Dark mode (follows system by default, toggleable in Profile)
+- AdMob banner ads on main screens
+
+Latest changes: [`CHANGELOG.md`](./CHANGELOG.md).
 
 ## Tech Stack
 

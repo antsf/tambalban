@@ -155,13 +155,14 @@ A mobile app that helps drivers quickly find the nearest tire repair shop (tamba
 - **Concept**: High-trust, calm interface with premium tactile feel
 - **Glassmorphism**: Subtle overlays for bottom sheets and floating controls
 
-### Color Scheme (Orchid Palette)
-- **Primary**: #D672E1 (Emergency Orchid)
+### Color Scheme (Blue Violet Palette — since v0.19)
+- **Primary**: #8A2BE2 (Blue Violet)
 - **Primary Container**: #DA70D6
 - **Surface**: #F8F9FA (Tonal Layering)
 - **On Surface**: #191C1D (High legibility grey)
 - **Secondary**: #DA70D6 (Action orchid)
 - **Tertiary Container**: #D1E8D1 (Safety Green)
+- **Dark mode**: `values-night/colors.xml` + `values-night/themes.xml` (follows system by default, toggle in Profile)
 
 ### Typography
 - **Headings**: Plus Jakarta Sans (Bold/Semi-bold)
