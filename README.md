@@ -33,10 +33,14 @@ Latest changes: [`CHANGELOG.md`](./CHANGELOG.md).
 
 ```bash
 ./gradlew assembleDebug     # debug APK
-./gradlew assembleRelease   # release APK
+./gradlew assembleRelease   # release APK (unsigned)
+./gradlew bundleRelease     # release AAB (for Play Store)
 ./gradlew test              # unit tests
 ./gradlew lint              # lint check
 ```
+
+Signing is configured via `signingConfigs` in `app/build.gradle.kts`.  
+Release AAB is at `app/build/outputs/bundle/release/app-release.aab`.
 
 Requires `local.properties` with `sdk.dir` pointing to Android SDK.
 

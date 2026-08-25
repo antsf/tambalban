@@ -5,6 +5,7 @@ import com.tambal_ban.auth.data.*
 
 import android.util.Log
 import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.utils.CrashlyticsHelper
 import com.tambal_ban.auth.data.Profile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -43,6 +44,7 @@ class ProfileRepository(
                     Result.failure(Exception("Failed to fetch profile: ${response.message()}"))
                 }
             } catch (e: Exception) {
+                CrashlyticsHelper.logNonFatal(e, "getProfile failed")
                 Result.failure(e)
             }
         }
@@ -57,6 +59,7 @@ class ProfileRepository(
                     Result.failure(Exception("Failed to update profile: ${response.message()}"))
                 }
             } catch (e: Exception) {
+                CrashlyticsHelper.logNonFatal(e, "updateProfile failed")
                 Result.failure(e)
             }
         }
@@ -76,6 +79,7 @@ class ProfileRepository(
                     Result.failure(Exception("Failed to upload avatar: ${response.message()}"))
                 }
             } catch (e: Exception) {
+                CrashlyticsHelper.logNonFatal(e, "uploadAvatar failed")
                 Result.failure(e)
             }
         }

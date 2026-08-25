@@ -4,6 +4,7 @@ import com.tambal_ban.workshop.viewmodel.*
 import com.tambal_ban.workshop.data.* 
 
 import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.utils.CrashlyticsHelper
 import com.tambal_ban.workshop.data.Review
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -20,6 +21,7 @@ class ReviewRepository(private val supabaseService: SupabaseService) {
                     Result.failure(Exception("Failed to fetch reviews: ${response.message()}"))
                 }
             } catch (e: Exception) {
+                CrashlyticsHelper.logNonFatal(e, "getReviews failed")
                 Result.failure(e)
             }
         }
@@ -34,6 +36,7 @@ class ReviewRepository(private val supabaseService: SupabaseService) {
                     Result.failure(Exception("Failed to submit review: ${response.message()}"))
                 }
             } catch (e: Exception) {
+                CrashlyticsHelper.logNonFatal(e, "submitReview failed")
                 Result.failure(e)
             }
         }

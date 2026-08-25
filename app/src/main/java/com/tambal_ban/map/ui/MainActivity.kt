@@ -21,6 +21,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.tambal_ban.R
+import com.tambal_ban.core.utils.AnalyticsHelper
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.tambal_ban.workshop.data.Workshop
@@ -127,7 +128,9 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
                 
                 binding.searchOverlay.etSearch.clearFocus()
                 binding.searchOverlay.suggestionsCard.visibility = View.GONE
-                viewModel.searchWorkshops(v.text.toString())
+                val query = v.text.toString()
+                AnalyticsHelper.logSearch(query)
+                viewModel.searchWorkshops(query)
                 true
             } else {
                 false
@@ -378,12 +381,13 @@ class MainActivity : com.tambal_ban.core.ui.BaseActivity() {
         return super.dispatchTouchEvent(event)
     }
 
-    override fun onResume() { 
+    override fun onResume() {
         super.onResume()
         binding.mapView.onResume()
         viewModel.fetchUserProfile()
-        val adMobManager = (application as com.tambal_ban.TambalBanApp).adMobManager
-        adMobManager.resumeBannerAd()
+        val app = application as com.tambal_ban.TambalBanApp
+        app.adMobManager.resumeBannerAd()
+        app.inAppUpdateManager.checkForUpdate(this)
     }
     override fun onPause() { super.onPause(); binding.mapView.onPause(); (application as com.tambal_ban.TambalBanApp).adMobManager.pauseBannerAd() }
     override fun onDestroy() { super.onDestroy(); viewModel.stopLocationUpdates(); (application as com.tambal_ban.TambalBanApp).adMobManager.destroyBannerAd() }

@@ -69,11 +69,18 @@ class AuthPrefs(context: Context) {
         sharedPreferences.edit().putInt(KEY_NIGHT_MODE, mode).apply()
     }
 
+    fun getLastUpdatePromptTime(): Long = sharedPreferences.getLong(KEY_LAST_UPDATE_PROMPT, 0L)
+
+    fun setLastUpdatePromptTime(time: Long) {
+        sharedPreferences.edit().putLong(KEY_LAST_UPDATE_PROMPT, time).apply()
+    }
+
     companion object {
         private const val KEY_ACCESS_TOKEN = "access_token"
         private const val KEY_REFRESH_TOKEN = "refresh_token"
         private const val KEY_USER_ID = "user_id"
         private const val KEY_EMAIL = "user_email"
         private const val KEY_NIGHT_MODE = "night_mode"
+        private const val KEY_LAST_UPDATE_PROMPT = "last_update_prompt"
     }
 }

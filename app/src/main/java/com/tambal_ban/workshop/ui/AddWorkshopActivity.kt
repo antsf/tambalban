@@ -15,6 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.tambal_ban.R
 import com.tambal_ban.core.ui.BaseActivity
+import com.tambal_ban.core.utils.AnalyticsHelper
 import com.tambal_ban.databinding.ActivityAddWorkshopBinding
 import com.tambal_ban.workshop.viewmodel.AddWorkshopViewModel
 import java.io.File
@@ -121,6 +122,7 @@ class AddWorkshopActivity : BaseActivity() {
 
         viewModel.submissionResult.observe(this) { result ->
             result.onSuccess {
+                AnalyticsHelper.logEvent("workshop_submit")
                 Toast.makeText(this, getString(R.string.success_workshop_submitted), Toast.LENGTH_SHORT).show()
                 finish()
             }
