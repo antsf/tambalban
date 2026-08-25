@@ -121,7 +121,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sudah punya akun? "
+                android:text="@string/label_have_account_prompt"
                 android:textColor="@color/on_surface_variant"
             />
 

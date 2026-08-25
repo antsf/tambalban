@@ -1,4 +1,4 @@
-`<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <string name="app_name">Tambal Ban Online</string>
 
@@ -32,6 +32,7 @@
 
     <!-- Location -->
     <string name="getting_location">Getting your location...</string>
+    <string name="label_locating_help">Locating help...</string>
 
     <!-- General -->
     <string name="km">km</string>
@@ -79,6 +80,9 @@
     <string
         name="info_forgot_password"
     >Fitur lupa kata sandi akan segera hadir</string>
+    <string name="action_forgot_password">Lupa Password?</string>
+    <string name="action_login">Masuk</string>
+    <string name="label_no_account_prompt">Belum punya akun? </string>
     <string name="welcome_back">Selamat datang kembali!</string>
     <string name="error_auth_failed">Autentikasi gagal</string>
     <string
@@ -89,6 +93,7 @@
     <string name="register_error_general">Pendaftaran gagal</string>
     <string name="action_register">Daftar</string>
     <string name="label_login_prompt">Masuk di sini</string>
+    <string name="label_have_account_prompt">Sudah punya akun? </string>
 
     <!-- Profile Screen -->
     <string name="section_account_settings">PENGATURAN AKUN</string>
