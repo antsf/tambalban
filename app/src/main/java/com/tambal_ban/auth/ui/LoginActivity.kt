@@ -9,6 +9,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.tambal_ban.R
+import com.tambal_ban.core.utils.AnalyticsHelper
 import com.tambal_ban.databinding.ActivityLoginBinding
 
 class LoginActivity : com.tambal_ban.core.ui.BaseActivity() {
@@ -46,25 +48,25 @@ class LoginActivity : com.tambal_ban.core.ui.BaseActivity() {
         }
 
         binding.tvForgot.setOnClickListener {
-            Toast.makeText(this, "Fitur lupa kata sandi akan segera hadir", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.info_forgot_password), Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun validateInputs(email: String, password: String): Boolean {
         var isValid = true
         if (email.isEmpty()) {
-            binding.etEmail.setError("Email wajib diisi")
+            binding.etEmail.setError(getString(R.string.register_error_email_required))
             isValid = false
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.etEmail.setError("Format email tidak valid")
+            binding.etEmail.setError(getString(R.string.register_error_email_invalid))
             isValid = false
         }
 
         if (password.isEmpty()) {
-            binding.etPassword.setError("Kata sandi wajib diisi")
+            binding.etPassword.setError(getString(R.string.register_error_password_required))
             isValid = false
         } else if (password.length < 6) {
-            binding.etPassword.setError("Kata sandi minimal 6 karakter")
+            binding.etPassword.setError(getString(R.string.login_error_password_short))
             isValid = false
         }
         return isValid
@@ -73,10 +75,11 @@ class LoginActivity : com.tambal_ban.core.ui.BaseActivity() {
     private fun setupObservers() {
         viewModel.loginResult.observe(this) { result ->
             if (result.isSuccess) {
-                Toast.makeText(this, "Selamat datang kembali!", Toast.LENGTH_SHORT).show()
+                AnalyticsHelper.logLogin()
+                Toast.makeText(this, getString(R.string.welcome_back), Toast.LENGTH_SHORT).show()
                 finish()
             } else {
-                val error = result.exceptionOrNull()?.message ?: "Autentikasi gagal"
+                val error = result.exceptionOrNull()?.message ?: getString(R.string.error_auth_failed)
                 if (error.contains("email", ignoreCase = true)) {
                     binding.etEmail.setError(error)
                 } else if (error.contains("password", ignoreCase = true)) {

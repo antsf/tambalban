@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <!-- Brand Colors (Blue Violet Palette - Dark) -->
     <color name="primary">#8A2BE2</color>
@@ -6,12 +6,10 @@
     <color name="on_primary">#FFFFFF</color>
     <color name="on_primary_container">#EDDBFF</color>
 
-    <!-- Modern Login Refresh Palette (Dark) -->
-    <color name="colorPrimaryLogin">#8A2BE2</color>
-    <color name="login_bg_start">#2A1A3A</color>
-    <color name="login_bg_end">#1A1C1E</color>
-    <color name="login_field_bg">#2C2E30</color>
-    <color name="login_text_secondary">#9A9A9E</color>
+    <!-- Gradient & Field Backgrounds (Dark) -->
+    <color name="gradient_start">#2A1A3A</color>
+    <color name="gradient_end">#1A1C1E</color>
+    <color name="field_bg">#2C2E30</color>
 
     <!-- Map Refresh Palette (Dark) -->
     <color name="map_teal_light">#1A3A38</color>

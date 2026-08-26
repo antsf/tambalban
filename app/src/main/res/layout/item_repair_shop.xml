@@ -49,7 +49,7 @@
                 style="@style/Guardian.Chip.Safety"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
-                android:text="OPEN NOW" />
+                android:text="@string/status_open_now_uppercase" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipMobileRepair"
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:layout_marginStart="8dp"
-                android:text="MOBILE REPAIR" />
+                android:text="@string/label_mobile_repair" />
 
         </LinearLayout>
 
@@ -82,7 +82,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="km"
+            android:text="@string/label_km"
             android:textAppearance="?attr/textAppearanceLabelMedium"
             android:textColor="@color/on_surface_variant"
             android:textAllCaps="true" />

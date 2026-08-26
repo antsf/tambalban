@@ -42,189 +42,174 @@
             android:padding="16dp"
         >
 
-            <!-- Name (required) -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilName"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            <!-- Name -->
+            <TextView
+                android:id="@+id/tvNameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_name"
+                android:textColor="@color/on_surface"
+                android:textSize="14sp"
+            />
+
+            <com.tambal_ban.core.ui.TambalTextField
+                android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/label_name"
-            >
+                android:layout_marginTop="8dp"
+                app:fieldHint="@string/label_name"
+                app:fieldIcon="@drawable/ic_person"
+            />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapWords"
-                />
+            <!-- Address -->
+            <TextView
+                android:id="@+id/tvAddressLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/label_address"
+                android:textColor="@color/on_surface"
+                android:textSize="14sp"
+            />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            <com.tambal_ban.core.ui.TambalTextField
+                android:id="@+id/etAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:fieldHint="@string/label_address"
+                app:fieldIcon="@drawable/ic_marker_pin"
+            />
 
-            <!-- Address (required) -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilAddress"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            <!-- City -->
+            <TextView
+                android:id="@+id/tvCityLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/label_city"
+                android:textColor="@color/on_surface"
+                android:textSize="14sp"
+            />
+
+            <com.tambal_ban.core.ui.TambalTextField
+                android:id="@+id/etCity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:fieldHint="@string/label_city"
+            />
+
+            <!-- Phone -->
+            <TextView
+                android:id="@+id/tvPhoneLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/label_phone"
+                android:textColor="@color/on_surface"
+                android:textSize="14sp"
+            />
+
+            <com.tambal_ban.core.ui.TambalTextField
+                android:id="@+id/etPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:fieldHint="@string/label_phone"
+                app:fieldIcon="@drawable/ic_phone"
+                app:fieldVariant="phone"
+            />
+
+            <!-- Province -->
+            <TextView
+                android:id="@+id/tvProvinceLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/label_province"
+                android:textColor="@color/on_surface"
+                android:textSize="14sp"
+            />
+
+            <com.tambal_ban.core.ui.TambalTextField
+                android:id="@+id/etProvince"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:fieldHint="@string/label_province"
+            />
+
+            <!-- Opening Hours -->
+            <TextView
+                android:id="@+id/tvOpeningHoursLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/label_opening_hours"
+                android:textColor="@color/on_surface"
+                android:textSize="14sp"
+            />
+
+            <com.tambal_ban.core.ui.TambalTextField
+                android:id="@+id/etOpeningHours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:fieldHint="@string/hint_opening_hours"
+                app:fieldIcon="@drawable/ic_schedule"
+            />
+
+            <!-- Latitude -->
+            <TextView
+                android:id="@+id/tvLatLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/hint_latitude"
+                android:textColor="@color/on_surface"
+                android:textSize="14sp"
+            />
+
+            <com.tambal_ban.core.ui.TambalTextField
+                android:id="@+id/etLat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="numberSigned|numberDecimal"
+                app:fieldHint="@string/hint_latitude"
+            />
+
+            <!-- Longitude -->
+            <TextView
+                android:id="@+id/tvLonLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/hint_longitude"
+                android:textColor="@color/on_surface"
+                android:textSize="14sp"
+            />
+
+            <com.tambal_ban.core.ui.TambalTextField
+                android:id="@+id/etLon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="numberSigned|numberDecimal"
+                app:fieldHint="@string/hint_longitude"
+            />
+
+            <!-- Current Location Button -->
+            <com.tambal_ban.core.ui.TambalButton
+                android:id="@+id/btnCurrentLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/label_address"
-            >
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"
-                    android:minLines="2"
-                />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- City (required) -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilCity"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="@string/label_city"
-            >
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Phone (required) -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPhone"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="@string/label_phone"
-            >
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPhone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="phone"
-                />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Province (optional) -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilProvince"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="@string/label_province"
-            >
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etProvince"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Opening Hours (optional) -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilOpeningHours"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="@string/label_opening_hours"
-            >
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etOpeningHours"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:hint="@string/hint_opening_hours"
-                    android:text="08:00-17:00"
-                />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Location Section -->
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-            >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                >
-
-                    <!-- Latitude -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilLat"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_latitude"
-                    >
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etLat"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="numberDecimal"
-                            android:text="-6.2"
-                        />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <!-- Longitude -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilLon"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:hint="@string/hint_longitude"
-                    >
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etLon"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="numberDecimal"
-                            android:text="106.8"
-                        />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </LinearLayout>
-
-                <!-- Current Location Button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCurrentLocation"
-                    style="@style/Widget.Material3.Button.IconButton.Filled"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="top|end"
-                    android:layout_marginTop="8dp"
-                    android:contentDescription="@string/btn_current_location"
-                    app:icon="@android:drawable/ic_dialog_map"
-                />
-
-            </FrameLayout>
+                app:btnText="Lokasi Saat Ini"
+                app:btnVariant="outlined"
+                app:btnIcon="@drawable/ic_my_location"
+            />
 
             <!-- Photo Section -->
             <TextView
@@ -233,8 +218,7 @@
                 android:layout_marginTop="24dp"
                 android:text="@string/label_photo_optional"
                 android:textColor="@color/on_surface_variant"
-                android:textSize="12sp"
-                android:textStyle="bold"
+                android:textSize="14sp"
             />
 
             <com.google.android.material.card.MaterialCardView
@@ -242,12 +226,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:focusable="true"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
                 app:strokeColor="@color/outline_variant_ghost"
                 app:strokeWidth="1dp"
-                android:clickable="true"
-                android:focusable="true"
             >
 
                 <FrameLayout
@@ -275,7 +259,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="Pilih Foto Tambal Ban"
+                            android:text="@string/btn_add_photo"
                             android:textColor="@color/primary"
                         />
                     </LinearLayout>

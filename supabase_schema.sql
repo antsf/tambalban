@@ -1,119 +1,132 @@
--- TambalBan - Supabase Database Schema
--- Run this SQL in your Supabase SQL Editor to create the required tables
+-- TambalBan - Supabase Database Schema (REFERENCE)
+-- Canonical schema shared by the Android app (`tambalban/`) and the web app
+-- (`tambalban-web/`). Run this SQL in your Supabase SQL Editor to create the
+-- required tables on a FRESH project.
+--
+-- NOTE: the live project's `tambal_ban` table has more columns than this file's
+-- original version — this file is the source of truth for NEW setups. The live
+-- project was migrated incrementally (see tambalban-web/supabase/migrations/).
+--
+-- One product, two front doors, one source of truth: `tambal_ban`.
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- =============================================
--- Table: workshops
+-- Table: tambal_ban  (the ONE workshop table)
 -- =============================================
-CREATE TABLE IF NOT EXISTS workshops (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+-- Both apps read/write this table. Visibility is controlled by `verified`:
+--   - verified = true   -> shown on the public map (both apps)
+--   - verified = false  -> hidden; only its owner (user_id) can see it
+-- `source` records provenance: 'osm' (OSM scraper) or 'user' (manual submit).
+CREATE TABLE tambal_ban (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
-    latitude DOUBLE PRECISION NOT NULL,
-    longitude DOUBLE PRECISION NOT NULL,
-    phone TEXT,
+    lat DOUBLE PRECISION NOT NULL,
+    lon DOUBLE PRECISION NOT NULL,
     address TEXT,
-    open_time TEXT,
-    close_time TEXT,
-    is_24h BOOLEAN DEFAULT false,
-    rating_avg DOUBLE PRECISION DEFAULT 0.0,
-    rating_count INTEGER DEFAULT 0,
-    source TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Create index for geospatial queries
-CREATE INDEX IF NOT EXISTS idx_workshops_location ON workshops (latitude, longitude);
-CREATE INDEX IF NOT EXISTS idx_workshops_name ON workshops (name);
-
--- =============================================
--- Table: users_profile
--- =============================================
-CREATE TABLE IF NOT EXISTS users_profile (
-    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-    full_name TEXT,
-    email TEXT,
+    city TEXT,
+    district TEXT,
+    province TEXT,
     phone TEXT,
-    avatar_url TEXT,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    whatsapp TEXT,
+    website TEXT,
+    instagram TEXT,
+    opening_hours TEXT,
+    rating DOUBLE PRECISION DEFAULT 0.0,
+    total_reviews INTEGER DEFAULT 0,
+    image_url TEXT,
+    source TEXT DEFAULT 'osm',
+    verified BOOLEAN DEFAULT false,
+    verified_at TIMESTAMPTZ,
+    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    osm_id BIGINT,
+    osm_tags JSONB,
+    motorcycle_tyres BOOLEAN NOT NULL DEFAULT false,
+    car_tyres BOOLEAN NOT NULL DEFAULT false,
+    truck_tyres BOOLEAN NOT NULL DEFAULT false,
+    tubeless_repair BOOLEAN NOT NULL DEFAULT false,
+    vulcanizer BOOLEAN NOT NULL DEFAULT false,
+    balancing BOOLEAN NOT NULL DEFAULT false,
+    spooring BOOLEAN NOT NULL DEFAULT false,
+    roadside_service BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+CREATE INDEX idx_tambal_ban_location ON tambal_ban (lat, lon);
+CREATE INDEX idx_tambal_ban_name ON tambal_ban (name);
+CREATE INDEX idx_tambal_ban_source ON tambal_ban (source);
+CREATE INDEX idx_tambal_ban_user ON tambal_ban (user_id);
+CREATE UNIQUE INDEX idx_tambal_ban_osm_id ON tambal_ban (osm_id) WHERE osm_id IS NOT NULL;
 
 -- =============================================
 -- Table: reviews
 -- =============================================
-CREATE TABLE IF NOT EXISTS reviews (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    workshop_id UUID NOT NULL REFERENCES workshops(id) ON DELETE CASCADE,
+CREATE TABLE reviews (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    workshop_id UUID REFERENCES tambal_ban(id) ON DELETE CASCADE,
     user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
     rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
     comment TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_reviews_workshop ON reviews(workshop_id);
+CREATE INDEX idx_reviews_workshop ON reviews (workshop_id);
 
 -- =============================================
--- Table: workshop_submissions
+-- Table: users_profile
 -- =============================================
-CREATE TABLE IF NOT EXISTS workshop_submissions (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name TEXT NOT NULL,
-    phone TEXT NOT NULL,
-    address TEXT NOT NULL,
-    latitude DOUBLE PRECISION NOT NULL,
-    longitude DOUBLE PRECISION NOT NULL,
-    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+CREATE TABLE users_profile (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    username TEXT,
+    full_name TEXT,
+    email TEXT,
+    phone TEXT,
+    avatar_url TEXT,
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    created_at TIMESTAMPTZ DEFAULT NOW()
 );
-
-CREATE INDEX IF NOT EXISTS idx_submissions_status ON workshop_submissions(status);
-
--- =============================================
--- Table: workshop_reports
--- =============================================
-CREATE TABLE IF NOT EXISTS workshop_reports (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    workshop_id UUID NOT NULL REFERENCES workshops(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-    reason TEXT NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_reports_workshop ON workshop_reports(workshop_id);
 
 -- =============================================
 -- Row Level Security (RLS)
 -- =============================================
--- Enable RLS on all tables
-ALTER TABLE workshops ENABLE ROW LEVEL SECURITY;
-ALTER TABLE users_profile ENABLE ROW LEVEL SECURITY;
+ALTER TABLE tambal_ban ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
-ALTER TABLE workshop_submissions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE workshop_reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE users_profile ENABLE ROW LEVEL SECURITY;
 
--- Public read access for workshops
-CREATE POLICY "Public can read workshops" ON workshops
+-- ---- tambal_ban ----
+-- Public can read verified rows only.
+CREATE POLICY public_read_verified ON tambal_ban
+    FOR SELECT USING (verified);
+
+-- Authenticated users can submit; the row must belong to them (the
+-- set_tambal_ban_user_id trigger fills user_id from the JWT automatically).
+CREATE POLICY user_insert ON tambal_ban
+    FOR INSERT WITH CHECK (auth.role() = 'authenticated' AND user_id = auth.uid());
+
+-- A user can see their own unverified submissions (verified rows are covered by
+-- public_read_verified). This is per-user — not "any authenticated user".
+CREATE POLICY user_read_own_unverified ON tambal_ban
+    FOR SELECT USING (verified OR (source = 'user' AND user_id = auth.uid()));
+
+-- Admin review = UPDATE tambal_ban SET verified = true (service_role key or
+-- SQL editor). No dedicated admin policy — the service role bypasses RLS.
+
+-- ---- reviews ----
+CREATE POLICY public_read_reviews ON reviews
     FOR SELECT USING (true);
 
--- Public read access for reviews
-CREATE POLICY "Public can read reviews" ON reviews
-    FOR SELECT USING (true);
+CREATE POLICY user_insert_review ON reviews
+    FOR INSERT WITH CHECK (auth.role() = 'authenticated' AND user_id = auth.uid());
 
--- Anyone can submit workshop
-CREATE POLICY "Anyone can submit workshop" ON workshop_submissions
-    FOR INSERT WITH CHECK (true);
+CREATE POLICY user_update_own_review ON reviews
+    FOR UPDATE USING (auth.role() = 'authenticated' AND user_id = auth.uid());
 
--- Anyone can read submissions
-CREATE POLICY "Public can read submissions" ON workshop_submissions
-    FOR SELECT USING (true);
+-- No DELETE policy: review deletion is admin-only, done with the service_role
+-- key or SQL editor (bypasses RLS) — same pattern as tambal_ban publishing.
 
--- Anyone can create reports
-CREATE POLICY "Anyone can create report" ON workshop_reports
-    FOR INSERT WITH CHECK (true);
-
--- User Profile Policies
+-- ---- users_profile ----
 CREATE POLICY "Users can view their own profile" ON users_profile
     FOR SELECT USING (auth.uid() = id);
 
@@ -122,46 +135,6 @@ CREATE POLICY "Users can update their own profile" ON users_profile
 
 CREATE POLICY "Public profiles are viewable by everyone" ON users_profile
     FOR SELECT USING (true);
-
--- =============================================
--- Sample Data (for testing)
--- =============================================
-INSERT INTO workshops (name, latitude, longitude, phone, address, is_24h, rating_avg, rating_count, source)
-VALUES
-    ('Tambal Ban Jakarta Pusat', -6.1751, 106.8650, '+62 21 1234567', 'Jl. Sudirman No. 1, Jakarta Pusat', true, 4.5, 25, 'manual'),
-    ('Tambal Ban Maju Jaya', -6.2088, 106.8456, '+62 21 9876543', 'Jl. Thamrin No. 10, Jakarta Pusat', true, 4.2, 18, 'manual'),
-    ('Tambal Ban Sejahtera', -6.9147, 107.6098, '+62 22 5551234', 'Jl. Braga No. 50, Bandung', false, 4.8, 32, 'manual'),
-    ('Bengkel Tambal Ban Selamat', -6.9175, 107.6191, '+62 22 6667890', 'Jl. Asia Afrika No. 15, Bandung', true, 4.3, 21, 'manual'),
-    ('Tambal Ban 24 Jam', -7.5755, 110.8243, '+62 24 1112223', 'Jl. Ahmad Yani No. 25, Semarang', true, 4.6, 45, 'manual');
-
--- =============================================
--- Functions for updating rating
--- =============================================
-CREATE OR REPLACE FUNCTION update_workshop_rating()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE workshops
-    SET
-        rating_avg = (
-            SELECT COALESCE(AVG(rating), 0)
-            FROM reviews
-            WHERE workshop_id = NEW.workshop_id
-        ),
-        rating_count = (
-            SELECT COUNT(*)
-            FROM reviews
-            WHERE workshop_id = NEW.workshop_id
-        )
-    WHERE id = NEW.workshop_id;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Create trigger to update workshop rating when a review is added
-CREATE TRIGGER trigger_update_rating
-    AFTER INSERT OR UPDATE ON reviews
-    FOR EACH ROW
-    EXECUTE FUNCTION update_workshop_rating();
 
 -- =============================================
 -- Auto-create profile on signup
@@ -175,7 +148,8 @@ BEGIN
         NEW.raw_user_meta_data->>'full_name',
         NEW.email,
         NEW.raw_user_meta_data->>'avatar_url'
-    );
+    )
+    ON CONFLICT (id) DO NOTHING; -- avoid errors if the profile already exists
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -184,7 +158,9 @@ CREATE OR REPLACE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION handle_new_user();
 
--- Update updated_at column
+-- =============================================
+-- updated_at triggers
+-- =============================================
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -197,17 +173,47 @@ CREATE OR REPLACE TRIGGER update_users_profile_updated_at
     BEFORE UPDATE ON users_profile
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- =============================================
--- Note for Bounding Box Queries
--- =============================================
--- To query workshops within a bounding box:
--- SELECT * FROM workshops
--- WHERE latitude BETWEEN :south AND :north
--- AND longitude BETWEEN :west AND :east
--- LIMIT 200;
+CREATE OR REPLACE FUNCTION set_tambal_ban_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
--- Example for Jakarta area:
--- SELECT * FROM workshops
--- WHERE latitude BETWEEN -6.3 AND -6.1
--- AND longitude BETWEEN 106.7 AND 107.0
+CREATE OR REPLACE TRIGGER update_tambal_ban_updated_at
+    BEFORE UPDATE ON tambal_ban
+    FOR EACH ROW EXECUTE FUNCTION set_tambal_ban_updated_at();
+
+-- =============================================
+-- Stamp the submitter on insert (tambal_ban)
+-- =============================================
+CREATE OR REPLACE FUNCTION set_tambal_ban_user_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.user_id = COALESCE(NEW.user_id, auth.uid());
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE TRIGGER set_tambal_ban_user_id
+    BEFORE INSERT ON tambal_ban
+    FOR EACH ROW EXECUTE FUNCTION set_tambal_ban_user_id();
+
+-- =============================================
+-- Storage
+-- =============================================
+-- Public bucket `workshops` for workshop images. Created via dashboard or:
+--   INSERT INTO storage.buckets (id, name, public) VALUES ('workshops', 'workshops', true);
+-- Path convention: `{userId}/{uuid}.jpg`; store the public CDN URL in image_url.
+-- User avatars live in a separate bucket (see Android auth feature).
+
+-- =============================================
+-- Bounding box queries
+-- =============================================
+-- SELECT * FROM tambal_ban
+-- WHERE verified
+--   AND lat BETWEEN :south AND :north
+--   AND lon BETWEEN :west AND :east
+-- ORDER BY rating DESC
 -- LIMIT 200;

@@ -46,7 +46,7 @@ class EditProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
         if (granted) {
             launchCamera()
         } else {
-            Toast.makeText(this, "Izin kamera diperlukan", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.error_camera_required), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -92,7 +92,7 @@ class EditProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
 
         viewModel.isUpdateSuccess.observe(this) { success ->
             if (success) {
-                Toast.makeText(this, "Profil berhasil diperbarui", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.success_profile_updated), Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
@@ -157,12 +157,12 @@ class EditProfileActivity : com.tambal_ban.core.ui.BaseActivity() {
         val phone = binding.etPhone.text.trim()
 
         if (name.isEmpty()) {
-            binding.etFullName.setError("Nama tidak boleh kosong")
+            binding.etFullName.setError(getString(R.string.error_name_required))
             return
         }
 
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.etEmail.setError("Masukkan email yang valid")
+            binding.etEmail.setError(getString(R.string.error_email_invalid))
             return
         }
 

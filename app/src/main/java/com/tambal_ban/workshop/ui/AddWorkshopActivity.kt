@@ -15,6 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.tambal_ban.R
 import com.tambal_ban.core.ui.BaseActivity
+import com.tambal_ban.core.utils.AnalyticsHelper
 import com.tambal_ban.databinding.ActivityAddWorkshopBinding
 import com.tambal_ban.workshop.viewmodel.AddWorkshopViewModel
 import java.io.File
@@ -41,7 +42,7 @@ class AddWorkshopActivity : BaseActivity() {
         if (granted) {
             launchCamera()
         } else {
-            Toast.makeText(this, "Izin kamera diperlukan", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.error_camera_required), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -71,14 +72,14 @@ class AddWorkshopActivity : BaseActivity() {
     }
 
     private fun setupFormWiring() {
-        binding.tilName.editText?.addTextChangedListener(createFieldWatcher("name"))
-        binding.tilAddress.editText?.addTextChangedListener(createFieldWatcher("address"))
-        binding.tilCity.editText?.addTextChangedListener(createFieldWatcher("city"))
-        binding.tilPhone.editText?.addTextChangedListener(createFieldWatcher("phone"))
-        binding.tilProvince.editText?.addTextChangedListener(createFieldWatcher("province"))
-        binding.tilOpeningHours.editText?.addTextChangedListener(createFieldWatcher("openingHours"))
-        binding.tilLat.editText?.addTextChangedListener(createFieldWatcher("lat"))
-        binding.tilLon.editText?.addTextChangedListener(createFieldWatcher("lon"))
+        binding.etName.addTextChangedListener(createFieldWatcher("name"))
+        binding.etAddress.addTextChangedListener(createFieldWatcher("address"))
+        binding.etCity.addTextChangedListener(createFieldWatcher("city"))
+        binding.etPhone.addTextChangedListener(createFieldWatcher("phone"))
+        binding.etProvince.addTextChangedListener(createFieldWatcher("province"))
+        binding.etOpeningHours.addTextChangedListener(createFieldWatcher("openingHours"))
+        binding.etLat.addTextChangedListener(createFieldWatcher("lat"))
+        binding.etLon.addTextChangedListener(createFieldWatcher("lon"))
     }
 
     private fun createFieldWatcher(fieldName: String): TextWatcher {
@@ -91,26 +92,23 @@ class AddWorkshopActivity : BaseActivity() {
         }
     }
 
+    private var wasLoadingLocation = false
+
     private fun observeViewModel() {
         viewModel.formState.observe(this) { formState ->
-            // Only update if value is different to avoid infinite loops with TextWatcher
-            val currentLat = binding.tilLat.editText?.text.toString()
-            val newLat = formState.lat.toString()
-            if (currentLat != newLat) {
-                binding.tilLat.editText?.setText(newLat)
+            val isLocationUpdate = wasLoadingLocation && !formState.isLoadingLocation
+            wasLoadingLocation = formState.isLoadingLocation
+
+            if (isLocationUpdate && formState.lat != 0.0 && formState.lon != 0.0) {
+                binding.etLat.setText(formState.lat.toString())
+                binding.etLon.setText(formState.lon.toString())
             }
 
-            val currentLon = binding.tilLon.editText?.text.toString()
-            val newLon = formState.lon.toString()
-            if (currentLon != newLon) {
-                binding.tilLon.editText?.setText(newLon)
-            }
-
-            binding.btnCurrentLocation.isEnabled = !formState.isLoadingLocation
+            binding.btnCurrentLocation.isEnabled(!formState.isLoadingLocation)
             if (formState.isLoadingLocation) {
-                binding.btnCurrentLocation.text = getString(R.string.getting_location)
+                binding.btnCurrentLocation.setText(getString(R.string.getting_location))
             } else {
-                binding.btnCurrentLocation.text = getString(R.string.btn_current_location)
+                binding.btnCurrentLocation.setText(getString(R.string.btn_current_location))
             }
 
             formState.locationError?.let { error ->
@@ -124,7 +122,8 @@ class AddWorkshopActivity : BaseActivity() {
 
         viewModel.submissionResult.observe(this) { result ->
             result.onSuccess {
-                Snackbar.make(binding.root, R.string.msg_submission_pending, Snackbar.LENGTH_LONG).show()
+                AnalyticsHelper.logEvent("workshop_submit")
+                Toast.makeText(this, getString(R.string.success_workshop_submitted), Toast.LENGTH_SHORT).show()
                 finish()
             }
             result.onFailure { error ->
@@ -135,12 +134,12 @@ class AddWorkshopActivity : BaseActivity() {
         viewModel.formErrors.observe(this) { errors ->
             errors.forEach { (field, message) ->
                 when (field) {
-                    "name" -> binding.tilName.error = message
-                    "address" -> binding.tilAddress.error = message
-                    "city" -> binding.tilCity.error = message
-                    "phone" -> binding.tilPhone.error = message
-                    "lat" -> binding.tilLat.error = message
-                    "lon" -> binding.tilLon.error = message
+                    "name" -> binding.etName.setError(message)
+                    "address" -> binding.etAddress.setError(message)
+                    "city" -> binding.etCity.setError(message)
+                    "phone" -> binding.etPhone.setError(message)
+                    "lat" -> binding.etLat.setError(message)
+                    "lon" -> binding.etLon.setError(message)
                 }
             }
         }

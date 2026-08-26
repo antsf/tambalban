@@ -12,6 +12,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.lifecycleScope
 import com.tambal_ban.core.ui.BaseActivity
+import com.tambal_ban.core.utils.AnalyticsHelper
 import com.tambal_ban.databinding.ActivityWorkshopListBinding
 import com.tambal_ban.workshop.viewmodel.WorkshopListViewModel
 import kotlinx.coroutines.delay
@@ -53,6 +54,7 @@ class WorkshopListActivity : BaseActivity() {
         binding.etSearch.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val query = v.text.toString()
+                AnalyticsHelper.logSearch(query)
                 viewModel.searchWorkshops(query)
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(v.windowToken, 0)

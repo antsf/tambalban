@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Locating help..."
+        android:text="@string/label_locating_help"
         android:textAppearance="?attr/textAppearanceTitleLarge"
         android:textColor="@color/on_surface" />
 

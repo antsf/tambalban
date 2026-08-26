@@ -8,11 +8,13 @@ Android app to find nearby tire repair shops (tambal ban) in Indonesia.
 - Workshop detail: address, phone, hours, rating, reviews
 - Call or navigate to workshop in one tap
 - Search workshops by name or area
-- Submit new workshop for review
+- Submit new workshop for review (from map or profile)
 - Write reviews for visited workshops
 - User profile with avatar
-- Dark mode support
+- Dark mode (follows system by default, toggleable in Profile)
 - Banner and native ads (AdMob)
+
+Latest changes: [`CHANGELOG.md`](./CHANGELOG.md).
 
 ## Requirements
 
@@ -80,6 +82,15 @@ Output: `app/build/outputs/apk/release/app-release-unsigned.apk`
 > Release APK must be signed before distribution. Use Android Studio
 > **Build > Generate Signed Bundle/APK** or configure a keystore in
 > `app/build.gradle.kts` under `signingConfigs`.
+
+### Release AAB (Play Store)
+
+```bash
+./gradlew bundleRelease
+```
+
+Output: `app/build/outputs/bundle/release/app-release.aab`. Signing is configured via
+`signingConfigs` in `app/build.gradle.kts`.
 
 ### Clean build
 

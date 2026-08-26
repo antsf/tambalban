@@ -14,7 +14,10 @@ captures/
 *.apk
 *.aar
 *.keystore
+*.jks
+*.pem
 !debug.keystore
+keystore.properties
 
 # Kotlin
 bin/
@@ -30,3 +33,4 @@ Thumbs.db
 # Environment
 .env*
 .idea/
+app/release/

@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Gagal memuat data"
+        android:text="@string/error_load_failed"
         android:textColor="@color/on_surface"
         android:textSize="14sp"
         android:textStyle="bold"
@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Periksa koneksi internet Anda dan coba lagi."
+        android:text="@string/error_load_subtitle"
         android:textColor="@color/on_surface_variant"
         android:textSize="12sp"
         android:gravity="center" />
@@ -39,6 +39,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Coba Lagi" />
+        android:text="@string/action_try_again" />
 
 </LinearLayout>

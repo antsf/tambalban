@@ -41,7 +41,7 @@
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.Guardian.TitleMedium"
             android:textColor="@color/on_surface"
-            app:layout_constraintEnd_toStartOf="@id/tvDistance"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/ivWorkshop"
             app:layout_constraintTop_toTopOf="@id/ivWorkshop"
             tools:text="Workshop Name"
@@ -111,7 +111,7 @@
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Open"
+                android:text="@string/status_open"
                 android:textAppearance="@style/TextAppearance.Guardian.LabelMedium"
                 android:textColor="@color/success"
             />

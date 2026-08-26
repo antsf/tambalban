@@ -1,5 +1,9 @@
 # Feature Specification: Workshops List Screen
 
+> **SUPERSEDED SCHEMA:** this spec references the retired `workshops` table (`latitude` /
+> `longitude`). The live shared table is `tambal_ban` (`lat` / `lon`) — see
+> [`017-workshop-schema-update`](../017-workshop-schema-update/spec.md).
+
 **Feature ID**: 015-workshops-list
 **Status**: [DONE] (Retrospective)
 **Priority**: P1

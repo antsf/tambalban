@@ -20,7 +20,7 @@
             android:background="@color/surface"
             app:navigationIcon="@drawable/ic_arrow_back"
             app:navigationIconTint="@color/on_surface"
-            app:title="Profil"
+            app:title="@string/title_profile"
             app:titleCentered="true"
             app:titleTextColor="@color/on_surface"
             app:titleTextAppearance="@style/TextAppearance.Guardian.TitleMedium" />
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
                 android:layout_marginBottom="16dp"
-                android:text="PENGATURAN AKUN"
+                android:text="@string/section_account_settings"
                 android:textColor="@color/on_surface_variant"
                 android:textSize="12sp"
                 android:letterSpacing="0.1"
@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:text="Edit Profil"
+                    android:text="@string/action_edit_profile"
                     style="@style/TextAppearance.Guardian.BodyLarge" />
 
                 <ImageView
@@ -142,7 +142,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:text="Tambah Tambal Ban"
+                    android:text="@string/screen_add_workshop"
                     style="@style/TextAppearance.Guardian.BodyLarge" />
 
                 <ImageView
@@ -157,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp"
-                android:text="TAMPILAN"
+                android:text="@string/section_display"
                 android:textColor="@color/on_surface_variant"
                 android:textSize="12sp"
                 android:letterSpacing="0.1"
@@ -186,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:text="Tema Gelap"
+                    android:text="@string/setting_dark_mode"
                     style="@style/TextAppearance.Guardian.BodyLarge" />
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -202,7 +202,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp"
-                android:text="UMPAN BALIK"
+                android:text="@string/section_feedback"
                 android:textColor="@color/on_surface_variant"
                 android:textSize="12sp"
                 android:letterSpacing="0.1"
@@ -229,7 +229,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:text="Beri Rating"
+                    android:text="@string/action_rate_app"
                     style="@style/TextAppearance.Guardian.BodyLarge" />
 
                 <ImageView
@@ -260,7 +260,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:text="Bagikan Aplikasi"
+                    android:text="@string/action_share_app"
                     style="@style/TextAppearance.Guardian.BodyLarge" />
 
                 <ImageView
@@ -284,7 +284,7 @@
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:btnText="Keluar"
+            app:btnText="@string/dialog_logout_title"
             app:btnIcon="@drawable/ic_logout"
             app:btnVariant="outlined"
             app:btnContentColor="@color/error"

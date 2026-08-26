@@ -1,11 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" ?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/bg_login_gradient">
+    android:background="@drawable/bg_login_gradient"
+>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,26 +17,29 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+    >
 
         <!-- Login Form Starts Here (Directly on Background) -->
         <TextView
             android:id="@+id/tvWelcomeBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Masuk ke Akun Anda"
+            android:text="@string/title_login"
             android:textColor="@color/on_surface"
             android:textSize="28sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+        />
 
         <TextView
             android:id="@+id/tvWelcomeSub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Silakan masukkan detail Anda untuk masuk"
-            android:textColor="@color/login_text_secondary"
-            android:textSize="14sp" />
+            android:text="@string/login_subtitle"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+        />
 
         <!-- Email Field -->
         <TextView
@@ -42,9 +47,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Alamat Email"
+            android:text="@string/email_label"
             android:textColor="@color/on_surface"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+        />
 
         <com.tambal_ban.core.ui.TambalTextField
             android:id="@+id/etEmail"
@@ -53,30 +59,34 @@
             android:layout_marginTop="8dp"
             app:fieldHint="name@example.com"
             app:fieldIcon="@drawable/ic_mail"
-            app:fieldVariant="email" />
+            app:fieldVariant="email"
+        />
 
         <!-- Password Field -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+        >
 
             <TextView
                 android:id="@+id/tvPasswordLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Kata Sandi"
+                android:text="@string/password_label"
                 android:textColor="@color/on_surface"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+            />
 
             <TextView
                 android:id="@+id/tvForgot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:text="Lupa Password?"
-                android:textColor="@color/colorPrimaryLogin"
-                android:textSize="14sp" />
+                android:text="@string/action_forgot_password"
+                android:textColor="@color/primary"
+                android:textSize="14sp"
+            />
 
         </RelativeLayout>
 
@@ -87,15 +97,17 @@
             android:layout_marginTop="8dp"
             app:fieldHint="*************"
             app:fieldIcon="@drawable/ic_lock"
-            app:fieldVariant="password" />
+            app:fieldVariant="password"
+        />
 
         <com.tambal_ban.core.ui.TambalButton
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            app:btnText="Masuk"
-            app:btnVariant="primary" />
+            app:btnText="@string/action_login"
+            app:btnVariant="primary"
+        />
 
         <!-- Registration Link -->
         <LinearLayout
@@ -104,22 +116,23 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+        >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Belum punya akun? "
-                android:textColor="@color/on_surface"
-                android:textSize="16sp" />
+                android:text="@string/label_no_account_prompt"
+                android:textColor="@color/on_surface_variant"
+            />
 
             <TextView
                 android:id="@+id/tvRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Daftar"
-                android:textColor="@color/colorPrimaryLogin"
-                android:textSize="16sp" />
+                android:text="@string/action_register"
+                android:textColor="@color/primary"
+            />
         </LinearLayout>
 
     </LinearLayout>

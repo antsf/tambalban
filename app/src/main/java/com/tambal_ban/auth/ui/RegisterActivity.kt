@@ -9,8 +9,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.tambal_ban.databinding.ActivityRegisterBinding
-import com.tambal_ban.map.ui.MainActivity
+import com.tambal_ban.core.utils.AnalyticsHelper
 import com.tambal_ban.core.utils.AuthErrorMapper
+import com.tambal_ban.map.ui.MainActivity
 
 /**
  * Activity for user registration.
@@ -61,13 +62,14 @@ class RegisterActivity : com.tambal_ban.core.ui.BaseActivity() {
 
         viewModel.registerResult.observe(this) { result ->
             if (result.isSuccess) {
+                AnalyticsHelper.logSignUp()
                 Toast.makeText(this, getString(com.tambal_ban.R.string.register_success), Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             } else {
                 val error = result.exceptionOrNull()
-                val message = error?.let { AuthErrorMapper.map(it) } ?: "Pendaftaran gagal"
+                val message = error?.let { AuthErrorMapper.map(it) } ?: getString(com.tambal_ban.R.string.register_error_general)
                 
                 // Show error message
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
