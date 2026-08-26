@@ -5,28 +5,39 @@ import com.google.firebase.ktx.Firebase
 
 object CrashlyticsHelper {
 
-    fun initialize() {
-        Firebase.crashlytics.apply {
-            sendUnsentReports()
+    /**
+     * Crash reporting must never itself crash the app (or, in a JVM unit test with no
+     * FirebaseApp initialized, throw IllegalStateException) — every call is best-effort.
+     */
+    private inline fun safe(block: () -> Unit) {
+        try {
+            block()
+        } catch (_: Exception) {
         }
+    }
+
+    fun initialize() {
+        safe { Firebase.crashlytics.sendUnsentReports() }
     }
 
     fun setUserId(userId: String) {
-        Firebase.crashlytics.setUserId(userId)
+        safe { Firebase.crashlytics.setUserId(userId) }
     }
 
     fun clearUserId() {
-        Firebase.crashlytics.setUserId("")
+        safe { Firebase.crashlytics.setUserId("") }
     }
 
     fun logNonFatal(throwable: Throwable, message: String? = null) {
-        if (!message.isNullOrBlank()) {
-            Firebase.crashlytics.log(message)
+        safe {
+            if (!message.isNullOrBlank()) {
+                Firebase.crashlytics.log(message)
+            }
+            Firebase.crashlytics.recordException(throwable)
         }
-        Firebase.crashlytics.recordException(throwable)
     }
 
     fun logMessage(message: String) {
-        Firebase.crashlytics.log(message)
+        safe { Firebase.crashlytics.log(message) }
     }
 }

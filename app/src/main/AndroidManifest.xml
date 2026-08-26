@@ -13,6 +13,11 @@
         android:maxSdkVersion="28"
         tools:ignore="ScopedStorage" />
 
+    <!-- CALL_PHONE/CAMERA are used opportunistically, not core functionality —
+         don't exclude devices (e.g. ChromeOS) that lack this hardware. -->
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
     <application
         android:name=".TambalBanApp"
         android:allowBackup="true"
