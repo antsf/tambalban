@@ -33,6 +33,24 @@
     <!-- Location -->
     <string name="getting_location">Getting your location...</string>
     <string name="label_locating_help">Locating help...</string>
+    <string name="location_unavailable">Unable to get your location</string>
+
+    <!-- Network -->
+    <string
+        name="network_error"
+    >Network error. Please check your connection.</string>
+    <string name="offline_mode">You are offline. Showing cached data.</string>
+    <string name="retry">Retry</string>
+
+    <!-- Emergency Mode -->
+    <string name="emergency_closest">Closest Workshop</string>
+    <string name="emergency_no_workshop">No workshop found within 3km</string>
+    <string name="calling">Calling...</string>
+    <string name="opening_navigation">Opening navigation...</string>
+
+    <!-- Ads -->
+    <string name="advertisement">Advertisement</string>
+    <string name="ad_label">Iklan</string>
 
     <!-- General -->
     <string name="km">km</string>

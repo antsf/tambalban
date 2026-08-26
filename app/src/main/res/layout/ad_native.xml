@@ -3,64 +3,112 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/white">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="12dp">
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginVertical="6dp"
+        app:cardBackgroundColor="@color/surface_container_lowest"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        app:strokeColor="@color/divider"
+        app:strokeWidth="1dp">
 
-        <!-- Ad Icon -->
-        <ImageView
-            android:id="@+id/ad_icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:scaleType="centerCrop"
-            tools:ignore="ContentDescription" />
-
-        <!-- Ad Headline -->
-        <TextView
-            android:id="@+id/ad_headline"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="Ad Headline" />
+            android:orientation="vertical"
+            android:padding="12dp">
 
-        <!-- Ad Body -->
-        <TextView
-            android:id="@+id/ad_body"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"
-            tools:text="Ad body text goes here" />
+            <!-- Ad label row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
 
-        <!-- Ad Call to Action Button -->
-        <Button
-            android:id="@+id/ad_call_to_action"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="#4285F4"
-            android:textColor="@android:color/white"
-            tools:text="Install Now" />
+                <TextView
+                    android:id="@+id/ad_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ad_label"
+                    android:textSize="10sp"
+                    android:textColor="@color/on_primary"
+                    android:background="@drawable/bg_ad_label"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="2dp" />
 
-        <!-- Ad Advertiser -->
-        <TextView
-            android:id="@+id/ad_advertiser"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp"
-            tools:text="Advertiser Name" />
+            </LinearLayout>
 
-    </LinearLayout>
+            <!-- Ad Icon + Headline row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Ad Icon -->
+                <ImageView
+                    android:id="@+id/ad_icon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:scaleType="centerCrop"
+                    tools:ignore="ContentDescription" />
+
+                <!-- Ad Headline + Body -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="10dp">
+
+                    <TextView
+                        android:id="@+id/ad_headline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/on_surface"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        tools:text="Ad Headline" />
+
+                    <TextView
+                        android:id="@+id/ad_body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="13sp"
+                        tools:text="Ad body text goes here" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Ad Advertiser -->
+            <TextView
+                android:id="@+id/ad_advertiser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="12sp"
+                tools:text="Advertiser Name" />
+
+            <!-- Ad Call to Action Button -->
+            <Button
+                android:id="@+id/ad_call_to_action"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                tools:text="Install Now" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </com.google.android.gms.ads.nativead.NativeAdView>

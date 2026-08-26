@@ -9,13 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- AdMob native ads in WorkshopListActivity: injected every 5 workshop items, memory-safe destroy in onDestroy
+
+### Changed
+- `ad_native.xml`: restyled to match workshop card using MaterialCardView, theme colors, and "Iklan" label
+- `activity_workshop_list.xml`: RecyclerView constrained above adContainer to fix banner overlap
+- `WorkshopListAdapter`: refactored to multi-view-type adapter supporting workshop and native ad slots
+- `WorkshopListActivity`: wires native ad loading per slot on workshop list update, destroys ads on destroy
+- All user-visible strings externalized to string resources (i18n) — no hardcoded UI text
+- Docs (README, SPEC) aligned with the real shared `tambal_ban` schema
+
 ### Security
 - Removed the `admin_delete_review` RLS policy — any authenticated user could delete any
   review. Review deletion is now admin-only via the service role.
-
-### Changed
-- All user-visible strings externalized to string resources (i18n) — no hardcoded UI text
-- Docs (README, SPEC) aligned with the real shared `tambal_ban` schema
 
 ### Fixed
 - ProGuard/R8 config keeps kotlinx-serialization classes — release builds no longer crash
