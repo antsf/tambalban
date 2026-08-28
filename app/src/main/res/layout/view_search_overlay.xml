@@ -90,7 +90,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:visibility="gone"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="@dimen/radius_md"
         app:cardElevation="8dp"
         app:strokeWidth="0dp"
         tools:visibility="visible"

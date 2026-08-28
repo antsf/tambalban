@@ -34,12 +34,12 @@
         android:textSize="12sp"
         android:gravity="center" />
 
-    <com.google.android.material.button.MaterialButton
+    <com.tambal_ban.core.ui.TambalButton
         android:id="@+id/btnRetry"
-        style="@style/Widget.Material3.Button.TonalButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="@string/action_try_again" />
+        app:btnText="@string/action_try_again"
+        app:btnVariant="outlined" />
 
 </LinearLayout>

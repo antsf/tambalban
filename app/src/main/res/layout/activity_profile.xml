@@ -93,7 +93,7 @@
             <LinearLayout
                 android:id="@+id/btnEditProfile"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
@@ -124,7 +124,7 @@
             <LinearLayout
                 android:id="@+id/btnAddWorkshop"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
@@ -166,7 +166,7 @@
             <LinearLayout
                 android:id="@+id/btnThemeToggle"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
@@ -211,7 +211,7 @@
             <LinearLayout
                 android:id="@+id/btnRateUs"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
@@ -242,7 +242,7 @@
             <LinearLayout
                 android:id="@+id/btnShareApp"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"

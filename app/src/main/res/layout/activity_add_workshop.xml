@@ -228,7 +228,7 @@
                 android:layout_marginTop="8dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardCornerRadius="12dp"
+                app:cardCornerRadius="@dimen/radius_md"
                 app:cardElevation="0dp"
                 app:strokeColor="@color/outline_variant_ghost"
                 app:strokeWidth="1dp"

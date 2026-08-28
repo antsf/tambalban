@@ -3,6 +3,7 @@
     <declare-styleable name="TambalTextField">
         <attr name="android:hint" />
         <attr name="android:inputType" />
+        <attr name="android:imeOptions" />
         <attr name="fieldHint" format="string" />
         <attr name="fieldIcon" format="reference" />
         <attr name="fieldVariant" format="enum">

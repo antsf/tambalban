@@ -76,8 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/on_surface"
-                android:textSize="28sp"
-                android:fontFamily="sans-serif-black"
+                android:textAppearance="@style/TextAppearance.Guardian.HeadlineMedium"
                 tools:text="Master Tire &amp; Rim Specialists"
             />
 
@@ -117,7 +116,7 @@
                     android:background="@drawable/bg_status_open"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="2dp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/on_primary"
                     android:textSize="10sp"
                     android:textStyle="bold"
                     tools:text="BUKA SEKARANG"
@@ -153,9 +152,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_full_address"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.Guardian.LabelMedium"
                     />
 
                     <TextView
@@ -200,9 +197,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_city_province"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.Guardian.LabelMedium"
                     />
 
                     <TextView
@@ -245,9 +240,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_phone_number"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.Guardian.LabelMedium"
                     />
 
                     <TextView
@@ -290,9 +283,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_business_hours"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.Guardian.LabelMedium"
                     />
 
                     <TextView
@@ -315,9 +306,7 @@
                 android:layout_marginTop="32dp"
                 android:text="@string/reviews"
                 android:textAllCaps="true"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.Guardian.LabelMedium"
                 android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -346,32 +335,26 @@
         android:layout_gravity="bottom"
     >
 
-        <com.google.android.material.button.MaterialButton
+        <com.tambal_ban.core.ui.TambalButton
             android:id="@+id/btnCall"
             android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="@string/call"
-            app:cornerRadius="28dp"
-            app:backgroundTint="@color/primary"
-            app:icon="@drawable/ic_phone"
-            app:iconGravity="textStart"
+            app:btnText="@string/call"
+            app:btnIcon="@drawable/ic_phone"
+            app:btnVariant="primary"
         />
 
-        <com.google.android.material.button.MaterialButton
+        <com.tambal_ban.core.ui.TambalButton
             android:id="@+id/btnNavigate"
             android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:text="@string/navigate"
-            android:textColor="@color/on_surface"
-            app:cornerRadius="28dp"
-            app:backgroundTint="@color/surface_container_low"
-            app:icon="@drawable/ic_marker_pin"
-            app:iconGravity="textStart"
-            app:iconTint="@color/on_surface"
+            app:btnText="@string/navigate"
+            app:btnIcon="@drawable/ic_marker_pin"
+            app:btnVariant="outlined"
         />
 
     </LinearLayout>
