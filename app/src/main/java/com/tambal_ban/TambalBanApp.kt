@@ -9,7 +9,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.analytics.ktx.analytics
 import com.tambal_ban.core.ads.AdMobManager
 import com.tambal_ban.core.network.NetworkModule
-import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.network.TambalBanApiService
 import com.tambal_ban.core.update.InAppUpdateManager
 import com.tambal_ban.core.utils.AnalyticsHelper
 import com.tambal_ban.core.utils.CrashlyticsHelper
@@ -46,7 +46,7 @@ class TambalBanApp : Application() {
     lateinit var authPrefs: AuthPrefs
         private set
 
-    lateinit var supabaseService: SupabaseService
+    lateinit var apiService: TambalBanApiService
         private set
 
     lateinit var inAppUpdateManager: InAppUpdateManager
@@ -71,20 +71,20 @@ class TambalBanApp : Application() {
         // Initialize AuthPrefs
         authPrefs = AuthPrefs(this)
 
-        // Initialize SupabaseService
-        supabaseService = NetworkModule.provideSupabaseService(authPrefs)
+        // Initialize TambalBanApiService
+        apiService = NetworkModule.provideApiService(authPrefs)
 
         // Initialize repository with native implementation
-        workshopRepository = WorkshopRepository(dbHelper, supabaseService)
+        workshopRepository = WorkshopRepository(dbHelper, apiService)
 
         // Initialize AuthRepository
-        authRepository = AuthRepository(supabaseService, authPrefs)
+        authRepository = AuthRepository(apiService, authPrefs)
 
         // Initialize ReviewRepository
-        reviewRepository = ReviewRepository(supabaseService)
+        reviewRepository = ReviewRepository(apiService)
 
         // Initialize ProfileRepository
-        profileRepository = ProfileRepository(supabaseService)
+        profileRepository = ProfileRepository(apiService)
 
         // T031: Initialize AdMob but don't load ads immediately
         adMobManager = AdMobManager(this)

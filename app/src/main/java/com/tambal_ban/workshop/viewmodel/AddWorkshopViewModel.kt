@@ -54,7 +54,6 @@ class AddWorkshopViewModel(application: Application) : AndroidViewModel(applicat
     ) {
         viewModelScope.launch {
             _isLoading.value = true
-            val userId = authRepository.getUserId()
             val submission = WorkshopSubmission(
                 name = name,
                 address = address,
@@ -65,7 +64,7 @@ class AddWorkshopViewModel(application: Application) : AndroidViewModel(applicat
                 province = province?.takeIf { it.isNotBlank() },
                 openingHours = openingHours?.takeIf { it.isNotBlank() }
             )
-            val result = workshopRepository.addWorkshop(submission, imageUri, userId, getApplication())
+            val result = workshopRepository.addWorkshop(submission, imageUri, getApplication())
             _submissionResult.value = result.map { Unit }
             _isLoading.value = false
         }
@@ -158,7 +157,7 @@ class AddWorkshopViewModel(application: Application) : AndroidViewModel(applicat
             return
         }
 
-        val userId = authRepository.getUserId() ?: return
+        if (!authRepository.isLoggedIn()) return
         _isLoading.value = true
 
         viewModelScope.launch {
@@ -173,7 +172,7 @@ class AddWorkshopViewModel(application: Application) : AndroidViewModel(applicat
                     province = form.province.takeIf { it.isNotBlank() },
                     openingHours = form.openingHours.takeIf { it.isNotBlank() }
                 )
-                workshopRepository.addWorkshop(submission, form.selectedImageUri, userId, getApplication())
+                workshopRepository.addWorkshop(submission, form.selectedImageUri, getApplication())
                 _submissionResult.value = Result.success(Unit)
                 _formState.value = AddWorkshopFormState()  // Reset form
             } catch (e: Exception) {

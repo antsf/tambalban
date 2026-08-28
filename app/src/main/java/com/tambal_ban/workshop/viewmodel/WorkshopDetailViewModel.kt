@@ -100,14 +100,7 @@ class WorkshopDetailViewModel(application: Application) : AndroidViewModel(appli
 
         viewModelScope.launch {
             _isLoading.value = true
-            val userId = authRepository.getUserId()
-            val review = Review(
-                workshopId = workshopId,
-                userId = userId,
-                rating = rating,
-                comment = comment
-            )
-            val result = reviewRepository.submitReview(review)
+            val result = reviewRepository.submitReview(workshopId, rating, comment).map { }
             _reviewSubmissionResult.value = result
             if (result.isSuccess) {
                 AnalyticsHelper.logEvent("review_submit")

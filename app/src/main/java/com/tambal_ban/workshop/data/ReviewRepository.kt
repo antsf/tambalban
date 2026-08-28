@@ -1,20 +1,19 @@
 package com.tambal_ban.workshop.data
-import com.tambal_ban.workshop.ui.* 
-import com.tambal_ban.workshop.viewmodel.* 
-import com.tambal_ban.workshop.data.* 
+import com.tambal_ban.workshop.ui.*
+import com.tambal_ban.workshop.viewmodel.*
+import com.tambal_ban.workshop.data.*
 
-import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.network.TambalBanApiService
 import com.tambal_ban.core.utils.CrashlyticsHelper
-import com.tambal_ban.workshop.data.Review
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ReviewRepository(private val supabaseService: SupabaseService) {
+class ReviewRepository(private val apiService: TambalBanApiService) {
 
     suspend fun getReviews(workshopId: String): Result<List<Review>> =
         withContext(Dispatchers.IO) {
             try {
-                val response = supabaseService.getReviews(workshopId)
+                val response = apiService.getReviews(workshopId)
                 if (response.isSuccessful) {
                     Result.success(response.body() ?: emptyList())
                 } else {
@@ -26,12 +25,12 @@ class ReviewRepository(private val supabaseService: SupabaseService) {
             }
         }
 
-    suspend fun submitReview(review: Review): Result<Unit> =
+    suspend fun submitReview(workshopId: String, rating: Int, comment: String?): Result<Review> =
         withContext(Dispatchers.IO) {
             try {
-                val response = supabaseService.submitReview(review)
-                if (response.isSuccessful) {
-                    Result.success(Unit)
+                val response = apiService.submitReview(workshopId, ReviewRequest(rating, comment))
+                if (response.isSuccessful && response.body() != null) {
+                    Result.success(response.body()!!)
                 } else {
                     Result.failure(Exception("Failed to submit review: ${response.message()}"))
                 }

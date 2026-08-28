@@ -2,7 +2,7 @@ package com.tambal_ban.core.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.tambal_ban.core.utils.AuthPrefs
-import com.tambal_ban.core.utils.SupabaseConfig
+import com.tambal_ban.core.utils.TambalBanApiConfig
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -20,7 +20,7 @@ object NetworkModule {
         isLenient = true
     }
 
-    fun provideSupabaseService(authPrefs: AuthPrefs): SupabaseService {
+    fun provideApiService(authPrefs: AuthPrefs): TambalBanApiService {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
@@ -31,11 +31,11 @@ object NetworkModule {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl(SupabaseConfig.URL)
+            .baseUrl(TambalBanApiConfig.BASE_URL)
             .client(client)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
 
-        return retrofit.create(SupabaseService::class.java)
+        return retrofit.create(TambalBanApiService::class.java)
     }
 }

@@ -6,14 +6,10 @@ import com.tambal_ban.auth.data.AuthRepository
 import com.tambal_ban.auth.data.Profile
 import com.tambal_ban.auth.data.ProfileRepository
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.runs
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -61,8 +57,7 @@ class ProfileViewModelTest {
     @Test
     fun `getProfile success updates profile`() = runTest {
         val profile = Profile(id = "u1", fullName = "Test User", email = "test@example.com", phone = "08123456789")
-        every { authRepo.getUserId() } returns "u1"
-        coEvery { profileRepo.getProfile(any()) } returns Result.success(profile)
+        coEvery { profileRepo.getProfile() } returns Result.success(profile)
 
         viewModel.getProfile()
         testDispatcher.scheduler.advanceUntilIdle()
@@ -73,8 +68,7 @@ class ProfileViewModelTest {
 
     @Test
     fun `getProfile failure sets error`() = runTest {
-        every { authRepo.getUserId() } returns "u1"
-        coEvery { profileRepo.getProfile(any()) } returns Result.failure(Exception("Profile not found"))
+        coEvery { profileRepo.getProfile() } returns Result.failure(Exception("Profile not found"))
 
         viewModel.getProfile()
         testDispatcher.scheduler.advanceUntilIdle()
@@ -85,8 +79,8 @@ class ProfileViewModelTest {
     }
 
     @Test
-    fun `getProfile when userId null does nothing`() {
-        every { authRepo.getUserId() } returns null
+    fun `getProfile when not logged in does nothing`() {
+        every { authRepo.isLoggedIn() } returns false
 
         viewModel.getProfile()
 
@@ -95,9 +89,9 @@ class ProfileViewModelTest {
 
     @Test
     fun `updateProfile success sets isUpdateSuccess`() = runTest {
-        every { authRepo.getUserId() } returns "u1"
-        coEvery { profileRepo.updateProfile(any(), any()) } returns Result.success(Unit)
-        coEvery { profileRepo.getProfile(any()) } returns Result.success(Profile(id = "u1"))
+        val updated = Profile(id = "u1", fullName = "New Name")
+        coEvery { profileRepo.updateProfile(any()) } returns Result.success(updated)
+        coEvery { profileRepo.getProfile() } returns Result.success(updated)
 
         viewModel.updateProfile("New Name", "08123456789")
         testDispatcher.scheduler.advanceUntilIdle()
@@ -107,26 +101,27 @@ class ProfileViewModelTest {
     }
 
     @Test
-    fun `logout clears session`() {
-        every { authRepo.logout() } just runs
+    fun `logout clears session`() = runTest {
+        coEvery { authRepo.logout() } returns Unit
 
         viewModel.logout()
+        testDispatcher.scheduler.advanceUntilIdle()
 
-        verify { authRepo.logout() }
+        coVerify { authRepo.logout() }
         assertTrue(viewModel.isLoggedOut.value!!)
     }
 
     @Test
     fun `uploadAvatar success triggers profile update`() = runTest {
-        every { authRepo.getUserId() } returns "u1"
-        coEvery { profileRepo.uploadAvatar(any(), any(), any()) } returns Result.success("https://example.com/avatar.png")
-        coEvery { profileRepo.updateProfile(any(), any()) } returns Result.success(Unit)
-        coEvery { profileRepo.getProfile(any()) } returns Result.success(Profile(id = "u1"))
+        val profile = Profile(id = "u1")
+        coEvery { profileRepo.uploadAvatar(any(), any()) } returns Result.success("https://example.com/avatar.png")
+        coEvery { profileRepo.updateProfile(any()) } returns Result.success(profile)
+        coEvery { profileRepo.getProfile() } returns Result.success(profile)
 
         viewModel.uploadAvatar(byteArrayOf(0x89.toByte(), 0x50.toByte(), 0x4E.toByte(), 0x47.toByte()), "image/png")
         testDispatcher.scheduler.advanceUntilIdle()
 
         assertFalse(viewModel.isUploading.value!!)
-        coVerify { profileRepo.uploadAvatar(any(), any(), any()) }
+        coVerify { profileRepo.uploadAvatar(any(), any()) }
     }
 }

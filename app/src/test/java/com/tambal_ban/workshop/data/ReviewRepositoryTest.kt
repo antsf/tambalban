@@ -1,13 +1,12 @@
 package com.tambal_ban.workshop.data
 
-import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.network.TambalBanApiService
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -15,7 +14,7 @@ import retrofit2.Response
 
 class ReviewRepositoryTest {
 
-    private val service = mockk<SupabaseService>()
+    private val service = mockk<TambalBanApiService>()
     private lateinit var repository: ReviewRepository
 
     @Before
@@ -57,12 +56,24 @@ class ReviewRepositoryTest {
     }
 
     @Test
-    fun `submitReview success returns unit`() = runTest {
-        val review = Review(workshopId = "ws-1", rating = 5, comment = "Good")
-        coEvery { service.submitReview(any()) } returns Response.success<Void>(null)
+    fun `submitReview success returns the created review`() = runTest {
+        val created = Review(id = "r1", workshopId = "ws-1", userId = "u1", rating = 5, comment = "Good")
+        coEvery { service.submitReview("ws-1", any()) } returns Response.success(created)
 
-        val result = repository.submitReview(review)
+        val result = repository.submitReview("ws-1", 5, "Good")
 
         assertTrue(result.isSuccess)
+        assertNotNull(result.getOrNull())
+    }
+
+    @Test
+    fun `submitReview error response returns failure`() = runTest {
+        coEvery { service.submitReview("ws-1", any()) } returns Response.error(
+            401, "".toResponseBody("application/json".toMediaType())
+        )
+
+        val result = repository.submitReview("ws-1", 5, "Good")
+
+        assertTrue(result.isFailure)
     }
 }

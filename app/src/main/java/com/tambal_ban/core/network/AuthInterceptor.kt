@@ -1,38 +1,30 @@
 package com.tambal_ban.core.network
 
 import com.tambal_ban.core.utils.AuthPrefs
-import com.tambal_ban.core.utils.Constants
-import com.tambal_ban.core.utils.SupabaseConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 
 /**
- * Interceptor that adds Supabase API Key and Bearer Token to outgoing requests.
+ * Adds the session Bearer token to outgoing requests. Unlike Supabase (which needed an
+ * `apikey` header plus an anon-key fallback for RLS on unauthenticated requests), the D1
+ * bearer API needs no header at all for public routes — anonymous requests go through
+ * untouched.
  */
 class AuthInterceptor(private val authPrefs: AuthPrefs) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
-        val requestBuilder = originalRequest.newBuilder()
-        
-        // 1. Mandatory Supabase API Key
-        requestBuilder.addHeader("apikey", SupabaseConfig.ANON_KEY)
-
         val token = authPrefs.getAccessToken()
-        val isAuthRequest = originalRequest.url.toString().contains("/auth/v1/")
+        val isAuthRequest = originalRequest.url.toString().contains("/api/v2/auth/")
 
-        // 2. Authorization Header logic
-        if (!token.isNullOrEmpty()) {
-            // Logged in: Use user's JWT
-            requestBuilder.header("Authorization", "Bearer $token")
-        } else if (!isAuthRequest) {
-            // Not logged in: Use ANON_KEY as fallback for public RLS access
-            requestBuilder.header("Authorization", "Bearer ${SupabaseConfig.ANON_KEY}")
+        val request = if (!token.isNullOrEmpty()) {
+            originalRequest.newBuilder().header("Authorization", "Bearer $token").build()
+        } else {
+            originalRequest
         }
 
-        val response = chain.proceed(requestBuilder.build())
+        val response = chain.proceed(request)
 
         if (response.code == 401 && !isAuthRequest) {
-            // Handle unauthorized error - clear invalid tokens
             authPrefs.clear()
         }
 

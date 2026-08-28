@@ -79,10 +79,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             return
         }
         
-        val userId = authRepository.getUserId() ?: return
         viewModelScope.launch {
             try {
-                val result = profileRepository.getProfile(userId)
+                val result = profileRepository.getProfile()
                 if (result.isSuccess) {
                     _userProfile.value = result.getOrNull()
                 }

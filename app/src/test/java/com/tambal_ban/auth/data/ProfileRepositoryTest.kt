@@ -1,10 +1,9 @@
 package com.tambal_ban.auth.data
 
-import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.network.TambalBanApiService
+import com.tambal_ban.core.network.UploadResponse
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -17,13 +16,11 @@ import retrofit2.Response
 
 class ProfileRepositoryTest {
 
-    private val service = mockk<SupabaseService>()
+    private val service = mockk<TambalBanApiService>()
     private lateinit var repository: ProfileRepository
 
     @Before
     fun setUp() {
-        mockkStatic(android.util.Log::class)
-        every { android.util.Log.d(any(), any()) } returns 0
         repository = ProfileRepository(service)
     }
 
@@ -36,40 +33,44 @@ class ProfileRepositoryTest {
             phone = "08123456789",
             avatarUrl = null,
         )
-        coEvery { service.getProfile(any<String>(), any<String>()) } returns Response.success(listOf(profile))
+        coEvery { service.getProfile() } returns Response.success(profile)
 
-        val result = repository.getProfile("u1")
+        val result = repository.getProfile()
 
         assertTrue(result.isSuccess)
         assertNotNull(result.getOrNull())
     }
 
     @Test
-    fun `getProfile empty response returns failure`() = runBlocking {
-        coEvery { service.getProfile("eq.u1", "*") } returns Response.success(emptyList())
-
-        val result = repository.getProfile("u1")
-
-        assertTrue(result.isFailure)
-    }
-
-    @Test
     fun `getProfile error response returns failure`() = runBlocking {
-        coEvery { service.getProfile("eq.u1", "*") } returns Response.error(
-            500, "".toResponseBody("application/json".toMediaType())
+        coEvery { service.getProfile() } returns Response.error(
+            401, "".toResponseBody("application/json".toMediaType())
         )
 
-        val result = repository.getProfile("u1")
+        val result = repository.getProfile()
 
         assertTrue(result.isFailure)
     }
 
     @Test
-    fun `updateProfile success returns unit`() = runBlocking {
-        coEvery { service.updateProfile(any(), any()) } returns Response.success<Void>(null)
+    fun `updateProfile success returns the updated profile`() = runBlocking {
+        val updated = Profile(id = "u1", fullName = "Updated", email = "test@example.com")
+        coEvery { service.updateProfile(any()) } returns Response.success(updated)
 
-        val result = repository.updateProfile("u1", mapOf("full_name" to "Updated"))
+        val result = repository.updateProfile(mapOf("full_name" to "Updated"))
 
         assertTrue(result.isSuccess)
+        assertEquals("Updated", result.getOrNull()?.fullName)
+    }
+
+    @Test
+    fun `uploadAvatar success returns the R2 URL`() = runBlocking {
+        coEvery { service.uploadAvatarImage(any()) } returns
+            Response.success(UploadResponse("https://tambalban-web.antsf.workers.dev/images/avatars/x.webp"))
+
+        val result = repository.uploadAvatar(ByteArray(8), "image/png")
+
+        assertTrue(result.isSuccess)
+        assertEquals("https://tambalban-web.antsf.workers.dev/images/avatars/x.webp", result.getOrNull())
     }
 }

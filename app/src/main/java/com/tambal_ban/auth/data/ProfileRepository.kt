@@ -1,45 +1,31 @@
 package com.tambal_ban.auth.data
-import com.tambal_ban.auth.ui.* 
-import com.tambal_ban.auth.viewmodel.* 
-import com.tambal_ban.auth.data.* 
+import com.tambal_ban.auth.ui.*
+import com.tambal_ban.auth.viewmodel.*
+import com.tambal_ban.auth.data.*
 
-import android.util.Log
-import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.network.TambalBanApiService
 import com.tambal_ban.core.utils.CrashlyticsHelper
-import com.tambal_ban.auth.data.Profile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
 
 /**
- * Repository for user profile data operations.
+ * Repository for user profile data operations. The bearer token identifies the caller
+ * server-side — unlike Supabase's RLS-scoped `users_profile` table, there's no `userId`
+ * parameter to pass; a request always operates on the token's own account.
  */
 class ProfileRepository(
-    private val supabaseService: SupabaseService
+    private val apiService: TambalBanApiService
 ) {
 
-    suspend fun getProfile(userId: String): Result<Profile> =
+    suspend fun getProfile(): Result<Profile> =
         withContext(Dispatchers.IO) {
             try {
-                val response = supabaseService.getProfile("eq.$userId")
+                val response = apiService.getProfile()
                 if (response.isSuccessful && response.body() != null) {
-                    val profileList = response.body()!!
-                    Log.d("Profile", "response: ${profileList}")
-
-                    if (profileList.isNotEmpty()) {
-                        val profile = profileList[0]
-                        // Transform avatar path to full URL
-                        val fullProfile = if (!profile.avatarUrl.isNullOrEmpty() && !profile.avatarUrl.startsWith("http")) {
-                            profile.copy(avatarUrl = getPublicUrl("avatars", profile.avatarUrl))
-                        } else {
-                            profile
-                        }
-                        Result.success(fullProfile)
-                    } else {
-                        Result.failure(Exception("Profile not found"))
-                    }
+                    Result.success(response.body()!!)
                 } else {
                     Result.failure(Exception("Failed to fetch profile: ${response.message()}"))
                 }
@@ -49,12 +35,12 @@ class ProfileRepository(
             }
         }
 
-    suspend fun updateProfile(userId: String, updates: Map<String, String>): Result<Unit> =
+    suspend fun updateProfile(updates: Map<String, String>): Result<Profile> =
         withContext(Dispatchers.IO) {
             try {
-                val response = supabaseService.updateProfile("eq.$userId", updates)
-                if (response.isSuccessful) {
-                    Result.success(Unit)
+                val response = apiService.updateProfile(updates)
+                if (response.isSuccessful && response.body() != null) {
+                    Result.success(response.body()!!)
                 } else {
                     Result.failure(Exception("Failed to update profile: ${response.message()}"))
                 }
@@ -64,17 +50,14 @@ class ProfileRepository(
             }
         }
 
-    suspend fun uploadAvatar(userId: String, bytes: ByteArray, mimeType: String): Result<String> =
+    suspend fun uploadAvatar(bytes: ByteArray, mimeType: String): Result<String> =
         withContext(Dispatchers.IO) {
             try {
-                val filename = "avatar_${System.currentTimeMillis()}.png"
-                val path = "$userId/$filename"
-                val requestBody = bytes.toRequestBody(mimeType.toMediaType())
-                
-                val response = supabaseService.uploadFile("avatars", path, requestBody)
-                if (response.isSuccessful) {
-                    val publicUrl = getPublicUrl("avatars", path)
-                    Result.success(publicUrl)
+                val body = bytes.toRequestBody(mimeType.toMediaType())
+                val part = MultipartBody.Part.createFormData("file", "avatar", body)
+                val response = apiService.uploadAvatarImage(part)
+                if (response.isSuccessful && response.body() != null) {
+                    Result.success(response.body()!!.url)
                 } else {
                     Result.failure(Exception("Failed to upload avatar: ${response.message()}"))
                 }
@@ -83,8 +66,4 @@ class ProfileRepository(
                 Result.failure(e)
             }
         }
-
-    private fun getPublicUrl(bucket: String = "avatars", path: String): String {
-        return "${com.tambal_ban.core.utils.SupabaseConfig.URL}storage/v1/object/public/$bucket/$path"
-    }
 }

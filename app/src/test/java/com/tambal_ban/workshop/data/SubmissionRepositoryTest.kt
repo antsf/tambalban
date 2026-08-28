@@ -1,7 +1,7 @@
 package com.tambal_ban.workshop.data
 
 import android.content.Context
-import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.network.TambalBanApiService
 import com.tambal_ban.workshop.data.database.WorkshopDbHelper
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -16,7 +16,7 @@ import retrofit2.Response
 
 class SubmissionRepositoryTest {
 
-    private val service = mockk<SupabaseService>()
+    private val service = mockk<TambalBanApiService>()
     private val dbHelper = mockk<WorkshopDbHelper>(relaxed = true)
     private val context = mockk<Context>(relaxed = true)
     private lateinit var repository: WorkshopRepository
@@ -44,9 +44,9 @@ class SubmissionRepositoryTest {
 
     @Test
     fun `addWorkshop success returns Result success with workshop`() = runTest {
-        coEvery { service.addWorkshop(any()) } returns Response.success(listOf(mockWorkshop()))
+        coEvery { service.addWorkshop(any()) } returns Response.success(mockWorkshop())
 
-        val result = repository.addWorkshop(submission, null, null, context)
+        val result = repository.addWorkshop(submission, null, context)
 
         assertTrue(result.isSuccess)
         assertNotNull(result.getOrNull())
@@ -57,7 +57,7 @@ class SubmissionRepositoryTest {
         coEvery { service.addWorkshop(any()) } returns
             Response.error(400, "".toResponseBody("application/json".toMediaType()))
 
-        val result = repository.addWorkshop(submission, null, null, context)
+        val result = repository.addWorkshop(submission, null, context)
 
         assertTrue(result.isFailure)
     }
@@ -66,19 +66,10 @@ class SubmissionRepositoryTest {
     fun `addWorkshop network exception returns Result failure`() = runTest {
         coEvery { service.addWorkshop(any()) } throws java.io.IOException("No connection")
 
-        val result = repository.addWorkshop(submission, null, null, context)
+        val result = repository.addWorkshop(submission, null, context)
 
         assertTrue(result.isFailure)
         assertNotNull(result.exceptionOrNull())
-    }
-
-    @Test
-    fun `addWorkshop empty response body returns Result failure`() = runTest {
-        coEvery { service.addWorkshop(any()) } returns Response.success(emptyList())
-
-        val result = repository.addWorkshop(submission, null, null, context)
-
-        assertTrue(result.isFailure)
     }
 
     @Test
@@ -87,9 +78,9 @@ class SubmissionRepositoryTest {
             province = "DKI Jakarta",
             openingHours = "08:00 - 20:00"
         )
-        coEvery { service.addWorkshop(any()) } returns Response.success(listOf(mockWorkshop()))
+        coEvery { service.addWorkshop(any()) } returns Response.success(mockWorkshop())
 
-        val result = repository.addWorkshop(fullSubmission, null, null, context)
+        val result = repository.addWorkshop(fullSubmission, null, context)
 
         assertTrue(result.isSuccess)
     }
