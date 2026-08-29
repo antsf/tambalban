@@ -40,13 +40,13 @@
             tools:text="Mobile repair unit #402 is en route to your location." />
 
         <!-- Track Progress Button -->
-        <com.google.android.material.button.MaterialButton
+        <com.tambal_ban.core.ui.TambalButton
             android:id="@+id/btnTrackProgress"
-            style="@style/Guardian.Button.Primary"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/action_track_progress" />
+            app:btnText="@string/action_track_progress"
+            app:btnVariant="primary" />
 
     </LinearLayout>
 

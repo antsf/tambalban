@@ -143,8 +143,7 @@ class MainViewModelTest {
     fun `fetchUserProfile logged in success updates userProfile`() = runTest {
         val profile = Profile(id = "u1", fullName = "Budi", email = "budi@example.com")
         every { authRepo.isLoggedIn() } returns true
-        every { authRepo.getUserId() } returns "u1"
-        coEvery { profileRepo.getProfile("u1") } returns Result.success(profile)
+        coEvery { profileRepo.getProfile() } returns Result.success(profile)
 
         viewModel.fetchUserProfile()
         advanceUntilIdle()

@@ -8,21 +8,20 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.util.Log
-import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.network.TambalBanApiService
 import com.tambal_ban.core.utils.CrashlyticsHelper
 import com.tambal_ban.core.utils.GeoUtils
-import com.tambal_ban.core.utils.SupabaseConfig
 import com.tambal_ban.workshop.data.database.WorkshopDbHelper
 import com.tambal_ban.workshop.data.database.mappers.WorkshopMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.util.UUID
 
 class WorkshopRepository(
     private val dbHelper: WorkshopDbHelper,
-    private val supabaseService: SupabaseService
+    private val apiService: TambalBanApiService
 ) {
     private val TAG = "WorkshopRepository"
 
@@ -36,11 +35,8 @@ class WorkshopRepository(
             withContext(Dispatchers.IO) {
                 if (isNetworkAvailable(context)) {
                     try {
-                        val response = supabaseService.getWorkshopsInBounds(
-                            minLat = "gte.$minLat",
-                            maxLat = "lte.$maxLat",
-                            minLon = "gte.$minLng",
-                            maxLon = "lte.$maxLng"
+                        val response = apiService.getWorkshops(
+                            minLat = minLat, maxLat = maxLat, minLng = minLng, maxLng = maxLng
                         )
                         if (response.isSuccessful) {
                             val workshops = response.body() ?: emptyList()
@@ -81,13 +77,8 @@ class WorkshopRepository(
 
             if (isNetworkAvailable(context)) {
                 try {
-                    val response = supabaseService.getWorkshopsInBounds(
-                        minLat = "gte.$minLat",
-                        maxLat = "lte.$maxLat",
-                        minLon = "gte.$minLng",
-                        maxLon = "lte.$maxLng",
-                        limit = limit,
-                        offset = offset
+                    val response = apiService.getWorkshops(
+                        minLat = minLat, maxLat = maxLat, minLng = minLng, maxLng = maxLng
                     )
                     if (response.isSuccessful) {
                         val workshops = response.body() ?: emptyList()
@@ -141,7 +132,7 @@ class WorkshopRepository(
         withContext(Dispatchers.IO) {
             if (isNetworkAvailable(context)) {
                 try {
-                    val response = supabaseService.getAllWorkshops(limit = limit, offset = offset)
+                    val response = apiService.getWorkshops()
                     if (response.isSuccessful) {
                         val workshops = response.body() ?: emptyList()
                         saveWorkshopsToDb(workshops)
@@ -194,12 +185,7 @@ class WorkshopRepository(
         withContext(Dispatchers.IO) {
             if (isNetworkAvailable(context)) {
                 try {
-                    val orFilter = "(name.ilike.*$query*,city.ilike.*$query*)"
-                    val response = supabaseService.searchWorkshops(
-                        or = orFilter,
-                        limit = limit,
-                        offset = offset
-                    )
+                    val response = apiService.getWorkshops(search = query)
                     if (response.isSuccessful) {
                         return@withContext response.body() ?: emptyList()
                     }
@@ -229,9 +215,9 @@ class WorkshopRepository(
     suspend fun getWorkshopById(id: String): Workshop? =
             withContext(Dispatchers.IO) {
                 try {
-                    val response = supabaseService.getWorkshopById("eq.$id")
+                    val response = apiService.getWorkshopById(id)
                     if (response.isSuccessful) {
-                        return@withContext response.body()?.firstOrNull()
+                        return@withContext response.body()
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error fetching workshop by ID", e)
@@ -257,21 +243,18 @@ class WorkshopRepository(
     suspend fun addWorkshop(
         submission: WorkshopSubmission,
         imageUri: Uri? = null,
-        userId: String? = null,
         context: Context
     ): Result<Workshop> = withContext(Dispatchers.IO) {
         try {
             var finalSubmission = submission
-            if (imageUri != null && !userId.isNullOrBlank()) {
-                val imageUrl = uploadImage(imageUri, userId, context)
+            if (imageUri != null) {
+                val imageUrl = uploadImage(imageUri, context)
                 finalSubmission = submission.copy(imageUrl = imageUrl)
             }
 
-            val response = supabaseService.addWorkshop(finalSubmission)
-            if (response.isSuccessful) {
-                val workshop = response.body()?.firstOrNull()
-                    ?: return@withContext Result.failure(Exception("Empty response from server"))
-                Result.success(workshop)
+            val response = apiService.addWorkshop(finalSubmission)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
             } else {
                 Result.failure(Exception("Submit failed: ${response.code()} ${response.message()}"))
             }
@@ -282,17 +265,16 @@ class WorkshopRepository(
         }
     }
 
-    private suspend fun uploadImage(imageUri: Uri, userId: String, context: Context): String {
-        val uuid = UUID.randomUUID().toString()
-        val path = "$userId/$uuid.jpg"
+    private suspend fun uploadImage(imageUri: Uri, context: Context): String {
         val bytes = context.contentResolver.openInputStream(imageUri)?.readBytes()
             ?: throw Exception("Cannot read image from URI")
-        val requestBody = bytes.toRequestBody("image/jpeg".toMediaType())
-        val response = supabaseService.uploadFile("workshops", path, requestBody)
-        if (!response.isSuccessful) {
+        val body = bytes.toRequestBody("image/jpeg".toMediaType())
+        val part = MultipartBody.Part.createFormData("file", "workshop.jpg", body)
+        val response = apiService.uploadWorkshopImage(part)
+        if (!response.isSuccessful || response.body() == null) {
             throw Exception("Image upload failed: ${response.code()}")
         }
-        return "${SupabaseConfig.STORAGE_PUBLIC_URL}/workshops/$path"
+        return response.body()!!.url
     }
 
     private fun saveWorkshopsToDb(workshops: List<Workshop>) {

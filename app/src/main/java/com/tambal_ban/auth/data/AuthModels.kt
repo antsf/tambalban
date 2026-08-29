@@ -1,7 +1,7 @@
 package com.tambal_ban.auth.data
-import com.tambal_ban.auth.ui.* 
-import com.tambal_ban.auth.viewmodel.* 
-import com.tambal_ban.auth.data.* 
+import com.tambal_ban.auth.ui.*
+import com.tambal_ban.auth.viewmodel.*
+import com.tambal_ban.auth.data.*
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -15,16 +15,16 @@ data class LoginRequest(
 @Serializable
 data class RegisterRequest(
     val email: String,
-    val password: String,
-    val data: Map<String, String> = emptyMap()
+    val password: String
 )
 
+/** D1 sessions are a single opaque token with an expiry — no separate refresh token
+ * (unlike Supabase Auth's access/refresh pair this replaced). */
 @Serializable
 data class AuthResponse(
-    @SerialName("access_token")
-    val accessToken: String,
-    @SerialName("refresh_token")
-    val refreshToken: String,
+    val token: String,
+    @SerialName("expires_at")
+    val expiresAt: String,
     val user: User
 )
 

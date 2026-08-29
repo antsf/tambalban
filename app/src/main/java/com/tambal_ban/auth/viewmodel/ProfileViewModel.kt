@@ -44,10 +44,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     val userEmail: String? get() = authRepository.getUserEmail()
 
     fun getProfile() {
-        val userId = authRepository.getUserId() ?: return
+        if (!authRepository.isLoggedIn()) return
         viewModelScope.launch {
             _isLoading.value = true
-            val result = profileRepository.getProfile(userId)
+            val result = profileRepository.getProfile()
             if (result.isSuccess) {
                 _profile.value = result.getOrNull()
             } else {
@@ -59,14 +59,14 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun updateProfile(fullName: String, phone: String) {
-        val userId = authRepository.getUserId() ?: return
+        if (!authRepository.isLoggedIn()) return
         viewModelScope.launch {
             _isLoading.value = true
             val updates = mapOf(
                 "full_name" to fullName,
                 "phone" to phone
             )
-            val result = profileRepository.updateProfile(userId, updates)
+            val result = profileRepository.updateProfile(updates)
             if (result.isSuccess) {
                 _isUpdateSuccess.value = true
                 getProfile() // Refresh data
@@ -78,10 +78,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun uploadAvatar(bytes: ByteArray, mimeType: String) {
-        val userId = authRepository.getUserId() ?: return
+        if (!authRepository.isLoggedIn()) return
         viewModelScope.launch {
             _isUploading.value = true
-            val result = profileRepository.uploadAvatar(userId, bytes, mimeType)
+            val result = profileRepository.uploadAvatar(bytes, mimeType)
             if (result.isSuccess) {
                 val path = result.getOrNull()!!
                 // Update profile with new avatar path/url
@@ -95,9 +95,9 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun updateProfileAvatar(path: String) {
-        val userId = authRepository.getUserId() ?: return
+        if (!authRepository.isLoggedIn()) return
         viewModelScope.launch {
-            val result = profileRepository.updateProfile(userId, mapOf("avatar_url" to path))
+            val result = profileRepository.updateProfile(mapOf("avatar_url" to path))
             if (result.isSuccess) {
                 _isUpdateSuccess.value = true
                 getProfile()
@@ -109,8 +109,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun logout() {
-        authRepository.logout()
-        _isLoggedOut.value = true
+        viewModelScope.launch {
+            authRepository.logout()
+            _isLoggedOut.value = true
+        }
     }
 
     fun isLoggedIn(): Boolean = authRepository.isLoggedIn()

@@ -50,7 +50,7 @@ class RegisterViewModelTest {
     @Test
     fun `register success updates registerResult`() = runTest {
         val user = User("u1", "test@example.com")
-        val response = AuthResponse("access-token", "refresh-token", user)
+        val response = AuthResponse("access-token", "2026-09-01T00:00:00.000Z", user)
         coEvery { authRepo.register(any(), any(), any()) } returns Result.success(response)
 
         viewModel.register("Test User", "test@example.com", "password123")
@@ -111,7 +111,7 @@ class RegisterViewModelTest {
     @Test
     fun `validateAndRegister with valid inputs clears validation error`() = runTest {
         val user = User("u1", "test@example.com")
-        val response = AuthResponse("access-token", "refresh-token", user)
+        val response = AuthResponse("access-token", "2026-09-01T00:00:00.000Z", user)
         coEvery { authRepo.register(any(), any(), any()) } returns Result.success(response)
 
         viewModel.validateAndRegister("Test User", "test@example.com", "password123")
@@ -123,7 +123,7 @@ class RegisterViewModelTest {
     @Test
     fun `register sets isLoading false after completion`() = runTest {
         val user = User("u1", "test@example.com")
-        val response = AuthResponse("access-token", "refresh-token", user)
+        val response = AuthResponse("access-token", "2026-09-01T00:00:00.000Z", user)
         coEvery { authRepo.register(any(), any(), any()) } returns Result.success(response)
 
         viewModel.register("Test User", "test@example.com", "password123")

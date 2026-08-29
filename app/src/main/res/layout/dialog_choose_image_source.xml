@@ -25,7 +25,7 @@
     <LinearLayout
         android:id="@+id/btnCamera"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/touch_target_min"
         android:layout_marginTop="16dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
@@ -50,7 +50,7 @@
     <LinearLayout
         android:id="@+id/btnGallery"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/touch_target_min"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"

@@ -46,6 +46,12 @@ class TambalTextField @JvmOverloads constructor(
                     editText.inputType = manualInputType
                 }
 
+                // imeOptions (e.g. actionSearch)
+                val imeOptions = getInt(R.styleable.TambalTextField_android_imeOptions, -1)
+                if (imeOptions != -1) {
+                    editText.imeOptions = imeOptions
+                }
+
             } finally {
                 recycle()
             }
@@ -81,6 +87,10 @@ class TambalTextField @JvmOverloads constructor(
 
     fun addTextChangedListener(watcher: TextWatcher) {
         editText.addTextChangedListener(watcher)
+    }
+
+    fun setOnEditorActionListener(listener: android.widget.TextView.OnEditorActionListener) {
+        editText.setOnEditorActionListener(listener)
     }
 
     val text: String get() = editText.text.toString()

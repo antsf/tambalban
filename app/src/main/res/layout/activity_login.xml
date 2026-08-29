@@ -27,8 +27,7 @@
             android:layout_height="wrap_content"
             android:text="@string/title_login"
             android:textColor="@color/on_surface"
-            android:textSize="28sp"
-            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.Guardian.HeadlineMedium"
         />
 
         <TextView

@@ -29,30 +29,16 @@
             app:titleTextAppearance="@style/TextAppearance.Guardian.TitleMedium"
         />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/searchLayout"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        <com.tambal_ban.core.ui.TambalTextField
+            android:id="@+id/etSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="8dp"
-            app:hintEnabled="false"
-            app:startIconDrawable="@drawable/ic_search"
-            app:startIconTint="@color/on_surface_variant"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.Guardian.Pill"
-        >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etSearch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Cari tambal ban..."
-                android:inputType="text"
-                android:imeOptions="actionSearch"
-                android:paddingVertical="12dp"
-                android:textAppearance="@style/TextAppearance.Guardian.BodyLarge"
-            />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:imeOptions="actionSearch"
+            app:fieldHint="Cari tambal ban..."
+            app:fieldIcon="@drawable/ic_search"
+        />
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.facebook.shimmer.ShimmerFrameLayout

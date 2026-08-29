@@ -1,9 +1,9 @@
 package com.tambal_ban.auth.data
-import com.tambal_ban.auth.ui.* 
-import com.tambal_ban.auth.viewmodel.* 
-import com.tambal_ban.auth.data.* 
+import com.tambal_ban.auth.ui.*
+import com.tambal_ban.auth.viewmodel.*
+import com.tambal_ban.auth.data.*
 
-import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.network.TambalBanApiService
 import com.tambal_ban.core.utils.CrashlyticsHelper
 import com.tambal_ban.workshop.*
 import com.tambal_ban.core.utils.AuthPrefs
@@ -14,18 +14,17 @@ import kotlinx.coroutines.withContext
  * Repository for authentication-related data operations.
  */
 class AuthRepository(
-    private val supabaseService: SupabaseService,
+    private val apiService: TambalBanApiService,
     private val authPrefs: AuthPrefs
 ) {
 
     suspend fun login(email: String, password: String): Result<AuthResponse> =
         withContext(Dispatchers.IO) {
             try {
-                val response = supabaseService.login(LoginRequest(email, password))
+                val response = apiService.login(LoginRequest(email, password))
                 if (response.isSuccessful && response.body() != null) {
                     val authResponse = response.body()!!
-                    authPrefs.saveAccessToken(authResponse.accessToken)
-                    authPrefs.saveRefreshToken(authResponse.refreshToken)
+                    authPrefs.saveAccessToken(authResponse.token)
                     authPrefs.saveUserId(authResponse.user.id)
                     authResponse.user.email?.let { authPrefs.saveEmail(it) }
                     Result.success(authResponse)
@@ -41,12 +40,10 @@ class AuthRepository(
     suspend fun register(name: String, email: String, password: String): Result<AuthResponse> =
         withContext(Dispatchers.IO) {
             try {
-                val metadata = mapOf("full_name" to name)
-                val response = supabaseService.register(RegisterRequest(email, password, metadata))
+                val response = apiService.register(RegisterRequest(email, password))
                 if (response.isSuccessful && response.body() != null) {
                     val authResponse = response.body()!!
-                    authPrefs.saveAccessToken(authResponse.accessToken)
-                    authPrefs.saveRefreshToken(authResponse.refreshToken)
+                    authPrefs.saveAccessToken(authResponse.token)
                     authPrefs.saveUserId(authResponse.user.id)
                     authPrefs.saveEmail(authResponse.user.email ?: email)
                     Result.success(authResponse)
@@ -59,8 +56,16 @@ class AuthRepository(
             }
         }
 
-    fun logout() {
-        authPrefs.clear()
+    /** Revokes the session server-side before clearing local prefs — previously this only
+     * cleared local prefs, leaving the D1 session row live until its 30-day expiry. */
+    suspend fun logout(): Unit = withContext(Dispatchers.IO) {
+        try {
+            apiService.logout()
+        } catch (e: Exception) {
+            CrashlyticsHelper.logNonFatal(e, "logout failed")
+        } finally {
+            authPrefs.clear()
+        }
     }
 
     fun isLoggedIn(): Boolean = authPrefs.isLoggedIn()

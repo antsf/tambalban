@@ -61,7 +61,7 @@ class AddWorkshopViewModelTest {
 
     @Test
     fun `addWorkshop success updates submissionResult`() = runTest {
-        coEvery { workshopRepo.addWorkshop(any(), any(), any(), any()) } returns Result.success(sampleWorkshop)
+        coEvery { workshopRepo.addWorkshop(any(), any(), any()) } returns Result.success(sampleWorkshop)
 
         viewModel.addWorkshop(
             name = "Tambal Ban Jaya",
@@ -79,7 +79,7 @@ class AddWorkshopViewModelTest {
 
     @Test
     fun `addWorkshop failure updates submissionResult with error`() = runTest {
-        coEvery { workshopRepo.addWorkshop(any(), any(), any(), any()) } returns Result.failure(Exception("Submit failed"))
+        coEvery { workshopRepo.addWorkshop(any(), any(), any()) } returns Result.failure(Exception("Submit failed"))
 
         viewModel.addWorkshop(
             name = "Tambal Ban Jaya",
@@ -97,7 +97,7 @@ class AddWorkshopViewModelTest {
 
     @Test
     fun `addWorkshop sets isLoading false after completion`() = runTest {
-        coEvery { workshopRepo.addWorkshop(any(), any(), any(), any()) } returns Result.success(sampleWorkshop)
+        coEvery { workshopRepo.addWorkshop(any(), any(), any()) } returns Result.success(sampleWorkshop)
 
         viewModel.addWorkshop(
             name = "Tambal Ban Jaya",

@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
-import com.tambal_ban.core.network.SupabaseService
+import com.tambal_ban.core.network.TambalBanApiService
 import com.tambal_ban.workshop.data.database.WorkshopDbHelper
 import io.mockk.coEvery
 import io.mockk.every
@@ -22,7 +22,7 @@ import retrofit2.Response
 
 class WorkshopRepositoryTest {
 
-    private val service = mockk<SupabaseService>()
+    private val service = mockk<TambalBanApiService>()
     private val dbHelper = mockk<WorkshopDbHelper>(relaxed = true)
     private val context = mockk<Context>(relaxed = true)
     private val connectivityManager = mockk<ConnectivityManager>()
@@ -51,8 +51,7 @@ class WorkshopRepositoryTest {
     @Test
     fun `getWorkshopsInBounds success returns workshop list`() = runTest {
         val workshops = listOf(mockWorkshop())
-        coEvery { service.getWorkshopsInBounds(any(), any(), any(), any(), any(), any(), any()) } returns
-            Response.success(workshops)
+        coEvery { service.getWorkshops(any(), any(), any(), any(), any()) } returns Response.success(workshops)
 
         val result = repository.getWorkshopsInBounds(-6.3, -6.1, 106.7, 106.9, context)
 
@@ -62,7 +61,7 @@ class WorkshopRepositoryTest {
 
     @Test
     fun `getWorkshopsInBounds API failure falls back to local DB empty`() = runTest {
-        coEvery { service.getWorkshopsInBounds(any(), any(), any(), any(), any(), any(), any()) } returns
+        coEvery { service.getWorkshops(any(), any(), any(), any(), any()) } returns
             Response.error(500, "".toResponseBody("application/json".toMediaType()))
         every { dbHelper.getWorkshopsInBounds(any(), any(), any(), any()) } returns null
 
@@ -73,7 +72,7 @@ class WorkshopRepositoryTest {
 
     @Test
     fun `getWorkshopsInBounds network exception falls back to local DB`() = runTest {
-        coEvery { service.getWorkshopsInBounds(any(), any(), any(), any(), any(), any(), any()) } throws
+        coEvery { service.getWorkshops(any(), any(), any(), any(), any()) } throws
             java.io.IOException("No network")
         every { dbHelper.getWorkshopsInBounds(any(), any(), any(), any()) } returns null
 
@@ -95,7 +94,7 @@ class WorkshopRepositoryTest {
     @Test
     fun `getWorkshopById success returns workshop`() = runTest {
         val workshop = mockWorkshop()
-        coEvery { service.getWorkshopById(any()) } returns Response.success(listOf(workshop))
+        coEvery { service.getWorkshopById(any()) } returns Response.success(workshop)
 
         val result = repository.getWorkshopById("ws-1")
 
@@ -125,7 +124,7 @@ class WorkshopRepositoryTest {
     @Test
     fun `searchWorkshops success returns list`() = runTest {
         val workshops = listOf(mockWorkshop())
-        coEvery { service.searchWorkshops(any(), any(), any(), any()) } returns Response.success(workshops)
+        coEvery { service.getWorkshops(search = any()) } returns Response.success(workshops)
 
         val result = repository.searchWorkshops("jaya", context)
 
